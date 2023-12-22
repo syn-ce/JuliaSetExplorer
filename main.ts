@@ -1,4 +1,5 @@
 import { getCanvasElementById, getCanvasRenderingContext2D } from './utils.js';
+import { Viewport } from './viewport.js';
 
 //document.getElementById('x-offset-in').oninput = (evt) => {
 //    let val = (evt.currentTarget as HTMLInputElement).value;
@@ -23,9 +24,6 @@ const zoom = (x: number, y: number, z: number) => {
     // z - Factor of zoom
 
     // Transform the defining points of the viewport
-    console.log(`Zooming into ${x}, ${y}! zoooOOOOM`);
-    console.log('old');
-    console.log(vp.xMin);
     let xMin = zoomPoint(x, y, z, vp.xMin, 0).x;
     let xMax = zoomPoint(x, y, z, vp.xMax, 0).x;
     let yMin = zoomPoint(x, y, z, 0, vp.yMin).y;
@@ -34,79 +32,8 @@ const zoom = (x: number, y: number, z: number) => {
     vp.xMax = xMax;
     vp.yMin = yMin;
     vp.yMax = yMax;
-    console.log('new');
-    console.log('xMin = ' + vp.xMin);
-    console.log('xMax = ' + vp.xMax);
-    console.log('yMin = ' + vp.yMin);
-    console.log('yMax = ' + vp.yMax);
-    drawMandelbrot(ctx);
+    drawMandelbrotEscapeTime(ctx);
 };
-
-class Pixel {
-    x: number;
-    y: number;
-
-    constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-    }
-}
-
-class Viewport {
-    vWidth: number;
-    vHeight: number;
-    xOffset: number;
-    yOffset: number;
-
-    xMin: number;
-    xMax: number;
-    yMin: number;
-    yMax: number;
-    ctx: CanvasRenderingContext2D;
-
-    constructor(vWidth: number, vHeight: number, ctx: CanvasRenderingContext2D) {
-        this.vWidth = vWidth;
-        this.vHeight = vHeight;
-        this.xOffset = 0;
-        this.yOffset = 0;
-        this.yMin = -1; //+ this.yOffset;
-        this.yMax = 1; //+ this.yOffset;
-        this.xMin = -2; //+ this.xOffset;
-        // The third value is calculated based on the aspect ratio of the screen
-        this.xMax = (vWidth / vHeight) * (this.yMax - this.yMin) + this.xMin;
-    }
-
-    xToCoord(x: number) {
-        return (x * (this.xMax - this.xMin)) / this.vWidth + this.xMin;
-    }
-    yToCoord(y: number) {
-        return (y / this.vHeight) * (this.yMin - this.yMax) + this.yMax; // Flip so that the y-axis grows towards the top
-    }
-    pixelToCoords(pixel: Pixel) {
-        return new Pixel(
-            (pixel.x * (this.xMax - this.xMin)) / this.vWidth + this.xMin,
-            (pixel.y * (this.yMax - this.yMin)) / this.vHeight + this.yMin
-        );
-    }
-
-    fillRect(topLeft: Pixel, bottomRight: Pixel) {
-        const topLeftCoords = this.pixelToCoords(topLeft);
-        const bottomRightCoords = this.pixelToCoords(bottomRight);
-    }
-
-    setXOffset(xOff: number) {
-        this.xOffset = xOff;
-        this.xMin = -2 + this.xOffset;
-        this.xMax = (this.vWidth / this.vHeight) * (this.yMax - this.yMin) + this.xMin;
-    }
-
-    setYOffset(yOff: number) {
-        this.yOffset = yOff;
-        this.yMin = -1 + this.yOffset;
-        this.yMax = 1 + this.yOffset;
-        this.xMax = (this.vWidth / this.vHeight) * (this.yMax - this.yMin) + this.xMin;
-    }
-}
 
 const canvas = getCanvasElementById('main-canvas');
 canvas.width = window.innerWidth;
@@ -122,7 +49,6 @@ canvas.onclick = (evt) => {
 const ctx = getCanvasRenderingContext2D(canvas);
 
 const vp = new Viewport(window.innerWidth, window.innerHeight, ctx);
-ctx.fillRect(200, 400, 100, 50);
 
 const nrIterations = 100;
 
@@ -184,6 +110,7 @@ const getEscapeTime = (x: number, y: number) => {
 
     return 0;
 };
+
 const drawMandelbrotEscapeTime = (ctx: CanvasRenderingContext2D) => {
     const values: number[] = [];
     let max = 0;
@@ -206,7 +133,6 @@ const drawMandelbrotEscapeTime = (ctx: CanvasRenderingContext2D) => {
         data[ind + 3] = 255;
     }
     ctx.putImageData(imageData, 0, 0, 0, 0, window.innerWidth, window.innerHeight);
-    console.log('Done');
 };
 
 //drawMandelbrot(ctx);
