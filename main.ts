@@ -16,22 +16,6 @@ import { getCanvasElementById, getCanvasRenderingContext2D } from './utils.js';
 
 // For a zoom, we transform the entire space
 const zoomPoint = (cx: number, cy: number, z: number, a: number, b: number) => {
-    //let tInvers = [
-    //    [1, 0, cx],
-    //    [0, 1, cy],
-    //    [0, 0, 1],
-    //];
-    //let t = [
-    //    [1, 0, -cx],
-    //    [0, 1, -cy],
-    //    [0, 0, 1],
-    //];
-    //let zoomMatrix = [
-    //    [z, 0, 0],
-    //    [0, z, 0],
-    //    [0, 0, 1],
-    //];
-
     return { x: a * z - z * cx + cx, y: b * z - z * cy + cy };
 };
 const zoom = (x: number, y: number, z: number) => {
@@ -182,4 +166,48 @@ const drawMandelbrot = (ctx: CanvasRenderingContext2D) => {
     ctx.putImageData(imageData, 0, 0, 0, 0, window.innerWidth, window.innerHeight);
 };
 
-drawMandelbrot(ctx);
+const getEscapeTime = (x: number, y: number) => {
+    let z = { real: 0, imag: 0 };
+    let c = { real: x, imag: y };
+
+    for (let i = 0; i < nrIterations; i++) {
+        let real = z.real * z.real - z.imag * z.imag + c.real;
+        let imag = (z.imag = 2 * z.real * z.imag + c.imag);
+
+        z.real = real;
+        z.imag = imag;
+
+        if (z.real * z.real + z.imag * z.imag > 4) {
+            return i; // Lies outside
+        }
+    }
+
+    return 0;
+};
+const drawMandelbrotEscapeTime = (ctx: CanvasRenderingContext2D) => {
+    const values: number[] = [];
+    let max = 0;
+    for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+            let val = getEscapeTime(vp.xToCoord(x), vp.yToCoord(y));
+            values.push(val);
+            if (val > max) max = val;
+        }
+    }
+
+    const imageData = ctx.getImageData(0, 0, window.innerWidth, window.innerHeight);
+    const data = imageData.data;
+    for (let i = 0; i < values.length; i++) {
+        let val = (values[i] / max) * 255;
+        let ind = i * 4;
+        data[ind] = val;
+        data[ind + 1] = val;
+        data[ind + 2] = val;
+        data[ind + 3] = 255;
+    }
+    ctx.putImageData(imageData, 0, 0, 0, 0, window.innerWidth, window.innerHeight);
+    console.log('Done');
+};
+
+//drawMandelbrot(ctx);
+drawMandelbrotEscapeTime(ctx);
