@@ -1,5 +1,6 @@
-import { getCanvasElementById, getCanvasRenderingContext2D } from './utils.js';
+import { Complex, getCanvasElementById, getCanvasRenderingContext2D } from './utils.js';
 import { Viewport } from './viewport.js';
+import { JuliaSet } from './JuliaSet.js';
 
 //document.getElementById('x-offset-in').oninput = (evt) => {
 //    let val = (evt.currentTarget as HTMLInputElement).value;
@@ -32,7 +33,8 @@ const zoom = (x: number, y: number, z: number) => {
     vp.xMax = xMax;
     vp.yMin = yMin;
     vp.yMax = yMax;
-    drawMandelbrotEscapeTime(ctx);
+    //drawMandelbrot(ctx);
+    drawJuliaSet(ctx, juliaSet);
 };
 
 const canvas = getCanvasElementById('main-canvas');
@@ -52,7 +54,7 @@ const vp = new Viewport(window.innerWidth, window.innerHeight, ctx);
 
 const nrIterations = 100;
 
-const getColorValue = (x: number, y: number) => {
+const getColorValueMandelbrot = (x: number, y: number) => {
     let z = { real: 0, imag: 0 };
     let c = { real: x, imag: y };
 
@@ -73,14 +75,16 @@ const getColorValue = (x: number, y: number) => {
     return 0; // Lies inside
 };
 
-const drawMandelbrot = (ctx: CanvasRenderingContext2D) => {
+const drawSet = (ctx: CanvasRenderingContext2D, getColor: (x: number, y: number) => number) => {
     var startTime = performance.now();
+    let zeroValues = 0;
     const imageData = ctx.getImageData(0, 0, window.innerWidth, window.innerHeight);
     const data = imageData.data;
     for (let y = 0; y < canvas.height; y++) {
         for (let x = 0; x < canvas.width; x++) {
             let ind = (y * canvas.width + x) * 4;
-            let val = getColorValue(vp.xToCoord(x), vp.yToCoord(y));
+            let val = getColor(vp.xToCoord(x), vp.yToCoord(y));
+            if (val == 0) zeroValues++;
 
             data[ind] = val * 255;
             data[ind + 1] = val * 255;
@@ -88,6 +92,9 @@ const drawMandelbrot = (ctx: CanvasRenderingContext2D) => {
             data[ind + 3] = 255;
         }
     }
+    console.log((zeroValues / canvas.width / canvas.height) * (vp.xMax - vp.xMin) * (vp.yMax - vp.yMin)); // This is a VERY rough estimate for the area
+    // of the set; Moreover, this assumes the entirety of the set being visible on the screen. For the Mandelbrot set at 1000 iterations, it yields a
+    // value of ~1.51
     console.log(`time taken: ${performance.now() - startTime}`);
     ctx.putImageData(imageData, 0, 0, 0, 0, window.innerWidth, window.innerHeight);
 };
@@ -135,5 +142,10 @@ const drawMandelbrotEscapeTime = (ctx: CanvasRenderingContext2D) => {
     ctx.putImageData(imageData, 0, 0, 0, 0, window.innerWidth, window.innerHeight);
 };
 
+const drawMandelbrot = (ctx: CanvasRenderingContext2D) => drawSet(ctx, getColorValueMandelbrot);
 //drawMandelbrot(ctx);
-drawMandelbrotEscapeTime(ctx);
+//drawMandelbrotEscapeTime(ctx);
+
+const juliaSet = new JuliaSet({ real: -0.5, imag: 0.5 }, nrIterations);
+const drawJuliaSet = (ctx: CanvasRenderingContext2D, juliaSet: JuliaSet) => drawSet(ctx, juliaSet.getColorValue);
+drawJuliaSet(ctx, juliaSet);

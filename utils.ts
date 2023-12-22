@@ -1,3 +1,8 @@
+export type Complex = {
+    real: number;
+    imag: number;
+};
+
 export const getCanvasElementById = (id: string): HTMLCanvasElement => {
     const canvas = document.getElementById(id);
 
