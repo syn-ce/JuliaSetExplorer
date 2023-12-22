@@ -1,20 +1,62 @@
 import { getCanvasElementById, getCanvasRenderingContext2D } from './utils.js';
 
-document.getElementById('x-offset-in').oninput = (evt) => {
-    let val = (evt.currentTarget as HTMLInputElement).value;
-    document.getElementById('x-offset-out').innerHTML = 'x-off: ' + val;
-    vp.setXOffset(parseFloat(val));
+//document.getElementById('x-offset-in').oninput = (evt) => {
+//    let val = (evt.currentTarget as HTMLInputElement).value;
+//    document.getElementById('x-offset-out').innerHTML = 'x-off: ' + val;
+//    vp.setXOffset(parseFloat(val));
+//    drawMandelbrot(ctx);
+//};
+//
+//document.getElementById('y-offset-in').oninput = (evt) => {
+//    let val = (evt.currentTarget as HTMLInputElement).value;
+//    document.getElementById('y-offset-out').innerHTML = 'y-off: ' + val;
+//    vp.setYOffset(parseFloat(val));
+//    drawMandelbrot(ctx);
+//};
+
+// For a zoom, we transform the entire space
+const zoomPoint = (cx: number, cy: number, z: number, a: number, b: number) => {
+    //let tInvers = [
+    //    [1, 0, cx],
+    //    [0, 1, cy],
+    //    [0, 0, 1],
+    //];
+    //let t = [
+    //    [1, 0, -cx],
+    //    [0, 1, -cy],
+    //    [0, 0, 1],
+    //];
+    //let zoomMatrix = [
+    //    [z, 0, 0],
+    //    [0, z, 0],
+    //    [0, 0, 1],
+    //];
+
+    return { x: a * z - z * cx + cx, y: b * z - z * cy + cy };
+};
+const zoom = (x: number, y: number, z: number) => {
+    // (x,y) - Center of zoom
+    // z - Factor of zoom
+
+    // Transform the defining points of the viewport
+    console.log(`Zooming into ${x}, ${y}! zoooOOOOM`);
+    console.log('old');
+    console.log(vp.xMin);
+    let xMin = zoomPoint(x, y, z, vp.xMin, 0).x;
+    let xMax = zoomPoint(x, y, z, vp.xMax, 0).x;
+    let yMin = zoomPoint(x, y, z, 0, vp.yMin).y;
+    let yMax = zoomPoint(x, y, z, 0, vp.yMax).y;
+    vp.xMin = xMin;
+    vp.xMax = xMax;
+    vp.yMin = yMin;
+    vp.yMax = yMax;
+    console.log('new');
+    console.log('xMin = ' + vp.xMin);
+    console.log('xMax = ' + vp.xMax);
+    console.log('yMin = ' + vp.yMin);
+    console.log('yMax = ' + vp.yMax);
     drawMandelbrot(ctx);
 };
-
-document.getElementById('y-offset-in').oninput = (evt) => {
-    let val = (evt.currentTarget as HTMLInputElement).value;
-    document.getElementById('y-offset-out').innerHTML = 'y-off: ' + val;
-    vp.setYOffset(parseFloat(val));
-    drawMandelbrot(ctx);
-};
-
-console.log('test');
 
 class Pixel {
     x: number;
@@ -43,9 +85,9 @@ class Viewport {
         this.vHeight = vHeight;
         this.xOffset = 0;
         this.yOffset = 0;
-        this.yMin = -1 + this.yOffset;
-        this.yMax = 1 + this.yOffset;
-        this.xMin = -2 + this.xOffset;
+        this.yMin = -1; //+ this.yOffset;
+        this.yMax = 1; //+ this.yOffset;
+        this.xMin = -2; //+ this.xOffset;
         // The third value is calculated based on the aspect ratio of the screen
         this.xMax = (vWidth / vHeight) * (this.yMax - this.yMin) + this.xMin;
     }
@@ -54,7 +96,7 @@ class Viewport {
         return (x * (this.xMax - this.xMin)) / this.vWidth + this.xMin;
     }
     yToCoord(y: number) {
-        return (y * (this.yMax - this.yMin)) / this.vHeight + this.yMin;
+        return (y / this.vHeight) * (this.yMin - this.yMax) + this.yMax; // Flip so that the y-axis grows towards the top
     }
     pixelToCoords(pixel: Pixel) {
         return new Pixel(
@@ -85,6 +127,13 @@ class Viewport {
 const canvas = getCanvasElementById('main-canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+canvas.onclick = (evt) => {
+    console.log(evt.clientX);
+    console.log(evt.clientY);
+    console.log(vp.xToCoord(evt.clientX));
+    console.log(vp.yToCoord(evt.clientY));
+    zoom(vp.xToCoord(evt.clientX), vp.yToCoord(evt.clientY), 0.5);
+};
 
 const ctx = getCanvasRenderingContext2D(canvas);
 
