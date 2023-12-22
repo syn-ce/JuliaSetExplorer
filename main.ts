@@ -24,8 +24,9 @@ class Viewport {
     constructor(vWidth: number, vHeight: number, ctx: CanvasRenderingContext2D) {
         this.vWidth = vWidth;
         this.vHeight = vHeight;
-        this.xMin = -1;
-        this.xMax = 1;
+        let aspectRatio = vWidth / vHeight;
+        this.xMin = -aspectRatio - 0.5;
+        this.xMax = aspectRatio - 0.5;
         this.yMin = -1;
         this.yMax = 1;
     }
@@ -34,7 +35,7 @@ class Viewport {
         return (x * (this.xMax - this.xMin)) / this.vWidth + this.xMin;
     }
     yToCoord(y: number) {
-        return (y * (this.yMax - this.yMin)) / this.vWidth + this.yMin;
+        return (y * (this.yMax - this.yMin)) / this.vHeight + this.yMin;
     }
     pixelToCoords(pixel: Pixel) {
         return new Pixel(
