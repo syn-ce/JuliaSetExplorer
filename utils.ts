@@ -24,3 +24,13 @@ export const getCanvasRenderingContext2D = (canvas: HTMLCanvasElement): CanvasRe
 
     return context;
 };
+
+export const getWebGL2RenderingContext = (canvas: HTMLCanvasElement): WebGL2RenderingContext => {
+    const context = canvas.getContext('webgl2');
+
+    if (context === null) {
+        throw new Error('Something went wrong and so far I did not bother to fix it. Perhaps you are using IE');
+    }
+
+    return context;
+};
