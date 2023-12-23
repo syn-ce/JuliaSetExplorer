@@ -110,7 +110,7 @@ var fragmentShaderText = `#version 300 es
         {
             z = vec2(z.x*z.x - z.y*z.y + c.x, 2.0 * z.x * z.y + c.y);
             if (z.x*z.x + z.y*z.y > 4.0) {
-                myOutputColor= vec4(0.0, xBounds.y / 10.0, 0.0,1.0); 
+                myOutputColor= vec4(1.0, 1.0, 1.0,1.0); 
                 return;
             }
         }
