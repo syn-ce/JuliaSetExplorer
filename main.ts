@@ -144,12 +144,13 @@ var vertexShaderText = `#version 300 es
     }`;
 
 const nrIterations = 100;
-const getFragmentShaderText = (zx: string, zy: string, cx: string, cy: string) => {
+const getFragmentShaderText = (z: string, c: string, additionalVariables: string) => {
     var baseFragmentShaderText = `#version 300 es
     precision highp float;
     in vec3 fragColor;
     out vec4 myOutputColor;
     uniform vec2 screenResolution;
+    ${additionalVariables}
     uniform vec2 xBounds;
     uniform vec2 yBounds;
     void main()
@@ -157,8 +158,8 @@ const getFragmentShaderText = (zx: string, zy: string, cx: string, cy: string) =
         // Convert position on screen to position in coordinate system, as previously done by Viewport
         float x = gl_FragCoord.x / screenResolution.x * (xBounds.y - xBounds.x) + xBounds.x;
         float y = gl_FragCoord.y / screenResolution.y * (yBounds.y - yBounds.x) + yBounds.x;
-        vec2 z = vec2(${zx}, ${zy});
-        vec2 c = vec2(${cx}, ${cy});
+        vec2 z = ${z};
+        vec2 c = ${c};
         for (float i = 0.0; i < ${nrIterations}.0; i++)
         {
             z = vec2(z.x*z.x - z.y*z.y, (z.x+z.x) * z.y) + c;
@@ -235,7 +236,7 @@ const setupGL = (gl: WebGL2RenderingContext, program: WebGLProgram, vp: Viewport
 const vpMandel = new Viewport(canvasMandel.width, canvasMandel.height, ctx);
 const glMandel = getWebGL2RenderingContext(canvasMandel);
 var vertexShaderMandel = createShader(glMandel, glMandel.VERTEX_SHADER, vertexShaderText);
-const fragmentShaderTextMandel = getFragmentShaderText('0.0', '0.0', 'x', 'y');
+const fragmentShaderTextMandel = getFragmentShaderText('vec2(0.0,0.0)', 'vec2(x,y)', '');
 var fragmentShaderMandel = createShader(glMandel, glMandel.FRAGMENT_SHADER, fragmentShaderTextMandel);
 
 var programMandel = createProgram(glMandel, vertexShaderMandel, fragmentShaderMandel);
@@ -248,15 +249,38 @@ var panningObjMandel: PanningObj = {
 };
 
 canvasAddPanZoom(canvasMandel, panningObjMandel, vpMandel, glMandel, programMandel);
+canvasMandel.addEventListener('mousemove', (evt) => {
+    if (panningObjMandel.panningCanvas) return;
+
+    // Draw the juliaSet corresponding to the point hovered
+    let x = vpMandel.xToCoord(evt.clientX);
+    let y = vpMandel.yToCoord(evt.clientY);
+
+    updateJuliaCCoords(x, y);
+});
+
+const primitiveType = glMandel.TRIANGLES;
+const offset = 0;
+const count = 3 * 2;
 
 // Julia-canvas
 const vpJulia = new Viewport(canvasJulia.width, canvasJulia.height, ctx);
 const glJulia = getWebGL2RenderingContext(canvasJulia);
 var vertextShaderJulia = createShader(glJulia, glJulia.VERTEX_SHADER, vertexShaderText);
-const fragmentShaderTextJulia = getFragmentShaderText('x', 'y', '0.3', '0.0');
+const fragmentShaderTextJulia = getFragmentShaderText('vec2(x,y)', 'cCoords', 'uniform vec2 cCoords;');
+
 const fragmentShaderJulia = createShader(glJulia, glJulia.FRAGMENT_SHADER, fragmentShaderTextJulia);
 const programJulia = createProgram(glJulia, vertextShaderJulia, fragmentShaderJulia);
 setupGL(glJulia, programJulia, vpJulia);
+
+const updateJuliaCCoords = (x: number, y: number) => {
+    var cCoordsAttribLocation = glJulia.getUniformLocation(programJulia, 'cCoords');
+    glJulia.uniform2f(cCoordsAttribLocation, x, y);
+
+    glJulia.drawArrays(primitiveType, offset, count);
+};
+
+updateJuliaCCoords(0.0, 0.0);
 
 var panningObjJulia: PanningObj = {
     panningCanvas: false,
@@ -267,9 +291,6 @@ var panningObjJulia: PanningObj = {
 canvasAddPanZoom(canvasJulia, panningObjJulia, vpJulia, glJulia, programJulia);
 
 // Main render loop
-const primitiveType = glMandel.TRIANGLES;
-const offset = 0;
-const count = 3 * 2;
 glMandel.drawArrays(primitiveType, offset, count);
 
 glJulia.drawArrays(primitiveType, offset, count);
