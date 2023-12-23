@@ -33,8 +33,22 @@ const zoom = (x: number, y: number, z: number) => {
     vp.xMax = xMax;
     vp.yMin = yMin;
     vp.yMax = yMax;
+    console.log(yMin);
+    console.log(yMax);
+
+    var xBoundsAttribLocation = gl.getUniformLocation(program, 'xBounds');
+    gl.uniform2f(xBoundsAttribLocation, vp.xMin, vp.xMax);
+    var yBoundsAttribLocation = gl.getUniformLocation(program, 'yBounds');
+    gl.uniform2f(yBoundsAttribLocation, vp.yMin, vp.yMax);
+
+    // Main render loop
+    const primitiveType = gl.TRIANGLES;
+    const offset = 0;
+    const count = 3 * 2;
+    gl.drawArrays(primitiveType, offset, count);
+
     //drawMandelbrot(ctx);
-    drawJuliaSet(ctx, juliaSet);
+    //drawJuliaSet(ctx, juliaSet);
 };
 
 const canvas = getCanvasElementById('main-canvas');
@@ -104,7 +118,7 @@ var fragmentShaderText = `#version 300 es
         vec2 z = vec2(0.0, 0.0); // (x * (this.xMax - this.xMin)) / this.vWidth + this.xMin
         // Convert position on screen to position in coordinate system, as previously done by Viewport
         float x = gl_FragCoord.x / screenResolution.x * (xBounds.y - xBounds.x) + xBounds.x;
-        float y = gl_FragCoord.y / screenResolution.y * (yBounds.x - yBounds.y) + yBounds.y;
+        float y = gl_FragCoord.y / screenResolution.y * (yBounds.y - yBounds.x) + yBounds.x;
         vec2 c = vec2(x, y);
         for (float i = 0.0; i < 10.0; i++)
         {
@@ -170,6 +184,7 @@ gl.bindVertexArray(vao); // Not sure why this is needed, seems to be working fin
 
 var screenResAttribLocation = gl.getUniformLocation(program, 'screenResolution');
 gl.uniform2f(screenResAttribLocation, vp.vWidth, vp.vHeight);
+
 var xBoundsAttribLocation = gl.getUniformLocation(program, 'xBounds');
 gl.uniform2f(xBoundsAttribLocation, vp.xMin, vp.xMax);
 var yBoundsAttribLocation = gl.getUniformLocation(program, 'yBounds');
