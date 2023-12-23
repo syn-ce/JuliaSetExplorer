@@ -42,9 +42,6 @@ const zoom = (x: number, y: number, z: number) => {
     gl.uniform2f(yBoundsAttribLocation, vp.yMin, vp.yMax);
 
     // Main render loop
-    const primitiveType = gl.TRIANGLES;
-    const offset = 0;
-    const count = 3 * 2;
     gl.drawArrays(primitiveType, offset, count);
 
     //drawMandelbrot(ctx);
@@ -54,16 +51,72 @@ const zoom = (x: number, y: number, z: number) => {
 const canvas = getCanvasElementById('main-canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-canvas.onclick = (evt) => {
-    console.log(evt.clientX);
-    console.log(evt.clientY);
-    console.log(vp.xToCoord(evt.clientX));
-    console.log(vp.yToCoord(evt.clientY));
-    let startTime = performance.now();
-    zoom(vp.xToCoord(evt.clientX), vp.yToCoord(evt.clientY), 0.5);
-    console.log('time taken: ');
-    console.log(performance.now() - startTime);
+
+canvas.addEventListener('wheel', (evt) => {
+    let sign = evt.deltaY < 0 ? -1 : 1; // deltaY < 0 -> zoom in
+    let x = vp.xToCoord(evt.clientX);
+    let y = vp.yToCoord(evt.clientY);
+    if (sign < 0) {
+        zoom(x, y, 0.5);
+    } else {
+        zoom(x, y, 1.5);
+    }
+});
+
+var panningObj = {
+    panningCanvas: false,
+    startXInCoords: 0,
+    startYInCoords: 0,
 };
+
+canvas.addEventListener('mousedown', (evt) => {
+    panningObj.panningCanvas = true;
+    panningObj.startXInCoords = vp.xToCoord(evt.clientX);
+    panningObj.startYInCoords = vp.yToCoord(evt.clientY);
+});
+canvas.addEventListener('mouseup', (evt) => {
+    panningObj.panningCanvas = false;
+});
+canvas.addEventListener('mousemove', (evt) => {
+    if (!panningObj.panningCanvas) return;
+
+    // Pan canvas
+    // Get difference to starting point
+    // Transform space from last position
+    let newX = 2 * panningObj.startXInCoords - vp.xToCoord(evt.clientX);
+    let newY = 2 * panningObj.startYInCoords - vp.yToCoord(evt.clientY);
+    let matrix = [
+        [1, 0, -panningObj.startXInCoords + newX],
+        [0, 1, -panningObj.startYInCoords + newY],
+        [0, 0, 1],
+    ];
+    let xMin = vp.xMin - panningObj.startXInCoords + newX;
+    let xMax = vp.xMax - panningObj.startXInCoords + newX;
+    let yMin = vp.yMin - panningObj.startYInCoords + newY;
+    let yMax = vp.yMax - panningObj.startYInCoords + newY;
+
+    vp.xMin = xMin;
+    vp.xMax = xMax;
+    vp.yMin = yMin;
+    vp.yMax = yMax;
+
+    gl.uniform2f(xBoundsAttribLocation, vp.xMin, vp.xMax);
+    gl.uniform2f(yBoundsAttribLocation, vp.yMin, vp.yMax);
+
+    // Main render loop
+    gl.drawArrays(primitiveType, offset, count);
+});
+
+//canvas.onclick = (evt) => {
+//    console.log(evt.clientX);
+//    console.log(evt.clientY);
+//    console.log(vp.xToCoord(evt.clientX));
+//    console.log(vp.yToCoord(evt.clientY));
+//    let startTime = performance.now();
+//    zoom(vp.xToCoord(evt.clientX), vp.yToCoord(evt.clientY), 0.5);
+//    console.log('time taken: ');
+//    console.log(performance.now() - startTime);
+//};
 
 const ctx = null; //getCanvasRenderingContext2D(canvas);
 
