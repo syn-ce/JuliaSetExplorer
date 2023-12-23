@@ -59,7 +59,10 @@ canvas.onclick = (evt) => {
     console.log(evt.clientY);
     console.log(vp.xToCoord(evt.clientX));
     console.log(vp.yToCoord(evt.clientY));
+    let startTime = performance.now();
     zoom(vp.xToCoord(evt.clientX), vp.yToCoord(evt.clientY), 0.5);
+    console.log('time taken: ');
+    console.log(performance.now() - startTime);
 };
 
 const ctx = null; //getCanvasRenderingContext2D(canvas);
@@ -120,19 +123,25 @@ var fragmentShaderText = `#version 300 es
         float x = gl_FragCoord.x / screenResolution.x * (xBounds.y - xBounds.x) + xBounds.x;
         float y = gl_FragCoord.y / screenResolution.y * (yBounds.y - yBounds.x) + yBounds.x;
         vec2 c = vec2(x, y);
-        for (float i = 0.0; i < 10.0; i++)
+        for (float i = 0.0; i < 100.0; i++)
         {
-            z = vec2(z.x*z.x - z.y*z.y + c.x, 2.0 * z.x * z.y + c.y);
+            z = vec2(z.x*z.x - z.y*z.y, 2.0 * z.x * z.y) + c;
             if (z.x*z.x + z.y*z.y > 4.0) {
-                myOutputColor= vec4(1.0, 1.0, 1.0,1.0); 
+                float gray = i + 1. - log(log(sqrt(z.x*z.x + z.y*z.y))) / log(2.0);
+                gray = gray / 100.0;
+                myOutputColor= vec4(gray, gray, gray, 1.0); 
                 return;
             }
         }
     myOutputColor = vec4(0.0, 0.0, 0.0, 1.0);
     }`;
 
+const initialiseMandelbrotShader = () => {};
+
+const vp = new Viewport(canvas.width, canvas.height, ctx);
+
 const gl = getWebGL2RenderingContext(canvas);
-gl.viewport(0, 0, canvas.width, canvas.height);
+gl.viewport(0, 0, vp.vWidth, vp.vHeight);
 gl.clearColor(0.4, 0.75, 0.2, 1.0);
 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -175,9 +184,6 @@ gl.vertexAttribPointer(
     5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
     2 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
 );
-
-const vp = new Viewport(window.innerWidth, window.innerHeight, ctx);
-console.log(vp.xMin);
 
 gl.useProgram(program);
 gl.bindVertexArray(vao); // Not sure why this is needed, seems to be working fine without it
