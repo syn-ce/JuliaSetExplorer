@@ -28,17 +28,4 @@ export class Viewport {
     yToCoord(y: number) {
         return (y / this.vHeight) * (this.yMin - this.yMax) + this.yMax; // Flip so that the y-axis grows towards the top
     }
-
-    setXOffset(xOff: number) {
-        this.xOffset = xOff;
-        this.xMin = -2 + this.xOffset;
-        this.xMax = (this.vWidth / this.vHeight) * (this.yMax - this.yMin) + this.xMin;
-    }
-
-    setYOffset(yOff: number) {
-        this.yOffset = yOff;
-        this.yMin = -1 + this.yOffset;
-        this.yMax = 1 + this.yOffset;
-        this.xMax = (this.vWidth / this.vHeight) * (this.yMax - this.yMin) + this.xMin;
-    }
 }

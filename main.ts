@@ -2,20 +2,6 @@ import { Complex, getCanvasElementById, getCanvasRenderingContext2D, getWebGL2Re
 import { Viewport } from './viewport.js';
 import { JuliaSet } from './JuliaSet.js';
 
-//document.getElementById('x-offset-in').oninput = (evt) => {
-//    let val = (evt.currentTarget as HTMLInputElement).value;
-//    document.getElementById('x-offset-out').innerHTML = 'x-off: ' + val;
-//    vp.setXOffset(parseFloat(val));
-//    drawMandelbrot(ctx);
-//};
-//
-//document.getElementById('y-offset-in').oninput = (evt) => {
-//    let val = (evt.currentTarget as HTMLInputElement).value;
-//    document.getElementById('y-offset-out').innerHTML = 'y-off: ' + val;
-//    vp.setYOffset(parseFloat(val));
-//    drawMandelbrot(ctx);
-//};
-
 // For a zoom, we transform the entire space
 const zoomPoint = (cx: number, cy: number, z: number, a: number, b: number) => {
     return { x: a * z - z * cx + cx, y: b * z - z * cy + cy };
@@ -146,6 +132,7 @@ var vertexShaderText = `#version 300 es
         gl_Position = vec4(vertPosition, 0.0, 1.0);
     }`;
 
+const nrIterations = 100;
 const getFragmentShaderText = (zx: string, zy: string, cx: string, cy: string) => {
     var baseFragmentShaderText = `#version 300 es
     precision highp float;
@@ -161,7 +148,7 @@ const getFragmentShaderText = (zx: string, zy: string, cx: string, cy: string) =
         float y = gl_FragCoord.y / screenResolution.y * (yBounds.y - yBounds.x) + yBounds.x;
         vec2 z = vec2(${zx}, ${zy});
         vec2 c = vec2(${cx}, ${cy});
-        for (float i = 0.0; i < 100.0; i++)
+        for (float i = 0.0; i < ${nrIterations}.0; i++)
         {
             z = vec2(z.x*z.x - z.y*z.y, (z.x+z.x) * z.y) + c;
             if (z.x*z.x + z.y*z.y > 4.0) {
@@ -248,105 +235,3 @@ const primitiveType = glMandel.TRIANGLES;
 const offset = 0;
 const count = 3 * 2;
 glMandel.drawArrays(primitiveType, offset, count);
-
-const nrIterations = 100;
-
-const getColorValueMandelbrot = (x: number, y: number) => {
-    let z = { real: 0, imag: 0 };
-    let c = { real: x, imag: y };
-
-    for (let i = 0; i < nrIterations; i++) {
-        let real = z.real * z.real - z.imag * z.imag + c.real;
-        let imag = (z.imag = 2 * z.real * z.imag + c.imag);
-
-        //let real = z.real ** 3 - 3 * z.real * z.imag * z.imag;
-        //let imag = -(z.imag ** 3) + 3 * z.real * z.real * y;
-        z.real = real;
-        z.imag = imag;
-
-        if (z.real * z.real + z.imag * z.imag > 4) {
-            return 1; // Lies outside
-        }
-    }
-
-    return 0; // Lies inside
-};
-
-const drawSet = (ctx: CanvasRenderingContext2D, getColor: (x: number, y: number) => number) => {
-    var startTime = performance.now();
-    let zeroValues = 0;
-    const imageData = ctx.getImageData(0, 0, window.innerWidth, window.innerHeight);
-    const data = imageData.data;
-    for (let y = 0; y < canvasMandel.height; y++) {
-        for (let x = 0; x < canvasMandel.width; x++) {
-            let ind = (y * canvasMandel.width + x) * 4;
-            let val = getColor(vpMandel.xToCoord(x), vpMandel.yToCoord(y));
-            if (val == 0) zeroValues++;
-
-            data[ind] = val * 255;
-            data[ind + 1] = val * 255;
-            data[ind + 2] = val * 255;
-            data[ind + 3] = 255;
-        }
-    }
-    console.log(
-        (zeroValues / canvasMandel.width / canvasMandel.height) *
-            (vpMandel.xMax - vpMandel.xMin) *
-            (vpMandel.yMax - vpMandel.yMin)
-    ); // This is a VERY rough estimate for the area
-    // of the set; Moreover, this assumes the entirety of the set being visible on the screen. For the Mandelbrot set at 1000 iterations, it yields a
-    // value of ~1.51
-    console.log(`time taken: ${performance.now() - startTime}`);
-    ctx.putImageData(imageData, 0, 0, 0, 0, window.innerWidth, window.innerHeight);
-};
-
-const getEscapeTime = (x: number, y: number) => {
-    let z = { real: 0, imag: 0 };
-    let c = { real: x, imag: y };
-
-    for (let i = 0; i < nrIterations; i++) {
-        let real = z.real * z.real - z.imag * z.imag + c.real;
-        let imag = (z.imag = 2 * z.real * z.imag + c.imag);
-
-        z.real = real;
-        z.imag = imag;
-
-        if (z.real * z.real + z.imag * z.imag > 4) {
-            return i; // Lies outside
-        }
-    }
-
-    return 0;
-};
-
-const drawMandelbrotEscapeTime = (ctx: CanvasRenderingContext2D) => {
-    const values: number[] = [];
-    let max = 0;
-    for (let y = 0; y < canvasMandel.height; y++) {
-        for (let x = 0; x < canvasMandel.width; x++) {
-            let val = getEscapeTime(vpMandel.xToCoord(x), vpMandel.yToCoord(y));
-            values.push(val);
-            if (val > max) max = val;
-        }
-    }
-
-    const imageData = ctx.getImageData(0, 0, window.innerWidth, window.innerHeight);
-    const data = imageData.data;
-    for (let i = 0; i < values.length; i++) {
-        let val = (values[i] / max) * 255;
-        let ind = i * 4;
-        data[ind] = val;
-        data[ind + 1] = val;
-        data[ind + 2] = val;
-        data[ind + 3] = 255;
-    }
-    ctx.putImageData(imageData, 0, 0, 0, 0, window.innerWidth, window.innerHeight);
-};
-
-const drawMandelbrot = (ctx: CanvasRenderingContext2D) => drawSet(ctx, getColorValueMandelbrot);
-//drawMandelbrot(ctx);
-//drawMandelbrotEscapeTime(ctx);
-
-const juliaSet = new JuliaSet({ real: -0.5, imag: 0.5 }, nrIterations);
-const drawJuliaSet = (ctx: CanvasRenderingContext2D, juliaSet: JuliaSet) => drawSet(ctx, juliaSet.getColorValue);
-//drawJuliaSet(ctx, juliaSet);
