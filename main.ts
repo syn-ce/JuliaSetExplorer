@@ -6,87 +6,98 @@ import { JuliaSet } from './JuliaSet.js';
 const zoomPoint = (cx: number, cy: number, z: number, a: number, b: number) => {
     return { x: a * z - z * cx + cx, y: b * z - z * cy + cy };
 };
-const zoom = (x: number, y: number, z: number) => {
+
+// TODO: fix zoom for julia-canvas
+const zoom = (gl: WebGL2RenderingContext, glProgram: WebGLProgram, vp: Viewport, x: number, y: number, z: number) => {
     // (x,y) - Center of zoom
     // z - Factor of zoom
 
     // Transform the defining points of the viewport
-    let xMin = zoomPoint(x, y, z, vpMandel.xMin, 0).x;
-    let xMax = zoomPoint(x, y, z, vpMandel.xMax, 0).x;
-    let yMin = zoomPoint(x, y, z, 0, vpMandel.yMin).y;
-    let yMax = zoomPoint(x, y, z, 0, vpMandel.yMax).y;
-    vpMandel.xMin = xMin;
-    vpMandel.xMax = xMax;
-    vpMandel.yMin = yMin;
-    vpMandel.yMax = yMax;
+    let xMin = zoomPoint(x, y, z, vp.xMin, 0).x;
+    let xMax = zoomPoint(x, y, z, vp.xMax, 0).x;
+    let yMin = zoomPoint(x, y, z, 0, vp.yMin).y;
+    let yMax = zoomPoint(x, y, z, 0, vp.yMax).y;
+    console.log(xMin, xMax, yMin, yMax);
+    vp.xMin = xMin;
+    vp.xMax = xMax;
+    vp.yMin = yMin;
+    vp.yMax = yMax;
     console.log(yMin);
     console.log(yMax);
 
-    var xBoundsAttribLocation = glMandel.getUniformLocation(programMandel, 'xBounds');
-    glMandel.uniform2f(xBoundsAttribLocation, vpMandel.xMin, vpMandel.xMax);
-    var yBoundsAttribLocation = glMandel.getUniformLocation(programMandel, 'yBounds');
-    glMandel.uniform2f(yBoundsAttribLocation, vpMandel.yMin, vpMandel.yMax);
+    setXYRenderingBounds(gl, glProgram, vp);
 
-    // Main render loop
-    glMandel.drawArrays(primitiveType, offset, count);
-
-    //drawMandelbrot(ctx);
-    //drawJuliaSet(ctx, juliaSet);
+    // Render
+    gl.drawArrays(primitiveType, offset, count);
 };
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
-canvasMandel.width = window.innerWidth;
+canvasMandel.width = window.innerWidth / 2;
 canvasMandel.height = window.innerHeight;
 
-canvasMandel.addEventListener('wheel', (evt) => {
-    let sign = evt.deltaY < 0 ? -1 : 1; // deltaY < 0 -> zoom in
-    let x = vpMandel.xToCoord(evt.clientX);
-    let y = vpMandel.yToCoord(evt.clientY);
-    if (sign < 0) {
-        zoom(x, y, 0.5);
-    } else {
-        zoom(x, y, 1.5);
-    }
-});
+const canvasJulia = getCanvasElementById('julia-canvas');
+canvasJulia.width = window.innerWidth / 2;
+canvasJulia.height = window.innerHeight;
 
-var panningObjMandel = {
-    panningCanvas: false,
-    startXInCoords: 0,
-    startYInCoords: 0,
+type PanningObj = {
+    panningCanvas: boolean;
+    startXInCoords: number;
+    startYInCoords: number;
 };
 
-canvasMandel.addEventListener('mousedown', (evt) => {
-    panningObjMandel.panningCanvas = true;
-    panningObjMandel.startXInCoords = vpMandel.xToCoord(evt.clientX);
-    panningObjMandel.startYInCoords = vpMandel.yToCoord(evt.clientY);
-});
-canvasMandel.addEventListener('mouseup', (evt) => {
-    panningObjMandel.panningCanvas = false;
-});
-canvasMandel.addEventListener('mousemove', (evt) => {
-    if (!panningObjMandel.panningCanvas) return;
+const canvasAddPanZoom = (
+    canvas: HTMLCanvasElement,
+    panningObject: PanningObj,
+    vp: Viewport,
+    gl: WebGL2RenderingContext,
+    glProgram: WebGLProgram
+) => {
+    // Zoom
+    canvas.addEventListener('wheel', (evt) => {
+        let sign = evt.deltaY < 0 ? -1 : 1; // deltaY < 0 -> zoom in
+        let x = vp.xToCoord(evt.clientX);
+        let y = vp.yToCoord(evt.clientY);
+        if (sign < 0) {
+            zoom(gl, glProgram, vp, x, y, 0.5);
+        } else {
+            zoom(gl, glProgram, vp, x, y, 1.5);
+        }
+    });
 
-    // Pan canvas
-    // Get difference to starting point
-    // Transform space from last position
-    let newX = 2 * panningObjMandel.startXInCoords - vpMandel.xToCoord(evt.clientX);
-    let newY = 2 * panningObjMandel.startYInCoords - vpMandel.yToCoord(evt.clientY);
+    // Pan
+    canvas.addEventListener('mousedown', (evt) => {
+        panningObject.panningCanvas = true;
+        panningObject.startXInCoords = vp.xToCoord(evt.clientX);
+        panningObject.startYInCoords = vp.yToCoord(evt.clientY);
+    });
+    canvas.addEventListener('mouseup', (evt) => {
+        panningObject.panningCanvas = false;
+    });
+    canvas.addEventListener('mousemove', (evt) => {
+        if (!panningObject.panningCanvas) return;
 
-    let xMin = vpMandel.xMin - panningObjMandel.startXInCoords + newX;
-    let xMax = vpMandel.xMax - panningObjMandel.startXInCoords + newX;
-    let yMin = vpMandel.yMin - panningObjMandel.startYInCoords + newY;
-    let yMax = vpMandel.yMax - panningObjMandel.startYInCoords + newY;
+        // Pan canvas
+        // Get difference to starting point
+        // Transform space from last position
+        let newX = 2 * panningObject.startXInCoords - vp.xToCoord(evt.clientX);
+        let newY = 2 * panningObject.startYInCoords - vp.yToCoord(evt.clientY);
 
-    vpMandel.xMin = xMin;
-    vpMandel.xMax = xMax;
-    vpMandel.yMin = yMin;
-    vpMandel.yMax = yMax;
+        let xMin = vp.xMin - panningObject.startXInCoords + newX;
+        let xMax = vp.xMax - panningObject.startXInCoords + newX;
+        let yMin = vp.yMin - panningObject.startYInCoords + newY;
+        let yMax = vp.yMax - panningObject.startYInCoords + newY;
 
-    setXYRenderingBounds(glMandel, programMandel, vpMandel);
+        vp.xMin = xMin;
+        vp.xMax = xMax;
+        vp.yMin = yMin;
+        vp.yMax = yMax;
 
-    // Main render loop
-    glMandel.drawArrays(primitiveType, offset, count);
-});
+        setXYRenderingBounds(gl, glProgram, vp);
+
+        // Main render loop
+        gl.drawArrays(primitiveType, offset, count);
+    });
+};
 
 const ctx = null; //getCanvasRenderingContext2D(canvas);
 
@@ -220,8 +231,8 @@ const setupGL = (gl: WebGL2RenderingContext, program: WebGLProgram, vp: Viewport
     setXYRenderingBounds(gl, program, vp);
 };
 
+// Mandel-canvas
 const vpMandel = new Viewport(canvasMandel.width, canvasMandel.height, ctx);
-
 const glMandel = getWebGL2RenderingContext(canvasMandel);
 var vertexShaderMandel = createShader(glMandel, glMandel.VERTEX_SHADER, vertexShaderText);
 const fragmentShaderTextMandel = getFragmentShaderText('0.0', '0.0', 'x', 'y');
@@ -230,8 +241,35 @@ var fragmentShaderMandel = createShader(glMandel, glMandel.FRAGMENT_SHADER, frag
 var programMandel = createProgram(glMandel, vertexShaderMandel, fragmentShaderMandel);
 setupGL(glMandel, programMandel, vpMandel);
 
+var panningObjMandel: PanningObj = {
+    panningCanvas: false,
+    startXInCoords: 0,
+    startYInCoords: 0,
+};
+
+canvasAddPanZoom(canvasMandel, panningObjMandel, vpMandel, glMandel, programMandel);
+
+// Julia-canvas
+const vpJulia = new Viewport(canvasJulia.width, canvasJulia.height, ctx);
+const glJulia = getWebGL2RenderingContext(canvasJulia);
+var vertextShaderJulia = createShader(glJulia, glJulia.VERTEX_SHADER, vertexShaderText);
+const fragmentShaderTextJulia = getFragmentShaderText('x', 'y', '0.3', '0.0');
+const fragmentShaderJulia = createShader(glJulia, glJulia.FRAGMENT_SHADER, fragmentShaderTextJulia);
+const programJulia = createProgram(glJulia, vertextShaderJulia, fragmentShaderJulia);
+setupGL(glJulia, programJulia, vpJulia);
+
+var panningObjJulia: PanningObj = {
+    panningCanvas: false,
+    startXInCoords: 0,
+    startYInCoords: 0,
+};
+
+canvasAddPanZoom(canvasJulia, panningObjJulia, vpJulia, glJulia, programJulia);
+
 // Main render loop
 const primitiveType = glMandel.TRIANGLES;
 const offset = 0;
 const count = 3 * 2;
 glMandel.drawArrays(primitiveType, offset, count);
+
+glJulia.drawArrays(primitiveType, offset, count);

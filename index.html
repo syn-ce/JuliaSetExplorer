@@ -13,7 +13,10 @@
         <output id="y-offset-out">y-off:</output>
         -->
 
-        <canvas id="mandel-canvas"></canvas>
+        <div id="canvas-container">
+            <canvas id="mandel-canvas"></canvas>
+            <canvas id="julia-canvas"></canvas>
+        </div>
         <script src="main.js" type="module"></script>
     </body>
     <style>
@@ -21,8 +24,9 @@
         html {
             margin: 0;
         }
-        #mandel-canvas {
-            display: block; /* Remove scroll bars from canvas */
+        #canvas-container {
+            display: flex;
+            flex-direction: row;
         }
     </style>
 </html>

@@ -15,9 +15,9 @@ export class Viewport {
         this.vHeight = vHeight;
         this.xOffset = 0;
         this.yOffset = 0;
-        this.yMin = -1; //+ this.yOffset;
-        this.yMax = 1; //+ this.yOffset;
-        this.xMin = -2; //+ this.xOffset;
+        this.yMin = -2.0; //+ this.yOffset;
+        this.yMax = 2.0; //+ this.yOffset;
+        this.xMin = -2.0; //+ this.xOffset;
         // The third value is calculated based on the aspect ratio of the screen
         this.xMax = (vWidth / vHeight) * (this.yMax - this.yMin) + this.xMin;
     }
