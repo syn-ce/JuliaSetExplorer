@@ -85,11 +85,7 @@ canvas.addEventListener('mousemove', (evt) => {
     // Transform space from last position
     let newX = 2 * panningObj.startXInCoords - vp.xToCoord(evt.clientX);
     let newY = 2 * panningObj.startYInCoords - vp.yToCoord(evt.clientY);
-    let matrix = [
-        [1, 0, -panningObj.startXInCoords + newX],
-        [0, 1, -panningObj.startYInCoords + newY],
-        [0, 0, 1],
-    ];
+
     let xMin = vp.xMin - panningObj.startXInCoords + newX;
     let xMax = vp.xMax - panningObj.startXInCoords + newX;
     let yMin = vp.yMin - panningObj.startYInCoords + newY;
@@ -106,17 +102,6 @@ canvas.addEventListener('mousemove', (evt) => {
     // Main render loop
     gl.drawArrays(primitiveType, offset, count);
 });
-
-//canvas.onclick = (evt) => {
-//    console.log(evt.clientX);
-//    console.log(evt.clientY);
-//    console.log(vp.xToCoord(evt.clientX));
-//    console.log(vp.yToCoord(evt.clientY));
-//    let startTime = performance.now();
-//    zoom(vp.xToCoord(evt.clientX), vp.yToCoord(evt.clientY), 0.5);
-//    console.log('time taken: ');
-//    console.log(performance.now() - startTime);
-//};
 
 const ctx = null; //getCanvasRenderingContext2D(canvas);
 
@@ -152,7 +137,7 @@ const createProgram = (gl: WebGL2RenderingContext, vertexShader: WebGLShader, fr
 };
 
 var vertexShaderText = `#version 300 es
-    precision mediump float;
+    precision highp float;
     in vec2 vertPosition;
     in vec3 vertColor;
     out vec3 fragColor;
@@ -163,7 +148,7 @@ var vertexShaderText = `#version 300 es
     }`;
 
 var fragmentShaderText = `#version 300 es
-    precision mediump float;
+    precision highp float;
     in vec3 fragColor;
     out vec4 myOutputColor;
     uniform vec2 screenResolution;
@@ -171,17 +156,17 @@ var fragmentShaderText = `#version 300 es
     uniform vec2 yBounds;
     void main()
     {
-        vec2 z = vec2(0.0, 0.0); // (x * (this.xMax - this.xMin)) / this.vWidth + this.xMin
+        vec2 z = vec2(0.0, 0.0);
         // Convert position on screen to position in coordinate system, as previously done by Viewport
         float x = gl_FragCoord.x / screenResolution.x * (xBounds.y - xBounds.x) + xBounds.x;
         float y = gl_FragCoord.y / screenResolution.y * (yBounds.y - yBounds.x) + yBounds.x;
         vec2 c = vec2(x, y);
         for (float i = 0.0; i < 100.0; i++)
         {
-            z = vec2(z.x*z.x - z.y*z.y, 2.0 * z.x * z.y) + c;
+            z = vec2(z.x*z.x - z.y*z.y, (z.x+z.x) * z.y) + c;
             if (z.x*z.x + z.y*z.y > 4.0) {
                 float gray = i + 1. - log(log(sqrt(z.x*z.x + z.y*z.y))) / log(2.0);
-                gray = gray / 100.0;
+                gray = gray * 0.01;
                 myOutputColor= vec4(gray, gray, gray, 1.0); 
                 return;
             }
@@ -204,13 +189,13 @@ var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderText);
 var program = createProgram(gl, vertexShader, fragmentShader);
 
 // X, Y,  R, G, B
-var bottomLeft = [
+var triangles = [
     -1.0, 1.0, 1.0, 1.0, 0.0, -1.0, -1.0, 0.8, 0.2, 1.0, 1.0, -1.0, 0.0, 0.4, 0.2, -1.0, 1.0, 1.0, 1.0, 0.0, 1.0, -1.0,
     0.8, 0.2, 1.0, 1.0, 1.0, 0.0, 0.4, 0.2,
 ];
 var triangleVertexBufferObject = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexBufferObject);
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bottomLeft), gl.STATIC_DRAW);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triangles), gl.STATIC_DRAW);
 
 var positionAttribLocation = gl.getAttribLocation(program, 'vertPosition');
 var colorAttribLocation = gl.getAttribLocation(program, 'vertColor');
