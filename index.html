@@ -13,7 +13,20 @@
         <output id="y-offset-out">y-off:</output>
         -->
 
-        <div id="canvas-container">
+        <div style="position: absolute; display: flex;">
+            <div style="display: flex;">
+                <label for="julia-coords" style="color: white;">Julia Coordinates</label>
+                <div id="julia-coords">
+                    <input type="number" id="julia-center-x" style="background: transparent; color: white;">
+                    <input type="number" id="julia-center-y" style="background: transparent; color: white;">
+                </div>
+            </div>
+            <div>
+                <label for="color-picker" style="color: white;">ColorPicker</label>
+                <input type="color" id="color-picker">
+            </div>
+        </div>
+        <iv id="canvas-container">
             <canvas id="mandel-canvas"></canvas>
             <canvas id="julia-canvas"></canvas>
         </div>
