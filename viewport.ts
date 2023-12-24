@@ -1,4 +1,5 @@
 export class Viewport {
+    screenStart: { x: number; y: number };
     vWidth: number;
     vHeight: number;
     xOffset: number;
@@ -10,7 +11,15 @@ export class Viewport {
     yMax: number;
     ctx: CanvasRenderingContext2D;
 
-    constructor(vWidth: number, vHeight: number, ctx: CanvasRenderingContext2D) {
+    constructor(
+        vWidth: number,
+        vHeight: number,
+        screenStartX: number,
+        screenStartY: number,
+        ctx: CanvasRenderingContext2D
+    ) {
+        this.screenStart = { x: screenStartX, y: screenStartY }; // Where on the screen the upper left pixel lies
+        // (used for offsetting when calculating the coordinate out of the pixel position on the screen)
         this.vWidth = vWidth;
         this.vHeight = vHeight;
         this.xOffset = 0;

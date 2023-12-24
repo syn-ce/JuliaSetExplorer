@@ -233,7 +233,7 @@ const setupGL = (gl: WebGL2RenderingContext, program: WebGLProgram, vp: Viewport
 };
 
 // Mandel-canvas
-const vpMandel = new Viewport(canvasMandel.width, canvasMandel.height, ctx);
+const vpMandel = new Viewport(canvasMandel.width, canvasMandel.height, 0, 0, ctx);
 const glMandel = getWebGL2RenderingContext(canvasMandel);
 var vertexShaderMandel = createShader(glMandel, glMandel.VERTEX_SHADER, vertexShaderText);
 const fragmentShaderTextMandel = getFragmentShaderText('vec2(0.0,0.0)', 'vec2(x,y)', '');
@@ -264,7 +264,7 @@ const offset = 0;
 const count = 3 * 2;
 
 // Julia-canvas
-const vpJulia = new Viewport(canvasJulia.width, canvasJulia.height, ctx);
+const vpJulia = new Viewport(canvasJulia.width, canvasJulia.height, vpMandel.vWidth, 0, ctx); // Located to the right of vpMandel
 const glJulia = getWebGL2RenderingContext(canvasJulia);
 var vertextShaderJulia = createShader(glJulia, glJulia.VERTEX_SHADER, vertexShaderText);
 const fragmentShaderTextJulia = getFragmentShaderText('vec2(x,y)', 'cCoords', 'uniform vec2 cCoords;');
