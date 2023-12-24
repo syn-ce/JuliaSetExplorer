@@ -32,9 +32,9 @@ export class Viewport {
     }
 
     xToCoord(x: number) {
-        return (x * (this.xMax - this.xMin)) / this.vWidth + this.xMin;
+        return ((x - this.screenStart.x) * (this.xMax - this.xMin)) / this.vWidth + this.xMin;
     }
     yToCoord(y: number) {
-        return (y / this.vHeight) * (this.yMin - this.yMax) + this.yMax; // Flip so that the y-axis grows towards the top
+        return ((y - this.screenStart.y) / this.vHeight) * (this.yMin - this.yMax) + this.yMax; // Flip so that the y-axis grows towards the top
     }
 }
