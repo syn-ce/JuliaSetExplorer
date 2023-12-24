@@ -38,6 +38,7 @@ canvasMandel.height = window.innerHeight;
 const canvasJulia = getCanvasElementById('julia-canvas');
 canvasJulia.width = window.innerWidth / 2;
 canvasJulia.height = window.innerHeight;
+const juliaCCoords = { x: 0.0, y: 0.0 };
 
 type PanningObj = {
     panningCanvas: boolean;
@@ -269,6 +270,24 @@ window.addEventListener('keydown', (evt) => {
     if (evt.code == 'Space') juliaReactive = !juliaReactive;
 });
 
+function DownloadCanvasAsImage() {
+    let downloadLink = document.createElement('a');
+    downloadLink.setAttribute('download', `JuliaSet_${juliaCCoords.x}_${juliaCCoords.y}.png`);
+    let canvas = <HTMLCanvasElement>document.getElementById('julia-canvas');
+    canvas.toBlob((blob) => {
+        let url = URL.createObjectURL(blob);
+        downloadLink.setAttribute('href', url);
+        downloadLink.click();
+    });
+}
+
+const saveJuliaPNGBtn = document.getElementById('save-julia-png-btn');
+saveJuliaPNGBtn.onclick = (evt) => {
+    updateJuliaCCoords(juliaCCoords.x, juliaCCoords.y); // Needed because the canvas' buffer will be cleared and
+    // therefore empty at this point, which would result in an empty (all transparent/black) image being downloaded
+    DownloadCanvasAsImage();
+};
+
 const primitiveType = glMandel.TRIANGLES;
 const offset = 0;
 const count = 3 * 2;
@@ -284,8 +303,10 @@ const programJulia = createProgram(glJulia, vertextShaderJulia, fragmentShaderJu
 setupGL(glJulia, programJulia, vpJulia);
 
 const updateJuliaCCoords = (x: number, y: number) => {
+    juliaCCoords.x = x;
+    juliaCCoords.y = y;
     var cCoordsAttribLocation = glJulia.getUniformLocation(programJulia, 'cCoords');
-    glJulia.uniform2f(cCoordsAttribLocation, x, y);
+    glJulia.uniform2f(cCoordsAttribLocation, juliaCCoords.x, juliaCCoords.y);
 
     glJulia.drawArrays(primitiveType, offset, count);
 };
