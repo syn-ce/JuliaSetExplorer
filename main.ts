@@ -28,7 +28,7 @@ const zoom = (gl: WebGL2RenderingContext, glProgram: WebGLProgram, vp: Viewport,
     setXYRenderingBounds(gl, glProgram, vp);
 
     // Render
-    gl.drawArrays(primitiveType, offset, count);
+    renderGL(gl);
 };
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
@@ -96,7 +96,7 @@ const canvasAddPanZoom = (
         setXYRenderingBounds(gl, glProgram, vp);
 
         // Main render loop
-        gl.drawArrays(primitiveType, offset, count);
+        renderGL(gl);
     });
 };
 
@@ -151,6 +151,7 @@ const getFragmentShaderText = (z: string, c: string, additionalVariables: string
     in vec3 fragColor;
     out vec4 myOutputColor;
     uniform vec2 screenResolution;
+    uniform float escapeRadius;
     ${additionalVariables}
     uniform vec2 xBounds;
     uniform vec2 yBounds;
@@ -164,7 +165,7 @@ const getFragmentShaderText = (z: string, c: string, additionalVariables: string
         for (float i = 0.0; i < ${nrIterations}.0; i++)
         {
             z = vec2(z.x*z.x - z.y*z.y, (z.x+z.x) * z.y) + c;
-            if (z.x*z.x + z.y*z.y > 4.0) {
+            if (z.x*z.x + z.y*z.y > escapeRadius) {
                 float gray = i + 1. - log(log(sqrt(z.x*z.x + z.y*z.y))) / log(2.0);
                 gray = gray / ${nrIterations + 1}.0;
                 myOutputColor= vec4(gray*0.2, gray*1.2, gray*gray, 1.0); 
@@ -234,7 +235,28 @@ const setupGL = (gl: WebGL2RenderingContext, program: WebGLProgram, vp: Viewport
     gl.uniform2f(screenStartAttribLocation, vp.screenStart.x, vp.screenStart.y);
 
     setXYRenderingBounds(gl, program, vp);
+
+    setEscapeRadius(gl, program, vp, escapeRadius);
 };
+
+var escapeRadius = 4.0;
+const renderGL = (gl: WebGL2RenderingContext) => gl.drawArrays(primitiveType, offset, count);
+
+const setEscapeRadius = (gl: WebGL2RenderingContext, glProgram: WebGLProgram, vp: Viewport, escapeRadius: number) => {
+    var escapeRadiusAttribLocation = gl.getUniformLocation(glProgram, 'escapeRadius');
+    gl.uniform1f(escapeRadiusAttribLocation, escapeRadius);
+};
+
+const escapeRadiusInput = <HTMLInputElement>document.getElementById('escape-radius');
+escapeRadiusInput.value = escapeRadius.toString();
+escapeRadiusInput.addEventListener('input', (evt) => {
+    let val = parseFloat((<HTMLInputElement>evt.currentTarget).value);
+    setEscapeRadius(glMandel, programMandel, vpMandel, val);
+    setEscapeRadius(glJulia, programJulia, vpJulia, val);
+
+    renderGL(glMandel);
+    renderGL(glJulia);
+});
 
 // Mandel-canvas
 const vpMandel = new Viewport(canvasMandel.width, canvasMandel.height, 0, 0, ctx);
@@ -272,7 +294,7 @@ window.addEventListener('keydown', (evt) => {
 
 function DownloadCanvasAsImage() {
     let downloadLink = document.createElement('a');
-    downloadLink.setAttribute('download', `JuliaSet_${juliaCCoords.x}_${juliaCCoords.y}.png`);
+    downloadLink.setAttribute('download', `JuliaSet_${escapeRadius}_${juliaCCoords.x}_${juliaCCoords.y}.png`);
     let canvas = <HTMLCanvasElement>document.getElementById('julia-canvas');
     canvas.toBlob((blob) => {
         let url = URL.createObjectURL(blob);
@@ -308,7 +330,7 @@ const updateJuliaCCoords = (x: number, y: number) => {
     var cCoordsAttribLocation = glJulia.getUniformLocation(programJulia, 'cCoords');
     glJulia.uniform2f(cCoordsAttribLocation, juliaCCoords.x, juliaCCoords.y);
 
-    glJulia.drawArrays(primitiveType, offset, count);
+    renderGL(glJulia);
 };
 
 updateJuliaCCoords(0.0, 0.0);
@@ -322,12 +344,14 @@ var panningObjJulia: PanningObj = {
 canvasAddPanZoom(canvasJulia, panningObjJulia, vpJulia, glJulia, programJulia);
 
 // Main render loop
-glMandel.drawArrays(primitiveType, offset, count);
+renderGL(glMandel);
 
-glJulia.drawArrays(primitiveType, offset, count);
+renderGL(glJulia);
 
 const juliaXCoordInput = <HTMLInputElement>document.getElementById('julia-center-x');
 const juliaYCoordInput = <HTMLInputElement>document.getElementById('julia-center-y');
+juliaXCoordInput.value = juliaCCoords.x.toString();
+juliaYCoordInput.value = juliaCCoords.y.toString();
 
 canvasMandel.addEventListener('mousemove', (evt) => {
     let x = vpMandel.xToCoord(evt.clientX);
