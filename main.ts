@@ -165,8 +165,8 @@ const getFragmentShaderText = (z: string, c: string, additionalVariables: string
             z = vec2(z.x*z.x - z.y*z.y, (z.x+z.x) * z.y) + c;
             if (z.x*z.x + z.y*z.y > 4.0) {
                 float gray = i + 1. - log(log(sqrt(z.x*z.x + z.y*z.y))) / log(2.0);
-                gray = gray * 0.01;
-                myOutputColor= vec4(gray, gray, gray, 1.0); 
+                gray = gray / ${nrIterations + 1}.0;
+                myOutputColor= vec4(gray*0.2, gray*1.2, gray*gray, 1.0); 
                 return;
             }
         }
@@ -229,6 +229,9 @@ const setupGL = (gl: WebGL2RenderingContext, program: WebGLProgram, vp: Viewport
     var screenResAttribLocation = gl.getUniformLocation(program, 'screenResolution');
     gl.uniform2f(screenResAttribLocation, vp.vWidth, vp.vHeight);
 
+    var screenStartAttribLocation = gl.getUniformLocation(program, 'screenStart');
+    gl.uniform2f(screenStartAttribLocation, vp.screenStart.x, vp.screenStart.y);
+
     setXYRenderingBounds(gl, program, vp);
 };
 
@@ -249,14 +252,21 @@ var panningObjMandel: PanningObj = {
 };
 
 canvasAddPanZoom(canvasMandel, panningObjMandel, vpMandel, glMandel, programMandel);
+var juliaReactive = true;
+// Enable reactive julia rendering
 canvasMandel.addEventListener('mousemove', (evt) => {
-    if (panningObjMandel.panningCanvas) return;
+    if (!juliaReactive || panningObjMandel.panningCanvas) return;
 
     // Draw the juliaSet corresponding to the point hovered
     let x = vpMandel.xToCoord(evt.clientX);
     let y = vpMandel.yToCoord(evt.clientY);
 
     updateJuliaCCoords(x, y);
+});
+
+// Enable pausing of reactive julia rendering
+window.addEventListener('keydown', (evt) => {
+    if (evt.code == 'Space') juliaReactive = !juliaReactive;
 });
 
 const primitiveType = glMandel.TRIANGLES;
@@ -294,3 +304,13 @@ canvasAddPanZoom(canvasJulia, panningObjJulia, vpJulia, glJulia, programJulia);
 glMandel.drawArrays(primitiveType, offset, count);
 
 glJulia.drawArrays(primitiveType, offset, count);
+
+const juliaXCoordInput = <HTMLInputElement>document.getElementById('julia-center-x');
+const juliaYCoordInput = <HTMLInputElement>document.getElementById('julia-center-y');
+
+canvasMandel.addEventListener('mousemove', (evt) => {
+    let x = vpMandel.xToCoord(evt.clientX);
+    let y = vpMandel.yToCoord(evt.clientY);
+    juliaXCoordInput.value = x.toString().substring(0, 6 + (x < 0 ? 1 : 0));
+    juliaYCoordInput.value = y.toString().substring(0, 6 + (y < 0 ? 1 : 0));
+});
