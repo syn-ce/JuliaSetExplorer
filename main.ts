@@ -353,6 +353,18 @@ const juliaYCoordInput = <HTMLInputElement>document.getElementById('julia-center
 juliaXCoordInput.value = juliaCCoords.x.toString();
 juliaYCoordInput.value = juliaCCoords.y.toString();
 
+juliaXCoordInput.addEventListener('input', (evt) => {
+    juliaCCoords.x = parseFloat((<HTMLInputElement>evt.currentTarget).value);
+    updateJuliaCCoords(juliaCCoords.x, juliaCCoords.y);
+    renderGL(glJulia);
+});
+
+juliaYCoordInput.addEventListener('input', (evt) => {
+    juliaCCoords.y = parseFloat((<HTMLInputElement>evt.currentTarget).value);
+    updateJuliaCCoords(juliaCCoords.x, juliaCCoords.y);
+    renderGL(glJulia);
+});
+
 canvasMandel.addEventListener('mousemove', (evt) => {
     let x = vpMandel.xToCoord(evt.clientX);
     let y = vpMandel.yToCoord(evt.clientY);
