@@ -324,9 +324,33 @@ const fragmentShaderJulia = createShader(glJulia, glJulia.FRAGMENT_SHADER, fragm
 const programJulia = createProgram(glJulia, vertextShaderJulia, fragmentShaderJulia);
 setupGL(glJulia, programJulia, vpJulia);
 
+const juliaCenterIndicatorWrapper = document.getElementById('julia-center-coords-indicator-wrapper');
+const juliaCenterIndicator = document.getElementById('julia-center-coords-indicator');
+const juliaCenterIndicatorDimensions = { x: 5, y: 5 };
+juliaCenterIndicatorWrapper.style.width = juliaCenterIndicatorDimensions.x.toString();
+juliaCenterIndicatorWrapper.style.height = juliaCenterIndicatorDimensions.y.toString();
+
 const updateJuliaCCoords = (x: number, y: number) => {
     juliaCCoords.x = x;
     juliaCCoords.y = y;
+    let xIndicator = vpMandel.coordToX(juliaCCoords.x) - juliaCenterIndicatorDimensions.x / 2;
+    let yIndicator = vpMandel.coordToY(juliaCCoords.y) - juliaCenterIndicatorDimensions.y / 2;
+
+    if (
+        // Check if indicator is out of bounds (hide overflow)
+        xIndicator - juliaCenterIndicatorDimensions.x < vpMandel.screenStart.x ||
+        xIndicator + juliaCenterIndicatorDimensions.x > vpMandel.screenStart.x + vpMandel.vWidth ||
+        yIndicator - juliaCenterIndicatorDimensions.y < vpMandel.screenStart.y ||
+        yIndicator + juliaCenterIndicatorDimensions.y > vpMandel.screenStart.y + vpMandel.vHeight
+    ) {
+        juliaCenterIndicatorWrapper.style.display = 'none';
+    } else {
+        juliaCenterIndicatorWrapper.style.display = '';
+    }
+
+    juliaCenterIndicatorWrapper.style.left = xIndicator.toString();
+    juliaCenterIndicatorWrapper.style.top = yIndicator.toString();
+
     var cCoordsAttribLocation = glJulia.getUniformLocation(programJulia, 'cCoords');
     glJulia.uniform2f(cCoordsAttribLocation, juliaCCoords.x, juliaCCoords.y);
 

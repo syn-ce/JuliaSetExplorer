@@ -37,4 +37,10 @@ export class Viewport {
     yToCoord(y: number) {
         return ((y - this.screenStart.y) / this.vHeight) * (this.yMin - this.yMax) + this.yMax; // Flip so that the y-axis grows towards the top
     }
+    coordToX(x: number) {
+        return ((x - this.xMin) / (this.xMax - this.xMin)) * this.vWidth + this.screenStart.x;
+    }
+    coordToY(y: number) {
+        return ((y - this.yMax) / (this.yMin - this.yMax)) * this.vHeight + this.screenStart.y;
+    }
 }
