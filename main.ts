@@ -152,6 +152,7 @@ const getFragmentShaderText = (z: string, c: string, additionalVariables: string
     out vec4 myOutputColor;
     uniform vec2 screenResolution;
     uniform float escapeRadius;
+    uniform vec3 rgbColor;
     ${additionalVariables}
     uniform vec2 xBounds;
     uniform vec2 yBounds;
@@ -166,9 +167,9 @@ const getFragmentShaderText = (z: string, c: string, additionalVariables: string
         {
             z = vec2(z.x*z.x - z.y*z.y, (z.x+z.x) * z.y) + c;
             if (z.x*z.x + z.y*z.y > escapeRadius) {
-                float gray = i + 1. - log(log(sqrt(z.x*z.x + z.y*z.y))) / log(2.0);
-                gray = gray / ${nrIterations + 1}.0;
-                myOutputColor= vec4(gray*0.2, gray*1.2, gray*gray, 1.0); 
+                float colVal = i + 1. - log(log(sqrt(z.x*z.x + z.y*z.y))) / log(2.0);
+                colVal = colVal / ${nrIterations + 1}.0;
+                myOutputColor= vec4(rgbColor * colVal, 1.0);
                 return;
             }
         }
@@ -237,6 +238,8 @@ const setupGL = (gl: WebGL2RenderingContext, program: WebGLProgram, vp: Viewport
     setXYRenderingBounds(gl, program, vp);
 
     setEscapeRadius(gl, program, vp, escapeRadius);
+
+    setColorValues(gl, program, vp, { r: 1.0, g: 1.0, b: 1.0 });
 };
 
 var escapeRadius = 4.0;
@@ -257,6 +260,13 @@ escapeRadiusInput.addEventListener('input', (evt) => {
     renderGL(glMandel);
     renderGL(glJulia);
 });
+
+type RGBColor = { r: number; g: number; b: number };
+
+const setColorValues = (gl: WebGL2RenderingContext, glProgram: WebGLProgram, vp: Viewport, rgbColor: RGBColor) => {
+    var rgbColorAttribLocation = gl.getUniformLocation(glProgram, 'rgbColor');
+    gl.uniform3f(rgbColorAttribLocation, rgbColor.r, rgbColor.g, rgbColor.b);
+};
 
 // Mandel-canvas
 const vpMandel = new Viewport(canvasMandel.width, canvasMandel.height, 0, 0, ctx);
@@ -476,3 +486,24 @@ const randomMovementBtn = document.getElementById('random-movement');
 randomMovementBtn.onclick = (evt) => {
     randomJuliaMovement();
 };
+
+const hexToRGB = (hexColor: string) => {
+    const r = parseInt(hexColor.substring(1, 1 + 2), 16);
+    const g = parseInt(hexColor.substring(3, 3 + 2), 16);
+    const b = parseInt(hexColor.substring(5, 5 + 2), 16);
+    return { r: r, g: g, b: b };
+};
+
+const normalizeRGB = (rgbColor: RGBColor) => {
+    return { r: rgbColor.r / 255, g: rgbColor.g / 255, b: rgbColor.b / 255 };
+};
+
+const colorPicker = document.getElementById('color-picker');
+colorPicker.addEventListener('input', (evt) => {
+    let rgbColor = normalizeRGB(hexToRGB((<HTMLInputElement>evt.currentTarget).value));
+    setColorValues(glMandel, programMandel, vpMandel, rgbColor);
+    setColorValues(glJulia, programJulia, vpJulia, rgbColor);
+
+    renderGL(glMandel);
+    renderGL(glJulia);
+});
