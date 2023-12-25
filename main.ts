@@ -330,9 +330,12 @@ const juliaCenterIndicatorDimensions = { x: 5, y: 5 };
 juliaCenterIndicatorWrapper.style.width = juliaCenterIndicatorDimensions.x.toString();
 juliaCenterIndicatorWrapper.style.height = juliaCenterIndicatorDimensions.y.toString();
 
-const updateJuliaCCoords = (x: number, y: number) => {
-    juliaCCoords.x = x;
-    juliaCCoords.y = y;
+const updateCenterIndicator = (
+    vpMandel: Viewport,
+    juliaCCoords: { x: number; y: number },
+    juliaCenterIndicatorWrapper: HTMLElement,
+    juliaCenterIndicatorDimensions: { x: number; y: number }
+) => {
     let xIndicator = vpMandel.coordToX(juliaCCoords.x) - juliaCenterIndicatorDimensions.x / 2;
     let yIndicator = vpMandel.coordToY(juliaCCoords.y) - juliaCenterIndicatorDimensions.y / 2;
 
@@ -350,6 +353,13 @@ const updateJuliaCCoords = (x: number, y: number) => {
 
     juliaCenterIndicatorWrapper.style.left = xIndicator.toString();
     juliaCenterIndicatorWrapper.style.top = yIndicator.toString();
+};
+
+const updateJuliaCCoords = (x: number, y: number) => {
+    juliaCCoords.x = x;
+    juliaCCoords.y = y;
+
+    updateCenterIndicator(vpMandel, juliaCCoords, juliaCenterIndicatorWrapper, juliaCenterIndicatorDimensions);
 
     var cCoordsAttribLocation = glJulia.getUniformLocation(programJulia, 'cCoords');
     glJulia.uniform2f(cCoordsAttribLocation, juliaCCoords.x, juliaCCoords.y);
@@ -371,6 +381,18 @@ canvasAddPanZoom(canvasJulia, panningObjJulia, vpJulia, glJulia, programJulia);
 renderGL(glMandel);
 
 renderGL(glJulia);
+
+// Update center indicator when panning
+canvasMandel.addEventListener('mousemove', (evt) => {
+    if (!panningObjMandel.panningCanvas) return;
+
+    updateCenterIndicator(vpMandel, juliaCCoords, juliaCenterIndicatorWrapper, juliaCenterIndicatorDimensions);
+});
+
+// Update center indicator when zooming
+canvasMandel.addEventListener('wheel', (evt) => {
+    updateCenterIndicator(vpMandel, juliaCCoords, juliaCenterIndicatorWrapper, juliaCenterIndicatorDimensions);
+});
 
 const juliaXCoordInput = <HTMLInputElement>document.getElementById('julia-center-x');
 const juliaYCoordInput = <HTMLInputElement>document.getElementById('julia-center-y');
