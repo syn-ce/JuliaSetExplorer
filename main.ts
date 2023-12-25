@@ -275,10 +275,10 @@ var panningObjMandel: PanningObj = {
 };
 
 canvasAddPanZoom(canvasMandel, panningObjMandel, vpMandel, glMandel, programMandel);
-var juliaReactive = true;
+var juliaFollowsMouse = true;
 // Enable reactive julia rendering
 canvasMandel.addEventListener('mousemove', (evt) => {
-    if (!juliaReactive || panningObjMandel.panningCanvas) return;
+    if (!juliaFollowsMouse || panningObjMandel.panningCanvas) return;
 
     // Draw the juliaSet corresponding to the point hovered
     let x = vpMandel.xToCoord(evt.clientX);
@@ -289,7 +289,7 @@ canvasMandel.addEventListener('mousemove', (evt) => {
 
 // Enable pausing of reactive julia rendering
 window.addEventListener('keydown', (evt) => {
-    if (evt.code == 'Space') juliaReactive = !juliaReactive;
+    if (evt.code == 'Space') juliaFollowsMouse = !juliaFollowsMouse;
 });
 
 function DownloadCanvasAsImage() {
@@ -411,11 +411,16 @@ juliaYCoordInput.addEventListener('input', (evt) => {
     renderGL(glJulia);
 });
 
+const updateJuliaCenterDisplayValues = (x: number, y: number) => {
+    juliaXCoordInput.value = x.toString().substring(0, 6 + (x < 0 ? 1 : 0));
+    juliaYCoordInput.value = y.toString().substring(0, 6 + (y < 0 ? 1 : 0));
+};
+
 canvasMandel.addEventListener('mousemove', (evt) => {
     let x = vpMandel.xToCoord(evt.clientX);
     let y = vpMandel.yToCoord(evt.clientY);
-    juliaXCoordInput.value = x.toString().substring(0, 6 + (x < 0 ? 1 : 0));
-    juliaYCoordInput.value = y.toString().substring(0, 6 + (y < 0 ? 1 : 0));
+    if (!juliaFollowsMouse) return;
+    updateJuliaCenterDisplayValues(x, y);
 });
 
 const distance = (point1: { x: number; y: number }, point2: { x: number; y: number }) => {
@@ -451,6 +456,8 @@ function randomJuliaMovement() {
 
             juliaCCoords.x += velocity.x;
             juliaCCoords.y += velocity.y;
+
+            updateJuliaCenterDisplayValues(juliaCCoords.x, juliaCCoords.y);
 
             updateJuliaCCoords(juliaCCoords.x, juliaCCoords.y);
             renderGL(glJulia);
