@@ -53,6 +53,20 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
     ${additionalVariables}
     uniform vec2 xBounds;
     uniform vec2 yBounds;
+    uniform float exponent;
+    
+    vec2 complexExp(float x, float y) // c = x + i*y
+    {
+        float arg = atan(y,x);
+        float r = sqrt(x*x + y*y);
+        //float real = pow((c.x*c+x + c.y*c.y),exponent.x * 0.5)*exp(-exponent.y*arg);
+        // De Moivre's formula
+        float r_n = pow(r,exponent);
+        float real = r_n * cos(exponent*arg);
+        float imag = r_n * sin(exponent*arg);
+        return vec2(real, imag);
+    }
+
     void main()
     {
         // Convert position on screen to position in coordinate system, as previously done by Viewport
@@ -62,7 +76,7 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
         vec2 c = ${c};
         for (float i = 0.0; i < ${nrIterations}.0; i++)
         {
-            z = vec2(z.x*z.x - z.y*z.y, (z.x+z.x) * z.y) + c;
+            z = complexExp(z.x, z.y) + c;
             if (z.x*z.x + z.y*z.y > escapeRadius) {
                 float colVal = i + 1. - log(log(sqrt(z.x*z.x + z.y*z.y))) / log(2.0);
                 colVal = colVal / ${nrIterations + 1}.0;

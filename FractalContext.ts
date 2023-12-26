@@ -13,6 +13,7 @@ export class FractalContext {
     count: number;
     escapeRadius: number;
     nrIterations: number;
+    exponent: number;
     panningObject: PanningObj;
 
     constructor(
@@ -30,6 +31,7 @@ export class FractalContext {
 
         this.vp = new Viewport(canvas.width, canvas.height, screenStart.x, screenStart.y, null);
         this.escapeRadius = 4.0;
+        this.exponent = 2.0;
 
         this.gl = getWebGL2RenderingContext(canvas);
         var vertexShader = createShader(this.gl, this.gl.VERTEX_SHADER, vertexShaderText);
@@ -64,13 +66,12 @@ export class FractalContext {
         this.gl.uniform2f(xBoundsAttribLocation, this.vp.xMin, this.vp.xMax);
         var yBoundsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'yBounds');
         this.gl.uniform2f(yBoundsAttribLocation, this.vp.yMin, this.vp.yMax);
+    };
 
-        const setXYRenderingBoundsEvent = new CustomEvent('setXYRenderingBounds', {
-            detail: { yMin: yMin, yMax: yMax, xMin: xMin },
-        });
-
-        this.canvas.dispatchEvent(setXYRenderingBoundsEvent);
-        console.log('dispatched');
+    setExponent = (exponent: number) => {
+        this.exponent = exponent;
+        var exponentAttribLocation = this.gl.getUniformLocation(this.glProgram, 'exponent');
+        this.gl.uniform1f(exponentAttribLocation, this.exponent);
     };
 
     render = () => {
@@ -129,6 +130,8 @@ export class FractalContext {
         this.setXYRenderingBounds(-2.0, 2.0, -2.0);
 
         this.setEscapeRadius(4.0);
+
+        this.setExponent(2.0);
 
         this.setColorValues({ r: 1.0, g: 1.0, b: 1.0 });
 
@@ -215,6 +218,17 @@ export class FractalContext {
         escapeRadiusInput.addEventListener('input', (evt) => {
             let val = parseFloat((<HTMLInputElement>evt.currentTarget).value);
             this.setEscapeRadius(val);
+            this.render();
+        });
+    };
+
+    addExponentInputListener = (exponentInputId: string) => {
+        const exponentInput = <HTMLInputElement>document.getElementById(exponentInputId);
+        exponentInput.value = this.exponent.toString();
+
+        exponentInput.addEventListener('input', (evt) => {
+            let val = parseFloat((<HTMLInputElement>evt.currentTarget).value);
+            this.setExponent(val);
             this.render();
         });
     };

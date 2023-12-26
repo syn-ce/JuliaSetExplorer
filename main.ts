@@ -25,6 +25,7 @@ const mandelContext = new MandelContext(
 
 mandelContext.addColorInputListener('color-picker');
 mandelContext.addEscapeRadiusInputListener('escape-radius');
+mandelContext.addExponentInputListener('exponent');
 
 const fragmentShaderTextJulia = getFragmentShaderText(nrIterations, 'vec2(x,y)', 'cCoords', 'uniform vec2 cCoords;');
 const juliaContext = new JuliaContext(
@@ -40,6 +41,7 @@ const juliaContext = new JuliaContext(
 
 juliaContext.addColorInputListener('color-picker');
 juliaContext.addEscapeRadiusInputListener('escape-radius');
+juliaContext.addExponentInputListener('exponent');
 
 addSaveJuliaPNGBtnListeners(juliaContext);
 
