@@ -52,7 +52,6 @@ export class MandelContext extends FractalContext {
         this.currentIndicatorPos = juliaCCoords;
         let xIndicator = this.vp.coordToX(juliaCCoords.x) - this.juliaCenterIndicatorDimensions.x / 2;
         let yIndicator = this.vp.coordToY(juliaCCoords.y) - this.juliaCenterIndicatorDimensions.y / 2;
-        console.log(xIndicator, yIndicator);
 
         if (
             // Check if indicator is out of bounds (hide overflow)

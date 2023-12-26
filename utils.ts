@@ -50,3 +50,7 @@ export const getWebGL2RenderingContext = (canvas: HTMLCanvasElement): WebGL2Rend
 export const zoomPoint = (cx: number, cy: number, z: number, a: number, b: number) => {
     return { x: a * z - z * cx + cx, y: b * z - z * cy + cy };
 };
+
+export const distance = (point1: { x: number; y: number }, point2: { x: number; y: number }) => {
+    return Math.sqrt((point2.x - point1.x) ** 2 + (point2.y - point1.y) ** 2);
+};
