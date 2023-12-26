@@ -1,6 +1,17 @@
+import { FractalContext } from './FractalContext';
+import { Viewport } from './viewport';
+
 export type Complex = {
     real: number;
     imag: number;
+};
+
+export type RGBColor = { r: number; g: number; b: number };
+
+export type PanningObj = {
+    panningCanvas: boolean;
+    startXInCoords: number;
+    startYInCoords: number;
 };
 
 export const getCanvasElementById = (id: string): HTMLCanvasElement => {
@@ -33,4 +44,9 @@ export const getWebGL2RenderingContext = (canvas: HTMLCanvasElement): WebGL2Rend
     }
 
     return context;
+};
+
+// For a zoom, we transform the entire space
+export const zoomPoint = (cx: number, cy: number, z: number, a: number, b: number) => {
+    return { x: a * z - z * cx + cx, y: b * z - z * cy + cy };
 };
