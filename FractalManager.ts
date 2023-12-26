@@ -1,7 +1,7 @@
 import { FractalContext } from './FractalContext.js';
 import { JuliaContext } from './JuliaContext.js';
 import { MandelContext } from './MandelContext.js';
-import { distance } from './utils.js';
+import { distance, limitLength } from './utils.js';
 
 // Enables the communication between two FractalContexts via events
 export class FractalManager {
@@ -89,13 +89,13 @@ export class FractalManager {
 
     stopRandomMovement() {
         this.movingRandom = false;
-        console.log('stopped');
     }
 
     randomMovement() {
+        if (this.movingRandom) return; // Already moving rdm
         this.movingRandom = true;
         let xMin = -1.5;
-        let xMax = 1.1;
+        let xMax = 0.5;
         let yMin = -1.0;
         let yMax = 1.0;
         // Move to this destination for a couply of frames
@@ -105,6 +105,8 @@ export class FractalManager {
         let velocity = { x: 0.0, y: 0.0 };
 
         const delay = 1000 / 60;
+        const maxSpeed = 0.5 / 60;
+
         var nextDestination: { x: number; y: number };
 
         let currentCenter = this.juliaContext.juliaCCoords;
@@ -124,6 +126,8 @@ export class FractalManager {
                 acceleration = { x: nextDestination.x - currentCenter.x, y: nextDestination.y - currentCenter.y };
                 velocity.x += acceleration.x * 0.0001;
                 velocity.y += acceleration.y * 0.0001;
+
+                limitLength(velocity, maxSpeed);
 
                 currentCenter.x += velocity.x;
                 currentCenter.y += velocity.y;

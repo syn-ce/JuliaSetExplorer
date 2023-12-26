@@ -54,3 +54,11 @@ export const zoomPoint = (cx: number, cy: number, z: number, a: number, b: numbe
 export const distance = (point1: { x: number; y: number }, point2: { x: number; y: number }) => {
     return Math.sqrt((point2.x - point1.x) ** 2 + (point2.y - point1.y) ** 2);
 };
+
+export const limitLength = (vec2d: { x: number; y: number }, limit: number) => {
+    if (vec2d.x ** 2 + vec2d.y ** 2 > limit * limit) {
+        let length = Math.sqrt(vec2d.x ** 2 + vec2d.y ** 2);
+        vec2d.x = (vec2d.x / length) * limit;
+        vec2d.y = (vec2d.y / length) * limit;
+    }
+};

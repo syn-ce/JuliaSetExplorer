@@ -54,7 +54,12 @@ const fractalManager = new FractalManager(mandelContext, juliaContext, 'julia-ce
 
 const randomMovementBtn = document.getElementById('random-movement');
 randomMovementBtn.onclick = (evt) => {
-    fractalManager.randomMovement();
+    if (!fractalManager.movingRandom) {
+        fractalManager.randomMovement();
+        console.log(evt);
+    } else {
+        fractalManager.stopRandomMovement();
+    }
 };
 
 setTimeout(() => fractalManager.stopRandomMovement(), 1000);
