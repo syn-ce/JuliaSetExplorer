@@ -205,14 +205,19 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
         vec2 c_real = c.xy;
         vec2 c_imag = c.zw;
 
-        float nrIterations = 20.0;
+        float nrIterations = 10.0;
 
         for (float i = 0.0; i < nrIterations; i++)
         {
-            z_real = df64_add(df64_diff(df64_mult(z_real,z_real), df64_mult(z_imag,z_imag)), c_real);
+            vec2 z_real_new = df64_add(df64_diff(df64_mult(z_real,z_real), df64_mult(z_imag,z_imag)), c_real);
             z_imag = df64_add(df64_mult(df64_add(z_real,z_real),z_imag), c_imag);
+            z_real = z_real_new;
             //z = vec2(z.x*z.x - z.y*z.y, (z.x+z.x) * z.y) + c; 
 
+            if (i == 1.0) {
+                myOutputColor = vec4(z_imag.x,0.0,0.0,1.0);
+                return;
+            }
 
             if (df64_lt(vec2(escapeRadius,0.0), df64_add(df64_mult(z_real,z_real), df64_mult(z_imag,z_imag))))
             {
