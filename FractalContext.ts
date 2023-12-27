@@ -137,11 +137,11 @@ export class FractalContext {
 
         this.setXYRenderingBounds(-2.0, 2.0, -2.0);
 
-        this.setEscapeRadius(4.0);
+        this.setEscapeRadius(100.0);
 
         this.setExponent(2.0);
 
-        this.setColorValues({ r: 1.0, g: 1.0, b: 1.0 });
+        this.setColorValues({ r: 0.0, g: 0.1, b: 0.1 });
 
         this.addPanZoomToCanvas();
     };

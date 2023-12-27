@@ -232,8 +232,12 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
                 //colVal = colVal / ${nrIterations + 1}.0;
                 //myOutputColor= vec4(rgbColor * colVal, 1.0);
 
-                float colVal = i / ${nrIterations + 1}.0;
-                myOutputColor = vec4(rgbColor * colVal, 1.0);
+                float k = 2.0;
+                float ismoothed = i - log2(log2(z_real.x*z_real.x+z_imag.x*z_imag.x)) + 4.0; // https://iquilezles.org/articles/msetsmooth
+                vec3 tmp = 0.5 + 0.5*sin( 3.0 + ismoothed*0.055 + ismoothed*rgbColor);
+
+                //float colVal = i / ${nrIterations + 1}.0;
+                myOutputColor = vec4(tmp, 1.0);
                 return;
             }
         }
