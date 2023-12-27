@@ -1,4 +1,4 @@
-import { createProgram, createShader, getFragmentShaderText, vertexShaderText } from './glutils.js';
+import { createProgram, createShader, getFragmentShaderText, split, vertexShaderText } from './glutils.js';
 import { hexToRGB, normalizeRGB } from './ui.js';
 import { PanningObj, RGBColor, getWebGL2RenderingContext, zoomPoint } from './utils.js';
 import { Viewport } from './viewport.js';
@@ -62,10 +62,18 @@ export class FractalContext {
         this.vp.updateXYBounds(yMin, yMax, xMin);
         console.log(this.vp);
 
-        var xBoundsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'xBounds');
-        this.gl.uniform2f(xBoundsAttribLocation, this.vp.xMin, this.vp.xMax);
-        var yBoundsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'yBounds');
-        this.gl.uniform2f(yBoundsAttribLocation, this.vp.yMin, this.vp.yMax);
+        var xBoundsMinAttribLocation = this.gl.getUniformLocation(this.glProgram, 'xBoundsMin');
+        var xBoundsMaxAttribLocation = this.gl.getUniformLocation(this.glProgram, 'xBoundsMax');
+        var yBoundsMinAttribLocation = this.gl.getUniformLocation(this.glProgram, 'yBoundsMin');
+        var yBoundsMaxAttribLocation = this.gl.getUniformLocation(this.glProgram, 'yBoundsMax');
+        let xBoundMin = split(this.vp.xMin);
+        let xBoundMax = split(this.vp.xMax);
+        let yBoundMin = split(this.vp.yMin);
+        let yBoundMax = split(this.vp.yMax);
+        this.gl.uniform2f(xBoundsMinAttribLocation, xBoundMin[0], xBoundMax[1]);
+        this.gl.uniform2f(xBoundsMaxAttribLocation, xBoundMax[0], xBoundMax[1]);
+        this.gl.uniform2f(yBoundsMinAttribLocation, yBoundMin[0], yBoundMin[1]);
+        this.gl.uniform2f(yBoundsMaxAttribLocation, yBoundMax[0], yBoundMax[1]);
     };
 
     setExponent = (exponent: number) => {

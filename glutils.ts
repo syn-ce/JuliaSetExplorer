@@ -51,8 +51,10 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
     uniform float escapeRadius;
     uniform vec3 rgbColor;
     ${additionalVariables}
-    uniform vec2 xBounds;
-    uniform vec2 yBounds;
+    uniform vec2 xBoundsMin;
+    uniform vec2 xBoundsMax;
+    uniform vec2 yBoundsMin;
+    uniform vec2 yBoundsMax;
     uniform float exponent;
 
     vec2 twoSum(float a, float b)
@@ -193,9 +195,21 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
         //float x = gl_FragCoord.x / screenResolution.x * (xBounds.y - xBounds.x) + xBounds.x;
         //float y = gl_FragCoord.y / screenResolution.y * (yBounds.y - yBounds.x) + yBounds.x;
 
+//        vec2 xBoundsMinSplit = split(xBounds.x);
+//        vec2 xBoundsMaxSplit = split(xBounds.y);
+//        vec2 yBoundsMinSplit = split(yBounds.x);
+//        vec2 yBoundsMaxSplit = split(yBounds.y);
 
-        vec2 xs = df64_add(df64_mult(df64_div(vec2(gl_FragCoord.x,0.0), vec2(screenResolution.x,0.0)), df64_diff(vec2(xBounds.y,0.0), vec2(xBounds.x,0.0))), vec2(xBounds.x,0.0));
-        vec2 ys = df64_add(df64_mult(df64_div(vec2(gl_FragCoord.y,0.0), vec2(screenResolution.y,0.0)), df64_diff(vec2(yBounds.y,0.0), vec2(yBounds.x,0.0))), vec2(yBounds.x,0.0));
+        vec2 screenResXSplit = split(screenResolution.x);
+        vec2 screenResYSplit = split(screenResolution.y);
+
+        vec2 glFragCoordXSplit = split(gl_FragCoord.x);
+        vec2 glFragCoordYSplit = split(gl_FragCoord.y);
+
+        vec2 xs = df64_add(df64_mult(df64_div(glFragCoordXSplit, screenResXSplit), df64_diff(xBoundsMax, xBoundsMin)), xBoundsMin);
+        vec2 ys = df64_add(df64_mult(df64_div(glFragCoordYSplit, screenResYSplit), df64_diff(yBoundsMax, yBoundsMin)), yBoundsMin);
+
+        vec2 escapeRadiusSplit = split(escapeRadius);
         
         vec4 z = ${z};
         vec2 z_real = z.xy;
@@ -212,7 +226,7 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
             z_real = z_real_new;
             //z = vec2(z.x*z.x - z.y*z.y, (z.x+z.x) * z.y) + c; 
 
-            if (df64_lt(vec2(escapeRadius,0.0), df64_add(df64_mult(z_real,z_real), df64_mult(z_imag,z_imag))))
+            if (df64_lt(escapeRadiusSplit, df64_add(df64_mult(z_real,z_real), df64_mult(z_imag,z_imag))))
             {
                 //float colVal = i + 1. - log(log(sqrt(z.x*z.x + z.y*z.y))) / log(2.0);
                 //colVal = colVal / ${nrIterations + 1}.0;
@@ -226,8 +240,6 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
         myOutputColor = vec4(0.0, 0.0, 0.0, 1.0);
     }
 
-
-    
     vec2 complexExp(float x, float y) // c = x + i*y
     {
         float arg = atan(y,x);
@@ -261,4 +273,12 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
 //    }`;
 
     return baseFragmentShaderText;
+};
+
+export const split = (a: number) => {
+    const splitter = (1 << 29) + 1;
+    const t = a * splitter;
+    const t_hi = t - (t - a);
+    const t_lo = a - t_hi;
+    return [t_hi, t_lo];
 };
