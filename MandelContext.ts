@@ -20,6 +20,7 @@ export class MandelContext extends FractalContext {
         this.addCenterIndicator();
         this.currentIndicatorPos = { x: 0.0, y: 0.0 };
         this.indicatorFollowsMouse = true;
+        this.setXYRenderingBounds(-1.5, 1.5, -2.1);
     }
 
     addCenterIndicator() {

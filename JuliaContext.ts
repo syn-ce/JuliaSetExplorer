@@ -16,6 +16,7 @@ export class JuliaContext extends FractalContext {
     ) {
         super(canvas, width, height, screenStart, fragmentShaderText);
         this.juliaCCoords = { x: 0.0, y: 0.0 };
+        this.setCenterTo(0, 0);
     }
 
     updateJuliaCCoords = (x: number, y: number) => {

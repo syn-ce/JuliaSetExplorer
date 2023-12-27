@@ -240,4 +240,19 @@ export class FractalContext {
             this.render();
         });
     };
+
+    setCenterTo = (cX: number, cY: number) => {
+        // Keep current zoom level, simply adjust the bounds
+        let currCX = (this.vp.xMin + this.vp.xMax) * 0.5;
+        let currCY = (this.vp.yMin + this.vp.yMax) * 0.5;
+
+        let xOffset = cX - currCX;
+        let yOffset = cY - currCY;
+
+        let newXMin = this.vp.xMin + xOffset;
+        let newYMin = this.vp.yMin + yOffset;
+        let newYMax = this.vp.yMax + yOffset;
+
+        this.setXYRenderingBounds(newYMin, newYMax, newXMin);
+    };
 }
