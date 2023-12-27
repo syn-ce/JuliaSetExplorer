@@ -10,7 +10,7 @@ const canvasMandel = getCanvasElementById('mandel-canvas');
 
 const canvasJulia = getCanvasElementById('julia-canvas');
 
-const nrIterations = 10;
+const nrIterations = 100;
 
 export var escapeRadius = 4.0;
 

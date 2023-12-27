@@ -190,8 +190,8 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
     void main()
     {
         // Convert position on screen to position in coordinate system, as previously done by Viewport
-        float x = gl_FragCoord.x / screenResolution.x * (xBounds.y - xBounds.x) + xBounds.x;
-        float y = gl_FragCoord.y / screenResolution.y * (yBounds.y - yBounds.x) + yBounds.x;
+        //float x = gl_FragCoord.x / screenResolution.x * (xBounds.y - xBounds.x) + xBounds.x;
+        //float y = gl_FragCoord.y / screenResolution.y * (yBounds.y - yBounds.x) + yBounds.x;
 
 
         vec2 xs = df64_add(df64_mult(df64_div(vec2(gl_FragCoord.x,0.0), vec2(screenResolution.x,0.0)), df64_diff(vec2(xBounds.y,0.0), vec2(xBounds.x,0.0))), vec2(xBounds.x,0.0));
@@ -205,19 +205,12 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
         vec2 c_real = c.xy;
         vec2 c_imag = c.zw;
 
-        float nrIterations = 10.0;
-
-        for (float i = 0.0; i < nrIterations; i++)
+        for (float i = 0.0; i < ${nrIterations + 1}.0; i++)
         {
             vec2 z_real_new = df64_add(df64_diff(df64_mult(z_real,z_real), df64_mult(z_imag,z_imag)), c_real);
             z_imag = df64_add(df64_mult(df64_add(z_real,z_real),z_imag), c_imag);
             z_real = z_real_new;
             //z = vec2(z.x*z.x - z.y*z.y, (z.x+z.x) * z.y) + c; 
-
-            if (i == 1.0) {
-                myOutputColor = vec4(z_imag.x,0.0,0.0,1.0);
-                return;
-            }
 
             if (df64_lt(vec2(escapeRadius,0.0), df64_add(df64_mult(z_real,z_real), df64_mult(z_imag,z_imag))))
             {
@@ -225,7 +218,7 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
                 //colVal = colVal / ${nrIterations + 1}.0;
                 //myOutputColor= vec4(rgbColor * colVal, 1.0);
 
-                float colVal = i / (nrIterations+1.0);
+                float colVal = i / ${nrIterations + 1}.0;
                 myOutputColor = vec4(rgbColor * colVal, 1.0);
                 return;
             }
