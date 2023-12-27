@@ -101,7 +101,7 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
 
     vec2 df64_diff(vec2 a, vec2 b)
     {
-        return df64_add(a, b);
+        return df64_add(a, -b);
     }
 
     vec2 split(float a)
@@ -140,12 +140,12 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
 
     vec2 df64_div(vec2 b, vec2 a)
     {
-        vec2 xn = vec2(1.0/a.x, 0.0);
-        vec2 yn = vec2(b.x*xn.x, 0.0);
-        float diff = (df64_diff(b, df64_mult(a,yn))).x;
-        vec2 prod = twoProd(xn.x, diff);
-
-        return df64_add(yn, prod);
+        float xn = 1.0/a.x;
+        float yn = b.x*xn;
+        vec2 diff = df64_diff(b, df64_mult(a,vec2(yn,0.0)));
+        vec2 prod = df64_mult(vec2(xn,0.0), diff);
+    
+        return df64_add(vec2(yn,0.0), prod); 
     }
 
     vec2 df64_sqrt(vec2 a)
@@ -192,12 +192,20 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
         // Convert position on screen to position in coordinate system, as previously done by Viewport
         float x = gl_FragCoord.x / screenResolution.x * (xBounds.y - xBounds.x) + xBounds.x;
         float y = gl_FragCoord.y / screenResolution.y * (yBounds.y - yBounds.x) + yBounds.x;
-        vec2 z = ${z};
-        vec2 z_real = vec2(z.x, 0.0);
-        vec2 z_imag = vec2(z.y, 0.0);
-        vec2 c = ${c};
-        vec2 c_real = vec2(c.x, 0.0);
-        vec2 c_imag = vec2(c.y, 0.0);
+
+
+        vec2 xs = df64_add(df64_mult(df64_div(vec2(gl_FragCoord.x,0.0), vec2(screenResolution.x,0.0)), df64_diff(vec2(xBounds.y,0.0), vec2(xBounds.x,0.0))), vec2(xBounds.x,0.0));
+        vec2 ys = df64_add(df64_mult(df64_div(vec2(gl_FragCoord.y,0.0), vec2(screenResolution.y,0.0)), df64_diff(vec2(yBounds.y,0.0), vec2(yBounds.x,0.0))), vec2(yBounds.x,0.0));
+        
+        vec4 z = ${z};
+        vec2 z_real = z.xy;
+        vec2 z_imag = z.zw;
+        vec4 c = ${c};
+
+        vec2 c_real = c.xy;
+        vec2 c_imag = c.zw;
+
+
         for (float i = 0.0; i < ${nrIterations}.0; i++)
         {
             z_real = df64_add(df64_diff(df64_mult(z_real,z_real), df64_mult(z_imag,z_imag)), c_real);
@@ -231,25 +239,25 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
         return vec2(real, imag);
     }
 
-    void main2()
-    {
-        // Convert position on screen to position in coordinate system, as previously done by Viewport
-        float x = gl_FragCoord.x / screenResolution.x * (xBounds.y - xBounds.x) + xBounds.x;
-        float y = gl_FragCoord.y / screenResolution.y * (yBounds.y - yBounds.x) + yBounds.x;
-        vec2 z = ${z};
-        vec2 c = ${c};
-        for (float i = 0.0; i < ${nrIterations}.0; i++)
-        {
-            z = complexExp(z.x, z.y) + c;
-            if (z.x*z.x + z.y*z.y > escapeRadius) {
-                float colVal = i + 1. - log(log(sqrt(z.x*z.x + z.y*z.y))) / log(2.0);
-                colVal = colVal / ${nrIterations + 1}.0;
-                myOutputColor= vec4(rgbColor * colVal, 1.0);
-                return;
-            }
-        }
-    myOutputColor = vec4(0.0, 0.0, 0.0, 1.0);
-    }`;
+//    void main2()
+//    {
+//        // Convert position on screen to position in coordinate system, as previously done by Viewport
+//        float x = gl_FragCoord.x / screenResolution.x * (xBounds.y - xBounds.x) + xBounds.x;
+//        float y = gl_FragCoord.y / screenResolution.y * (yBounds.y - yBounds.x) + yBounds.x;
+//        vec2 z = ${z};
+//        vec2 c = ${c};
+//        for (float i = 0.0; i < ${nrIterations}.0; i++)
+//        {
+//            z = complexExp(z.x, z.y) + c;
+//            if (z.x*z.x + z.y*z.y > escapeRadius) {
+//                float colVal = i + 1. - log(log(sqrt(z.x*z.x + z.y*z.y))) / log(2.0);
+//                colVal = colVal / ${nrIterations + 1}.0;
+//                myOutputColor= vec4(rgbColor * colVal, 1.0);
+//                return;
+//            }
+//        }
+//    myOutputColor = vec4(0.0, 0.0, 0.0, 1.0);
+//    }`;
 
     return baseFragmentShaderText;
 };
