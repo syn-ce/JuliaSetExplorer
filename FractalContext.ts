@@ -14,6 +14,7 @@ export class FractalContext {
     escapeRadius: number;
     nrIterations: number;
     exponent: number;
+    rgbColor: RGBColor;
     panningObject: PanningObj;
 
     constructor(
@@ -48,8 +49,9 @@ export class FractalContext {
     }
 
     setColorValues = (rgbColor: RGBColor) => {
+        this.rgbColor = rgbColor;
         var rgbColorAttribLocation = this.gl.getUniformLocation(this.glProgram, 'rgbColor');
-        this.gl.uniform3f(rgbColorAttribLocation, rgbColor.r, rgbColor.g, rgbColor.b);
+        this.gl.uniform3f(rgbColorAttribLocation, this.rgbColor.r, this.rgbColor.g, this.rgbColor.b);
     };
 
     setEscapeRadius = (escapeRadius: number) => {

@@ -43,7 +43,15 @@ juliaContext.addColorInputListener('color-picker');
 juliaContext.addEscapeRadiusInputListener('escape-radius');
 juliaContext.addExponentInputListener('exponent');
 
-addSaveJuliaPNGBtnListeners(juliaContext);
+const juliaDrawingContext = new JuliaContext(
+    <HTMLCanvasElement>document.createElement('canvas'),
+    3092,
+    1920,
+    { x: 0, y: 0 },
+    fragmentShaderTextJulia
+);
+
+addSaveJuliaPNGBtnListeners(juliaContext, juliaDrawingContext, 'save-julia-png-btn');
 
 juliaContext.updateJuliaCCoords(0.0, 0.0);
 

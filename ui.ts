@@ -4,23 +4,41 @@ import { RGBColor } from './utils.js';
 import { Viewport } from './viewport.js';
 
 // Download button
-const DownloadCanvasAsImage = (escapeRadius: number, juliaCCoords: { x: number; y: number }) => {
+const DownloadCanvasAsImage = (juliaContext: JuliaContext, juliaDrawingContext: JuliaContext) => {
     let downloadLink = document.createElement('a');
-    downloadLink.setAttribute('download', `JuliaSet_${escapeRadius}_${juliaCCoords.x}_${juliaCCoords.y}.png`);
-    let canvas = <HTMLCanvasElement>document.getElementById('julia-canvas');
-    canvas.toBlob((blob) => {
+    downloadLink.setAttribute(
+        'download',
+        `JuliaSet_${juliaContext.rgbColor.r}_${juliaContext.rgbColor.g}_${juliaContext.rgbColor.b}_${juliaContext.exponent}_${juliaContext.escapeRadius}_${juliaContext.juliaCCoords.x}_${juliaContext.juliaCCoords.y}.png`
+    );
+
+    // Copy the values of the original juliaContext
+    juliaDrawingContext.setEscapeRadius(juliaContext.escapeRadius);
+    juliaDrawingContext.setXYRenderingBounds(juliaContext.vp.yMin, juliaContext.vp.yMax, juliaContext.vp.xMin);
+    juliaDrawingContext.setColorValues(juliaContext.rgbColor);
+    juliaDrawingContext.setExponent(juliaContext.exponent);
+    juliaDrawingContext.updateJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y);
+    // Need to set center explicitly because of the different canvas sizes and the way the bounds are set
+    let xCenterJuliaContext = (juliaContext.vp.xMax + juliaContext.vp.xMin) * 0.5;
+    let yCenterJuliaContext = (juliaContext.vp.yMax + juliaContext.vp.yMin) * 0.5;
+    juliaDrawingContext.setCenterTo(xCenterJuliaContext, yCenterJuliaContext);
+
+    juliaDrawingContext.render();
+
+    juliaDrawingContext.canvas.toBlob((blob) => {
         let url = URL.createObjectURL(blob);
         downloadLink.setAttribute('href', url);
         downloadLink.click();
     });
 };
 
-export const addSaveJuliaPNGBtnListeners = (juliaContext: JuliaContext) => {
-    const saveJuliaPNGBtn = document.getElementById('save-julia-png-btn');
+export const addSaveJuliaPNGBtnListeners = (
+    juliaContext: JuliaContext,
+    juliaDrawingContext: JuliaContext,
+    btnId: string
+) => {
+    const saveJuliaPNGBtn = document.getElementById(btnId);
     saveJuliaPNGBtn.onclick = (evt) => {
-        juliaContext.updateJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y); // Needed because the canvas' buffer will be cleared and
-        // therefore empty at this point, which would result in an empty (all transparent/black) image being downloaded
-        DownloadCanvasAsImage(juliaContext.escapeRadius, juliaContext.juliaCCoords);
+        DownloadCanvasAsImage(juliaContext, juliaDrawingContext);
     };
 };
 
