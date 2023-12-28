@@ -1,0 +1,89 @@
+body,
+html {
+    margin: 0;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+#header {
+    position: absolute;
+    display: flex;
+    width: 100%;
+}
+#julia-center-coords-indicator {
+    fill: white;
+    mix-blend-mode: difference;
+}
+#controls {
+    display: flex;
+}
+
+#canvas-container {
+    display: flex;
+    flex-direction: row;
+}
+
+label {
+    font-size: 1.5em;
+    color: white;
+}
+
+input[type='number'] {
+    background: transparent;
+    color: white;
+    box-shadow: none;
+    border: none;
+    width: 14ch;
+    font-size: 1.2em;
+}
+
+button {
+    font-size: 1.3em;
+    height: 70%;
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-left: 2em;
+}
+
+.input-wrapper > * {
+    margin: auto;
+    padding: 3px;
+}
+
+#julia-center-coords-indicator-wrapper {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 5px;
+    height: 5px;
+    pointer-events: none;
+}
+
+#escape-radius {
+    width: 8ch;
+}
+
+#exponent {
+    width: 5ch;
+}
+
+/* Color input */
+input[type='color'] {
+    -webkit-appearance: none;
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+input[type='color']::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+input[type='color']::-webkit-color-swatch {
+    border: none;
+}
+
+#save-julia-wrapper {
+    margin-left: auto;
+    margin-right: 1em;
+}

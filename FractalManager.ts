@@ -40,8 +40,8 @@ export class FractalManager {
     updateJuliaCenterDisplayValues = () => {
         let x = this.juliaContext.juliaCCoords.x;
         let y = this.juliaContext.juliaCCoords.y;
-        this.juliaXCoordInput.value = x.toString().substring(0, 6 + (x < 0 ? 1 : 0));
-        this.juliaYCoordInput.value = y.toString().substring(0, 6 + (y < 0 ? 1 : 0));
+        this.juliaXCoordInput.value = x.toString().substring(0, 10 + (x < 0 ? 1 : 0));
+        this.juliaYCoordInput.value = y.toString().substring(0, 10 + (y < 0 ? 1 : 0));
     };
 
     addJuliaCoordInputListeners = (juliaCenterXInputId: string, juliaCenterYInputId: string) => {
