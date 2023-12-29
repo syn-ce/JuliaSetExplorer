@@ -14,7 +14,7 @@ const nrIterations = 300;
 
 export var escapeRadius = 4.0;
 
-const fragmentShaderTextMandel = getFragmentShaderText(nrIterations, 'vec4(0.0,0.0,0.0,0.0)', 'vec4(xs,ys)', '');
+const fragmentShaderTextMandel = getFragmentShaderText(nrIterations, 'vec2(0.0,0.0)', 'vec2(x,y)', '');
 const mandelContext = new MandelContext(
     canvasMandel,
     window.innerWidth / 2,
@@ -27,7 +27,7 @@ mandelContext.addColorInputListener('color-picker');
 mandelContext.addEscapeRadiusInputListener('escape-radius');
 mandelContext.addExponentInputListener('exponent');
 
-const fragmentShaderTextJulia = getFragmentShaderText(nrIterations, 'vec4(xs,ys)', 'cCoords', 'uniform vec4 cCoords;');
+const fragmentShaderTextJulia = getFragmentShaderText(nrIterations, 'vec2(x,y)', 'cCoords', 'uniform vec2 cCoords;');
 const juliaContext = new JuliaContext(
     canvasJulia,
     window.innerWidth / 2,

@@ -1,5 +1,4 @@
 import { FractalContext } from './FractalContext.js';
-import { split } from './glutils.js';
 
 export class JuliaContext extends FractalContext {
     juliaCCoords: { x: number; y: number };
@@ -24,10 +23,8 @@ export class JuliaContext extends FractalContext {
         this.juliaCCoords.y = y;
 
         var cCoordsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'cCoords');
-        let splitX = split(this.juliaCCoords.x);
-        let splitY = split(this.juliaCCoords.y);
 
-        this.gl.uniform4f(cCoordsAttribLocation, splitX[0], splitX[1], splitY[0], splitY[1]);
+        this.gl.uniform2f(cCoordsAttribLocation, this.juliaCCoords.x, this.juliaCCoords.y);
 
         this.render();
     };
