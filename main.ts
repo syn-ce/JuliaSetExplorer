@@ -1,5 +1,10 @@
 import { getCanvasElementById } from './utils.js';
-import { addResizing, addSaveJuliaPNGBtnListeners } from './ui.js';
+import {
+    addDownloadBtnFunctionality,
+    addDownloadResInputListener,
+    addResizing,
+    addSaveJuliaPNGBtnListeners,
+} from './ui.js';
 import { getFragmentShaderText } from './glutils.js';
 import { JuliaContext } from './JuliaContext.js';
 import { MandelContext } from './MandelContext.js';
@@ -57,9 +62,11 @@ const juliaPreviewContext = new JuliaContext(
 const juliaPreviewCanvasBorder = <HTMLElement>document.getElementById('download-preview-canvas-border');
 
 addResizing(juliaPreviewCanvasBorder, juliaPreviewContext);
+addDownloadResInputListener(juliaPreviewContext);
+
+addDownloadBtnFunctionality(juliaDrawingContext, juliaPreviewContext);
 
 juliaPreviewContext.setCenterTo(0, 0);
-console.log(structuredClone(juliaPreviewContext.vp));
 
 addSaveJuliaPNGBtnListeners(juliaContext, juliaDrawingContext, 'save-julia-png-btn', juliaPreviewContext);
 

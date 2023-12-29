@@ -94,14 +94,56 @@ input[type='color']::-webkit-color-swatch {
     position: absolute;
     width: 100%;
     height: 100%;
+    backdrop-filter: blur(10px);
 }
 
 #download-preview-canvas-border {
     position: absolute;
     display: block;
-    border: 10px solid black;
+    border: 10px solid #333;
 }
 
 #download-preview-canvas {
     display: block;
+}
+
+#download-resolution-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+
+#download-julia-btn {
+    position: absolute;
+    height: 30px;
+    bottom: 20px;
+    left: 50%;
+    translate: -50%;
+}
+
+.close {
+    position: absolute;
+    right: 32px;
+    top: 32px;
+    width: 32px;
+    height: 32px;
+    opacity: 0.7;
+}
+.close:hover {
+    opacity: 1;
+}
+.close:before,
+.close:after {
+    position: absolute;
+    left: 15px;
+    content: ' ';
+    height: 33px;
+    width: 3px;
+    background-color: #333;
+}
+.close:before {
+    transform: rotate(45deg);
+}
+.close:after {
+    transform: rotate(-45deg);
 }
