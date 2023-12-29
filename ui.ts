@@ -1,39 +1,25 @@
-import { FractalContext } from './FractalContext.js';
 import { JuliaContext } from './JuliaContext.js';
 import { RGBColor } from './utils.js';
-import { Viewport } from './viewport.js';
 
 const previewDownloadImage = (juliaContext: JuliaContext, juliaPreviewContext: JuliaContext, borderId?: string) => {
     const juliaPreviewContainer = document.getElementById('download-preview-container');
     juliaPreviewContainer.style.display = 'block';
-    const previewCanvas = juliaPreviewContext.canvas;
-    //    previewCanvas.width = window.innerWidth / 2;
-    //    previewCanvas.height = window.innerHeight / 2;
-    //
-    //previewCanvas.style.left = `${window.innerWidth / 4}px`;
-    //previewCanvas.style.top = `${window.innerHeight / 4}px`;
-    //
 
     const borderElement = document.getElementById(borderId);
 
-    juliaPreviewContext.render();
     if (borderId) moveCanvas(juliaPreviewContext, borderElement);
-    console.log('wtf');
 
-    setTimeout(() => {
-        resizeCanvas(
-            juliaPreviewContext,
-            window.innerWidth / 4 - 100,
-            (window.innerWidth / 4) * 3,
-            window.innerHeight / 4 + 100,
-            (window.innerHeight / 4) * 3
-        );
-        if (borderId) moveCanvas(juliaPreviewContext, borderElement);
+    juliaPreviewContext.setEscapeRadius(juliaContext.escapeRadius);
+    juliaPreviewContext.setXYRenderingBounds(juliaContext.vp.yMin, juliaContext.vp.yMax, juliaContext.vp.xMin);
+    juliaPreviewContext.setColorValues(juliaContext.rgbColor);
+    juliaPreviewContext.setExponent(juliaContext.exponent);
+    // Need to set center explicitly because of the different canvas sizes and the way the bounds are set
+    let xCenterJuliaContext2 = (juliaContext.vp.xMax + juliaContext.vp.xMin) * 0.5;
+    let yCenterJuliaContext2 = (juliaContext.vp.yMax + juliaContext.vp.yMin) * 0.5;
+    juliaPreviewContext.setCenterTo(xCenterJuliaContext2, yCenterJuliaContext2);
+    juliaPreviewContext.updateJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y);
 
-        juliaPreviewContext.render();
-        console.log('done');
-        addResizing(<HTMLElement>document.getElementById(borderId), juliaPreviewContext);
-    }, 1000);
+    juliaPreviewContext.render();
 };
 
 const resizeCanvas = (
@@ -74,7 +60,7 @@ const moveCanvas = (juliaContext: JuliaContext, borderElement: HTMLElement) => {
     borderElement.style.top = `${juliaContext.vp.screenStart.y.toString()}px`;
 };
 
-const addResizing = (canvasBorder: HTMLElement, juliaContext: JuliaContext) => {
+export const addResizing = (canvasBorder: HTMLElement, juliaContext: JuliaContext) => {
     let threshold = 10;
     let isDragging = false;
     const draggingDirections = { left: false, right: false, top: false, bottom: false };

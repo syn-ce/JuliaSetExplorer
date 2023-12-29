@@ -1,6 +1,5 @@
-import { PanningObj, distance, getCanvasElementById } from './utils.js';
-import { addSaveJuliaPNGBtnListeners } from './ui.js';
-import { FractalContext } from './FractalContext.js';
+import { getCanvasElementById } from './utils.js';
+import { addResizing, addSaveJuliaPNGBtnListeners } from './ui.js';
 import { getFragmentShaderText } from './glutils.js';
 import { JuliaContext } from './JuliaContext.js';
 import { MandelContext } from './MandelContext.js';
@@ -54,6 +53,10 @@ const juliaPreviewContext = new JuliaContext(
     { x: window.innerWidth / 4, y: window.innerHeight / 4 },
     fragmentShaderTextJulia
 );
+
+const juliaPreviewCanvasBorder = <HTMLElement>document.getElementById('download-preview-canvas-border');
+
+addResizing(juliaPreviewCanvasBorder, juliaPreviewContext);
 
 juliaPreviewContext.setCenterTo(0, 0);
 console.log(structuredClone(juliaPreviewContext.vp));

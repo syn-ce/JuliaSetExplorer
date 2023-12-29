@@ -1,4 +1,3 @@
-import { FractalContext } from './FractalContext.js';
 import { JuliaContext } from './JuliaContext.js';
 import { MandelContext } from './MandelContext.js';
 import { distance, limitLength } from './utils.js';

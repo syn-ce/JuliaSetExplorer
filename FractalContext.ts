@@ -1,4 +1,4 @@
-import { createProgram, createShader, getFragmentShaderText, vertexShaderText } from './glutils.js';
+import { createProgram, createShader, vertexShaderText } from './glutils.js';
 import { hexToRGB, normalizeRGB } from './ui.js';
 import { PanningObj, RGBColor, getWebGL2RenderingContext, zoomPoint } from './utils.js';
 import { Viewport } from './viewport.js';
