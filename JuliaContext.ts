@@ -26,8 +26,7 @@ export class JuliaContext extends FractalContext {
         var cCoordsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'cCoords');
         let splitX = split(this.juliaCCoords.x);
         let splitY = split(this.juliaCCoords.y);
-        console.log(splitX);
-        console.log(splitY);
+
         this.gl.uniform4f(cCoordsAttribLocation, splitX[0], splitX[1], splitY[0], splitY[1]);
 
         this.render();

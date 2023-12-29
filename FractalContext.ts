@@ -16,6 +16,9 @@ export class FractalContext {
     exponent: number;
     rgbColor: RGBColor;
     panningObject: PanningObj;
+    timeOfLastRender: number;
+    FPS: number;
+    frameInterval: number;
 
     constructor(
         canvas: HTMLCanvasElement,
@@ -45,6 +48,10 @@ export class FractalContext {
         this.offset = 0;
         this.count = 3 * 2;
 
+        this.timeOfLastRender = 0.0;
+        this.FPS = 120;
+        this.frameInterval = 1000 / this.FPS;
+
         this.setupGL();
     }
 
@@ -62,7 +69,6 @@ export class FractalContext {
 
     setXYRenderingBounds = (yMin: number, yMax: number, xMin: number) => {
         this.vp.updateXYBounds(yMin, yMax, xMin);
-        console.log(this.vp);
 
         var xBoundsMinAttribLocation = this.gl.getUniformLocation(this.glProgram, 'xBoundsMin');
         var xBoundsMaxAttribLocation = this.gl.getUniformLocation(this.glProgram, 'xBoundsMax');
@@ -85,7 +91,11 @@ export class FractalContext {
     };
 
     render = () => {
-        this.gl.drawArrays(this.primitiveType, this.offset, this.count);
+        // Could be improved by "Queuing" the render
+        if (Date.now() - this.timeOfLastRender >= this.frameInterval) {
+            this.timeOfLastRender = Date.now();
+            this.gl.drawArrays(this.primitiveType, this.offset, this.count);
+        }
     };
 
     setupGL = () => {
@@ -174,9 +184,9 @@ export class FractalContext {
             let x = vp.xToCoord(evt.clientX);
             let y = vp.yToCoord(evt.clientY);
             if (sign < 0) {
-                this.zoom(x, y, 0.5);
+                this.zoom(x, y, 0.625);
             } else {
-                this.zoom(x, y, 1.5);
+                this.zoom(x, y, 1.6);
             }
         });
 
