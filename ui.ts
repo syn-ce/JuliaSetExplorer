@@ -16,13 +16,11 @@ const DownloadCanvasAsImage = (juliaContext: JuliaContext, juliaDrawingContext: 
     juliaDrawingContext.setXYRenderingBounds(juliaContext.vp.yMin, juliaContext.vp.yMax, juliaContext.vp.xMin);
     juliaDrawingContext.setColorValues(juliaContext.rgbColor);
     juliaDrawingContext.setExponent(juliaContext.exponent);
-    juliaDrawingContext.updateJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y);
     // Need to set center explicitly because of the different canvas sizes and the way the bounds are set
     let xCenterJuliaContext = (juliaContext.vp.xMax + juliaContext.vp.xMin) * 0.5;
     let yCenterJuliaContext = (juliaContext.vp.yMax + juliaContext.vp.yMin) * 0.5;
     juliaDrawingContext.setCenterTo(xCenterJuliaContext, yCenterJuliaContext);
-
-    juliaDrawingContext.render();
+    juliaDrawingContext.updateJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y);
 
     juliaDrawingContext.canvas.toBlob((blob) => {
         let url = URL.createObjectURL(blob);
