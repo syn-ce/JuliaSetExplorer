@@ -31,6 +31,12 @@ export class Viewport {
         this.xMax = (vWidth / vHeight) * (this.yMax - this.yMin) + this.xMin;
     }
 
+    updateVP(screenStartX: number, screenStartY: number, vWidth: number, vHeight: number) {
+        this.screenStart = { x: screenStartX, y: screenStartY };
+        this.vWidth = vWidth;
+        this.vHeight = vHeight;
+    }
+
     updateXYBounds(yMin: number, yMax: number, xMin: number) {
         this.yMin = yMin;
         this.yMax = yMax;

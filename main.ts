@@ -43,15 +43,22 @@ juliaContext.addColorInputListener('color-picker');
 juliaContext.addEscapeRadiusInputListener('escape-radius');
 juliaContext.addExponentInputListener('exponent');
 
-const juliaDrawingContext = new JuliaContext(
-    <HTMLCanvasElement>document.createElement('canvas'),
-    3092,
-    1920,
-    { x: 0, y: 0 },
+const juliaDrawingCanvas = <HTMLCanvasElement>document.createElement('canvas');
+const juliaDrawingContext = new JuliaContext(juliaDrawingCanvas, 3092, 1920, { x: 0, y: 0 }, fragmentShaderTextJulia);
+
+const juliaPreviewCanvas = <HTMLCanvasElement>document.getElementById('download-preview-canvas');
+const juliaPreviewContext = new JuliaContext(
+    juliaPreviewCanvas,
+    window.innerWidth / 2,
+    window.innerHeight / 2,
+    { x: window.innerWidth / 4, y: window.innerHeight / 4 },
     fragmentShaderTextJulia
 );
 
-addSaveJuliaPNGBtnListeners(juliaContext, juliaDrawingContext, 'save-julia-png-btn');
+juliaPreviewContext.setCenterTo(0, 0);
+console.log(structuredClone(juliaPreviewContext.vp));
+
+addSaveJuliaPNGBtnListeners(juliaContext, juliaDrawingContext, 'save-julia-png-btn', juliaPreviewContext);
 
 juliaContext.updateJuliaCCoords(0.0, 0.0);
 

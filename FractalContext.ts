@@ -133,11 +133,9 @@ export class FractalContext {
         this.gl.useProgram(this.glProgram);
         this.gl.bindVertexArray(vao); // Not sure why this is needed, seems to be working fine without it
 
-        var screenResAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenResolution');
-        this.gl.uniform2f(screenResAttribLocation, this.vp.vWidth, this.vp.vHeight);
+        this.setScreenResolution(this.vp.vWidth, this.vp.vHeight);
 
-        var screenStartAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenStart');
-        this.gl.uniform2f(screenStartAttribLocation, this.vp.screenStart.x, this.vp.screenStart.y);
+        this.setScreenStart(this.vp.screenStart.x, this.vp.screenStart.y);
 
         this.setXYRenderingBounds(-2.0, 2.0, -2.0);
 
@@ -258,5 +256,14 @@ export class FractalContext {
         let newYMax = this.vp.yMax + yOffset;
 
         this.setXYRenderingBounds(newYMin, newYMax, newXMin);
+    };
+
+    setScreenResolution = (width: number, height: number) => {
+        var screenResAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenResolution');
+        this.gl.uniform2f(screenResAttribLocation, width, height);
+    };
+    setScreenStart = (screenStartX: number, screenStartY: number) => {
+        var screenStartAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenStart');
+        this.gl.uniform2f(screenStartAttribLocation, screenStartX, screenStartY);
     };
 }

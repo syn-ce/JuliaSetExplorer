@@ -45,6 +45,7 @@ button {
     display: flex;
     flex-direction: column;
     margin-left: 2em;
+    resize: both;
 }
 
 .input-wrapper > * {
@@ -86,4 +87,21 @@ input[type='color']::-webkit-color-swatch {
 #save-julia-wrapper {
     margin-left: auto;
     margin-right: 1em;
+}
+
+#download-preview-container {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#download-preview-canvas-border {
+    position: absolute;
+    display: block;
+    border: 10px solid black;
+}
+
+#download-preview-canvas {
+    display: block;
 }
