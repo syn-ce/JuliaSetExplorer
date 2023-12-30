@@ -1,6 +1,5 @@
 import { createProgram, createShader, vertexShaderText } from './glutils.js';
-import { hexToRGB, normalizeRGB } from './ui.js';
-import { PanningObj, RGBColor, getWebGL2RenderingContext, zoomPoint } from './utils.js';
+import { PanningObj, RGBColor, getWebGL2RenderingContext, hexToRGB, normalizeRGB, zoomPoint } from './utils.js';
 import { Viewport } from './viewport.js';
 
 export class FractalContext {

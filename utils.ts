@@ -62,3 +62,27 @@ export const limitLength = (vec2d: { x: number; y: number }, limit: number) => {
         vec2d.y = (vec2d.y / length) * limit;
     }
 };
+
+export const hexToRGB = (hexColor: string) => {
+    const r = parseInt(hexColor.substring(1, 1 + 2), 16);
+    const g = parseInt(hexColor.substring(3, 3 + 2), 16);
+    const b = parseInt(hexColor.substring(5, 5 + 2), 16);
+    return { r: r, g: g, b: b };
+};
+
+export const RGBToHex = (rgbColor: RGBColor) => {
+    return `#${componentToHex(rgbColor.r)}${componentToHex(rgbColor.g)}${componentToHex(rgbColor.b)}`;
+};
+
+export const componentToHex = (c: number) => {
+    var hex = c.toString(16);
+    return hex.length == 1 ? '0' + hex : hex;
+};
+
+export const normalizeRGB = (rgbColor: RGBColor) => {
+    return { r: rgbColor.r / 255, g: rgbColor.g / 255, b: rgbColor.b / 255 };
+};
+
+export const denormalizeRGB = (rgbColor: RGBColor) => {
+    return { r: Math.round(rgbColor.r * 255), g: Math.round(rgbColor.g * 255), b: Math.round(rgbColor.b * 255) };
+};

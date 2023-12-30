@@ -1,11 +1,9 @@
-import { getCanvasElementById } from './utils.js';
+import { RGBToHex, denormalizeRGB, getCanvasElementById } from './utils.js';
 import {
-    RGBToHex,
     addDownloadBtnFunctionality,
     addDownloadResInputListener,
     addResizing,
     addSaveJuliaPNGBtnListeners,
-    denormalizeRGB,
 } from './ui.js';
 import { getFragmentShaderText } from './glutils.js';
 import { JuliaContext } from './JuliaContext.js';
