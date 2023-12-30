@@ -19,6 +19,7 @@ export class FractalContext {
     timeOfLastRender: number;
     FPS: number;
     frameInterval: number;
+    zoomFactor: number;
 
     constructor(
         canvas: HTMLCanvasElement,
@@ -149,6 +150,7 @@ export class FractalContext {
 
         this.setColorValues({ r: 0.0, g: 0.0, b: 0.0 });
 
+        this.zoomFactor = 1.6;
         this.addPanZoomToCanvas();
     };
 
@@ -178,9 +180,9 @@ export class FractalContext {
             let x = vp.xToCoord(evt.clientX);
             let y = vp.yToCoord(evt.clientY);
             if (sign < 0) {
-                this.zoom(x, y, 0.625);
+                this.zoom(x, y, 1 / this.zoomFactor);
             } else {
-                this.zoom(x, y, 1.6);
+                this.zoom(x, y, this.zoomFactor);
             }
         });
 

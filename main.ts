@@ -61,6 +61,8 @@ const juliaPreviewContext = new JuliaContext(
     fragmentShaderTextJulia
 );
 
+juliaPreviewContext.zoomFactor = 1.15; // Make zoom for preview less aggressive (easier to "fine-tune")
+
 const juliaPreviewCanvasBorder = <HTMLElement>document.getElementById('download-preview-canvas-border');
 
 addResizing(juliaPreviewCanvasBorder, juliaPreviewContext);
