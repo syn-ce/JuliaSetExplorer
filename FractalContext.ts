@@ -99,39 +99,25 @@ export class FractalContext {
         this.gl.clearColor(0.4, 0.75, 0.2, 1.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-        // X, Y,  R, G, B
-        var triangles = [
-            -1.0, 1.0, 1.0, 1.0, 0.0, -1.0, -1.0, 0.8, 0.2, 1.0, 1.0, -1.0, 0.0, 0.4, 0.2, -1.0, 1.0, 1.0, 1.0, 0.0,
-            1.0, -1.0, 0.8, 0.2, 1.0, 1.0, 1.0, 0.0, 0.4, 0.2,
-        ];
+        // X, Y
+        var triangles = [-1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0];
         var triangleVertexBufferObject = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, triangleVertexBufferObject);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(triangles), this.gl.STATIC_DRAW);
 
         var positionAttribLocation = this.gl.getAttribLocation(this.glProgram, 'vertPosition');
-        var colorAttribLocation = this.gl.getAttribLocation(this.glProgram, 'vertColor');
 
         var vao = this.gl.createVertexArray();
         this.gl.bindVertexArray(vao);
         this.gl.enableVertexAttribArray(positionAttribLocation);
-        this.gl.enableVertexAttribArray(colorAttribLocation);
 
         this.gl.vertexAttribPointer(
             positionAttribLocation, // Attribute location
             2, // Number of elements per attribute
             this.gl.FLOAT, // Type of elements
             false,
-            5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
+            2 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
             0 // Offset from the beginning of a single vertex to this attribute
-        );
-
-        this.gl.vertexAttribPointer(
-            colorAttribLocation, // Attribute location
-            3, // Number of elements per attribute
-            this.gl.FLOAT, // Type of elements
-            false,
-            5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
-            2 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
         );
 
         this.gl.useProgram(this.glProgram);

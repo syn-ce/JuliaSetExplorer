@@ -34,18 +34,14 @@ export const createProgram = (gl: WebGL2RenderingContext, vertexShader: WebGLSha
 export var vertexShaderText = `#version 300 es
     precision highp float;
     in vec2 vertPosition;
-    in vec3 vertColor;
-    out vec3 fragColor;
     void main()
     {
-        fragColor = vertColor;
         gl_Position = vec4(vertPosition, 0.0, 1.0);
     }`;
 
 export const getFragmentShaderText = (nrIterations: number, z: string, c: string, additionalVariables: string) => {
     var baseFragmentShaderText = `#version 300 es
     precision highp float;
-    in vec3 fragColor;
     out vec4 myOutputColor;
     uniform vec2 screenResolution;
     uniform float escapeRadius;
