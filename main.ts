@@ -1,9 +1,11 @@
 import { getCanvasElementById } from './utils.js';
 import {
+    RGBToHex,
     addDownloadBtnFunctionality,
     addDownloadResInputListener,
     addResizing,
     addSaveJuliaPNGBtnListeners,
+    denormalizeRGB,
 } from './ui.js';
 import { getFragmentShaderText } from './glutils.js';
 import { JuliaContext } from './JuliaContext.js';
@@ -70,7 +72,13 @@ juliaPreviewContext.setCenterTo(0, 0);
 
 addSaveJuliaPNGBtnListeners(juliaContext, juliaDrawingContext, 'save-julia-png-btn', juliaPreviewContext);
 
+juliaContext.setColorValues({ r: 0.0, g: 0.1, b: 0.1 });
+mandelContext.setColorValues({ r: 0.0, g: 0.1, b: 0.1 });
+
 juliaContext.updateJuliaCCoords(0.0, 0.0);
+
+const colorPicker = <HTMLInputElement>document.getElementById('color-picker');
+colorPicker.value = RGBToHex(denormalizeRGB({ r: 0.0, g: 0.1, b: 0.1 }));
 
 // Main render loop
 mandelContext.render();

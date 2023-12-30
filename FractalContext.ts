@@ -147,7 +147,7 @@ export class FractalContext {
 
         this.setExponent(2.0);
 
-        this.setColorValues({ r: 0.0, g: 0.1, b: 0.1 });
+        this.setColorValues({ r: 0.0, g: 0.0, b: 0.0 });
 
         this.addPanZoomToCanvas();
     };
@@ -219,6 +219,7 @@ export class FractalContext {
         const colorPicker = document.getElementById(colorPickerId);
 
         colorPicker.addEventListener('input', (evt) => {
+            console.log(evt.currentTarget);
             let rgbColor = normalizeRGB(hexToRGB((<HTMLInputElement>evt.currentTarget).value));
             this.setColorValues(rgbColor);
             this.render();
