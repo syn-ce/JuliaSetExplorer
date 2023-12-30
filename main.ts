@@ -83,7 +83,6 @@ const randomMovementBtn = document.getElementById('random-movement');
 randomMovementBtn.onclick = (evt) => {
     if (!fractalManager.movingRandom) {
         fractalManager.randomMovement();
-        console.log(evt);
     } else {
         fractalManager.stopRandomMovement();
     }

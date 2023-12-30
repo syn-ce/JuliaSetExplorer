@@ -82,6 +82,10 @@ export class FractalContext {
         this.gl.uniform1f(exponentAttribLocation, this.exponent);
     };
 
+    canImmediatelyRender = () => {
+        return Date.now() - this.timeOfLastRender >= this.frameInterval;
+    };
+
     render = () => {
         // Could be improved by "Queuing" the render
         if (Date.now() - this.timeOfLastRender >= this.frameInterval) {
