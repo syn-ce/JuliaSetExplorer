@@ -196,6 +196,9 @@ export class FractalContext {
         this.canvas.addEventListener('mouseup', (evt) => {
             this.panningObject.panningCanvas = false;
         });
+        this.canvas.addEventListener('mouseleave', (evt) => {
+            this.panningObject.panningCanvas = false;
+        });
         this.canvas.addEventListener('mousemove', (evt) => {
             if (!this.panningObject.panningCanvas) return;
             let vp = this.vp;
