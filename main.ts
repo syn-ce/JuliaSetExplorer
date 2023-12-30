@@ -98,4 +98,8 @@ randomMovementBtn.onclick = (evt) => {
     }
 };
 
-setTimeout(() => fractalManager.stopRandomMovement(), 1000);
+const previewCenterOriginBtn = <HTMLInputElement>document.getElementById('preview-center-origin-btn');
+previewCenterOriginBtn.onclick = (evt) => {
+    juliaPreviewContext.setCenterTo(0, 0);
+    juliaPreviewContext.render();
+};

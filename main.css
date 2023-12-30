@@ -114,12 +114,24 @@ input[type='color']::-webkit-color-swatch {
     left: 20px;
 }
 
+#download-resolution-y,
+#download-resolution-x {
+    width: 80px;
+}
+
 #download-julia-btn {
     position: absolute;
     height: 30px;
     bottom: 20px;
     left: 50%;
     translate: -50%;
+}
+
+#preview-center-origin-btn {
+    position: absolute;
+    height: 30px;
+    bottom: 30px;
+    left: 130px;
 }
 
 .close {
