@@ -3,13 +3,13 @@ import { addDownloadBtnFunctionality, addDownloadResInputListener, addSaveJuliaP
 import { getFragmentShaderText } from './glutils.js';
 import { JuliaContext } from './JuliaContext.js';
 import { MandelContext } from './MandelContext.js';
-import { FractalManager as FractalManager } from './FractalManager.js';
+import { FractalManager } from './FractalManager.js';
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
 
 const canvasJulia = getCanvasElementById('julia-canvas');
 
-const nrIterations = 100;
+const nrIterations = 300;
 
 export var escapeRadius = 4.0;
 
@@ -64,13 +64,13 @@ juliaPreviewContext.setCenterTo(0, 0);
 
 addSaveJuliaPNGBtnListeners(juliaContext, juliaDrawingContext, 'save-julia-png-btn', juliaPreviewContext);
 
-juliaContext.setColorValues({ r: 0.0, g: 0.1, b: 0.1 });
-mandelContext.setColorValues({ r: 0.0, g: 0.1, b: 0.1 });
+juliaContext.setColorValues({ r: 0.1, g: 0.46, b: 0.0 });
+mandelContext.setColorValues({ r: 0.1, g: 0.46, b: 0.0 });
 
 juliaContext.updateJuliaCCoords(0.0, 0.0);
 
 const colorPicker = <HTMLInputElement>document.getElementById('color-picker');
-colorPicker.value = RGBToHex(denormalizeRGB({ r: 0.0, g: 0.1, b: 0.1 }));
+colorPicker.value = RGBToHex(denormalizeRGB({ r: 0.1, g: 0.46, b: 0.0 }));
 
 // Main render loop
 mandelContext.render();
@@ -99,7 +99,7 @@ const getColorSettings = () => {
 };
 
 const colorDropdown = document.getElementById('color-dropdown');
-const colorSettingsInputs: Element[] = Array.from(colorDropdown.children);
+const colorSettingsInputs: HTMLInputElement[] = Array.from(colorDropdown.getElementsByTagName('input'));
 colorSettingsInputs.forEach((input) =>
     input.addEventListener('input', (evt) => {
         const colorSettings = getColorSettings();
