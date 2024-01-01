@@ -23,7 +23,7 @@ html {
 }
 
 label {
-    font-size: 1.5em;
+    font-size: 1em;
     color: white;
 }
 
@@ -33,18 +33,18 @@ input[type='number'] {
     box-shadow: none;
     border: none;
     width: 14ch;
-    font-size: 1.2em;
+    font-size: 0.9em;
 }
 
 button {
-    font-size: 1.3em;
+    font-size: 0.9em;
     height: 70%;
 }
 
 .input-wrapper {
     display: flex;
     flex-direction: column;
-    margin-left: 2em;
+    margin-left: 1.5em;
     resize: both;
 }
 
@@ -83,6 +83,10 @@ input[type='color']::-webkit-color-swatch-wrapper {
 }
 input[type='color']::-webkit-color-swatch {
     border: none;
+}
+
+#color-dropdown label {
+    font-size: 15px;
 }
 
 #save-julia-wrapper {
