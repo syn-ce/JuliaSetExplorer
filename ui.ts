@@ -9,7 +9,10 @@ juliaPreviewCloser.addEventListener('click', (evt) => {
 const downloadResXInput = <HTMLInputElement>document.getElementById('download-resolution-x');
 const downloadResYInput = <HTMLInputElement>document.getElementById('download-resolution-y');
 
-const downloadResolution = { x: 1920, y: 1080 };
+const downloadResolution = {
+    x: window.screen.width * window.devicePixelRatio,
+    y: window.screen.height * window.devicePixelRatio,
+};
 
 downloadResXInput.value = downloadResolution.x.toString();
 downloadResYInput.value = downloadResolution.y.toString();
