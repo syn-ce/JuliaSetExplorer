@@ -18,14 +18,11 @@ export class JuliaContext extends FractalContext {
         this.setCenterTo(0, 0);
     }
 
-    updateJuliaCCoords = (x: number, y: number) => {
+    setJuliaCCoords = (x: number, y: number) => {
         this.juliaCCoords.x = x;
         this.juliaCCoords.y = y;
 
         var cCoordsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'cCoords');
-
         this.gl.uniform2f(cCoordsAttribLocation, this.juliaCCoords.x, this.juliaCCoords.y);
-
-        this.render();
     };
 }

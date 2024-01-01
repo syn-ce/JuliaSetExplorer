@@ -134,7 +134,9 @@ const previewDownloadImage = (juliaContext: JuliaContext, juliaPreviewContext: J
     let yCenterJuliaContext2 = (juliaContext.vp.yMax + juliaContext.vp.yMin) * 0.5;
     juliaPreviewContext.setCenterTo(xCenterJuliaContext2, yCenterJuliaContext2);
     juliaPreviewContext.setColorSettings(juliaContext.colorSettings);
-    juliaPreviewContext.updateJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y);
+    juliaPreviewContext.setJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y);
+
+    juliaPreviewContext.render();
 };
 
 const resizeCanvas = (
@@ -199,7 +201,9 @@ const download = (juliaDrawingContext: JuliaContext, juliaPreviewContext: JuliaC
     let yCenterJuliaPreviewContext = (juliaPreviewContext.vp.yMax + juliaPreviewContext.vp.yMin) * 0.5;
     juliaDrawingContext.setCenterTo(xCenterJuliaPreviewContext, yCenterJuliaPreviewContext);
     juliaDrawingContext.setColorSettings(juliaPreviewContext.colorSettings);
-    juliaDrawingContext.updateJuliaCCoords(juliaPreviewContext.juliaCCoords.x, juliaPreviewContext.juliaCCoords.y);
+    juliaDrawingContext.setJuliaCCoords(juliaPreviewContext.juliaCCoords.x, juliaPreviewContext.juliaCCoords.y);
+
+    juliaDrawingContext.render();
 
     juliaDrawingContext.canvas.toBlob((blob) => {
         let url = URL.createObjectURL(blob);

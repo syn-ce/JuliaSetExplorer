@@ -67,14 +67,10 @@ addSaveJuliaPNGBtnListeners(juliaContext, juliaDrawingContext, 'save-julia-png-b
 juliaContext.setColorValues({ r: 0.1, g: 0.46, b: 0.0 });
 mandelContext.setColorValues({ r: 0.1, g: 0.46, b: 0.0 });
 
-juliaContext.updateJuliaCCoords(0.0, 0.0);
+juliaContext.setJuliaCCoords(0.0, 0.0);
 
 const colorPicker = <HTMLInputElement>document.getElementById('color-picker');
 colorPicker.value = RGBToHex(denormalizeRGB({ r: 0.1, g: 0.46, b: 0.0 }));
-
-// Main render loop
-mandelContext.render();
-juliaContext.render();
 
 // Enables communication between mandel and julia context
 const fractalManager = new FractalManager(mandelContext, juliaContext, 'julia-center-x', 'julia-center-y');
@@ -105,8 +101,18 @@ colorSettingsInputs.forEach((input) =>
         const colorSettings = getColorSettings();
         juliaContext.setColorSettings(colorSettings);
         juliaContext.render();
-        mandelContext.setColorSettings(getColorSettings());
+        mandelContext.setColorSettings(colorSettings);
         mandelContext.render();
     })
 );
-console.log(colorDropdown.children);
+
+// Initial color settings
+colorSettingsInputs[0].checked = true;
+colorSettingsInputs[1].checked = true;
+const colorSettings = getColorSettings();
+juliaContext.setColorSettings(colorSettings);
+mandelContext.setColorSettings(colorSettings);
+
+// Render
+juliaContext.render();
+mandelContext.render();
