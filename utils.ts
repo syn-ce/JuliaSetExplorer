@@ -14,6 +14,8 @@ export type PanningObj = {
     startYInCoords: number;
 };
 
+export type ColorSettings = number[];
+
 export const getCanvasElementById = (id: string): HTMLCanvasElement => {
     const canvas = document.getElementById(id);
 

@@ -1,5 +1,13 @@
 import { createProgram, createShader, vertexShaderText } from './glutils.js';
-import { PanningObj, RGBColor, getWebGL2RenderingContext, hexToRGB, normalizeRGB, zoomPoint } from './utils.js';
+import {
+    ColorSettings,
+    PanningObj,
+    RGBColor,
+    getWebGL2RenderingContext,
+    hexToRGB,
+    normalizeRGB,
+    zoomPoint,
+} from './utils.js';
 import { Viewport } from './viewport.js';
 
 export class FractalContext {
@@ -19,6 +27,7 @@ export class FractalContext {
     FPS: number;
     frameInterval: number;
     zoomFactor: number;
+    colorSettings: ColorSettings;
 
     constructor(
         canvas: HTMLCanvasElement,
@@ -54,6 +63,12 @@ export class FractalContext {
 
         this.setupGL();
     }
+
+    setColorSettings = (colorSettings: ColorSettings) => {
+        this.colorSettings = colorSettings;
+        var colorSettingsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'colorSettings');
+        this.gl.uniform1fv(colorSettingsAttribLocation, this.colorSettings);
+    };
 
     setColorValues = (rgbColor: RGBColor) => {
         this.rgbColor = rgbColor;

@@ -50,6 +50,8 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
     uniform vec2 xBounds;
     uniform vec2 yBounds;
     uniform float exponent;
+    uniform float colorSettings[9]; // Array of ones and zeroes, used to calc the color of a pixel
+    // colorSettings[0] Enables non-smooth rendering
 
     vec2 complexExp(float x, float y) // c = x + i*y
     {
@@ -73,9 +75,16 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
         {
             z = complexExp(z.x, z.y) + c;
             if (z.x*z.x + z.y*z.y > escapeRadius) {
-                float k = exponent;
                 float ismoothed = i - log2(log2(z.x*z.x+z.y*z.y)/log2(escapeRadius))/log2(exponent); // https://iquilezles.org/articles/msetsmooth
-                vec3 tmp = 0.5 + 0.5*sin( 3.0 + ismoothed*0.055 + ismoothed*rgbColor);
+                float gray = colorSettings[0] * (i + 1. - log(log(sqrt(z.x*z.x + z.y*z.y))) / log(exponent)) + colorSettings[1] * i;
+                gray = gray / ${nrIterations}.0; // ((${nrIterations + 1}.0 -1.) * colorSettings[2] + 1.);
+
+                vec3 tmp =  colorSettings[3] * vec3(rgbColor * i / ${nrIterations}.0)  + 
+                            colorSettings[4] * (0.5 + 0.5*sin( 3.0 + ismoothed * rgbColor)) + 
+                            colorSettings[5] * (0.5 + 0.5*sin( 3.0 + ismoothed * 0.55 + ismoothed*rgbColor)) + 
+                            colorSettings[6] * (vec3(gray*4.2, gray*1.2, gray*gray)) + 
+                            colorSettings[7] * (vec3(gray, gray, gray)) + 
+                            colorSettings[8] * (gray * 5.0 * rgbColor);
 
                 myOutputColor = vec4(tmp, 1.0);
 

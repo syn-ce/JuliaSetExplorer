@@ -14,7 +14,7 @@ const canvasMandel = getCanvasElementById('mandel-canvas');
 
 const canvasJulia = getCanvasElementById('julia-canvas');
 
-const nrIterations = 300;
+const nrIterations = 100;
 
 export var escapeRadius = 4.0;
 
@@ -101,3 +101,20 @@ previewCenterOriginBtn.onclick = (evt) => {
     juliaPreviewContext.setCenterTo(0, 0);
     juliaPreviewContext.render();
 };
+
+const getColorSettings = () => {
+    return colorSettingsInputs.map((input) => ((<HTMLInputElement>input).checked ? 1.0 : 0.0));
+};
+
+const colorDropdown = document.getElementById('color-dropdown');
+const colorSettingsInputs: Element[] = Array.from(colorDropdown.children);
+colorSettingsInputs.forEach((input) =>
+    input.addEventListener('input', (evt) => {
+        const colorSettings = getColorSettings();
+        juliaContext.setColorSettings(colorSettings);
+        juliaContext.render();
+        mandelContext.setColorSettings(getColorSettings());
+        mandelContext.render();
+    })
+);
+console.log(colorDropdown.children);

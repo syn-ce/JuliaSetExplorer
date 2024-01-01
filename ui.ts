@@ -1,5 +1,4 @@
 import { JuliaContext } from './JuliaContext.js';
-import { RGBColor } from './utils.js';
 
 const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');
 const juliaPreviewContainer = document.getElementById('download-preview-container');
@@ -91,7 +90,7 @@ export const addDownloadResInputListener = (juliaPreviewContext: JuliaContext) =
 const addDownloadResXInputListener = (juliaPreviewContext: JuliaContext) => {
     downloadResXInput.addEventListener('input', (evt) => {
         let xVal = parseInt((<HTMLInputElement>evt.currentTarget).value);
-        if (xVal < 9) {
+        if (Number.isNaN(xVal) || xVal < 9) {
             // Too small
             return;
         } // Change ratio accordingly
@@ -104,7 +103,7 @@ const addDownloadResXInputListener = (juliaPreviewContext: JuliaContext) => {
 const addDownloadResYInputListener = (juliaPreviewContext: JuliaContext) => {
     downloadResYInput.addEventListener('input', (evt) => {
         let yVal = parseInt((<HTMLInputElement>evt.currentTarget).value);
-        if (yVal < 9) {
+        if (Number.isNaN(yVal) || yVal < 9) {
             // Too small
             return;
         }
@@ -131,9 +130,8 @@ const previewDownloadImage = (juliaContext: JuliaContext, juliaPreviewContext: J
     let xCenterJuliaContext2 = (juliaContext.vp.xMax + juliaContext.vp.xMin) * 0.5;
     let yCenterJuliaContext2 = (juliaContext.vp.yMax + juliaContext.vp.yMin) * 0.5;
     juliaPreviewContext.setCenterTo(xCenterJuliaContext2, yCenterJuliaContext2);
+    juliaPreviewContext.setColorSettings(juliaContext.colorSettings);
     juliaPreviewContext.updateJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y);
-
-    juliaPreviewContext.render();
 };
 
 const resizeCanvas = (
@@ -305,6 +303,7 @@ const download = (juliaDrawingContext: JuliaContext, juliaPreviewContext: JuliaC
     let xCenterJuliaPreviewContext = (juliaPreviewContext.vp.xMax + juliaPreviewContext.vp.xMin) * 0.5;
     let yCenterJuliaPreviewContext = (juliaPreviewContext.vp.yMax + juliaPreviewContext.vp.yMin) * 0.5;
     juliaDrawingContext.setCenterTo(xCenterJuliaPreviewContext, yCenterJuliaPreviewContext);
+    juliaDrawingContext.setColorSettings(juliaPreviewContext.colorSettings);
     juliaDrawingContext.updateJuliaCCoords(juliaPreviewContext.juliaCCoords.x, juliaPreviewContext.juliaCCoords.y);
 
     juliaDrawingContext.canvas.toBlob((blob) => {
