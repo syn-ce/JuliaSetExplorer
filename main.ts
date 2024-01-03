@@ -108,10 +108,33 @@ colorSettingsInputs.forEach((input) =>
 
 // Initial color settings
 colorSettingsInputs[0].checked = true;
-colorSettingsInputs[1].checked = true;
+colorSettingsInputs[2].checked = true;
 const colorSettings = getColorSettings();
 juliaContext.setColorSettings(colorSettings);
 mandelContext.setColorSettings(colorSettings);
+
+// Hide-UI-Button
+const hideUIButton = <HTMLInputElement>document.getElementById('hide-ui-btn');
+const uiControlDiv = document.getElementById('controls');
+const uiControlInputs = Array.from(uiControlDiv.getElementsByTagName('input'));
+const uiControlButtons = Array.from(uiControlDiv.getElementsByTagName('button'));
+
+var uiShown = true;
+
+hideUIButton.onclick = () => {
+    if (uiShown) {
+        uiControlInputs.forEach((el) => (el.tabIndex = -1));
+        uiControlButtons.forEach((el) => (el.tabIndex = -1));
+        hideUIButton.innerText = 'Show UI';
+        uiControlDiv.classList.add('invisible');
+    } else {
+        uiControlInputs.forEach((el) => (el.tabIndex = 1));
+        uiControlButtons.forEach((el) => (el.tabIndex = 1));
+        hideUIButton.innerText = 'Hide UI';
+        uiControlDiv.classList.remove('invisible');
+    }
+    uiShown = !uiShown;
+};
 
 // Render
 juliaContext.render();
