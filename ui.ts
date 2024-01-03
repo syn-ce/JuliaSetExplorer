@@ -1,22 +1,5 @@
 import { JuliaContext } from './JuliaContext.js';
 
-const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');
-const juliaPreviewContainer = document.getElementById('download-preview-container');
-juliaPreviewCloser.addEventListener('click', (evt) => {
-    juliaPreviewContainer.style.display = 'none';
-});
-
-const downloadResXInput = <HTMLInputElement>document.getElementById('download-resolution-x');
-const downloadResYInput = <HTMLInputElement>document.getElementById('download-resolution-y');
-
-const downloadResolution = {
-    x: window.screen.width * window.devicePixelRatio,
-    y: window.screen.height * window.devicePixelRatio,
-};
-
-downloadResXInput.value = downloadResolution.x.toString();
-downloadResYInput.value = downloadResolution.y.toString();
-
 // Will change the x-value so that the result matches the aspect ratio, will move the window to the center of the screen
 const setAspectRatio = (juliaPreviewContext: JuliaContext, aspectRatio: number) => {
     // Try adjusting width and height so that the image stays on screen and has a reasonable size
@@ -58,6 +41,26 @@ const setAspectRatio = (juliaPreviewContext: JuliaContext, aspectRatio: number) 
 
     moveCanvas(juliaPreviewContext, <HTMLElement>document.getElementById('download-preview-canvas-border'));
     juliaPreviewContext.render();
+};
+
+const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');
+const juliaPreviewContainer = document.getElementById('download-preview-container');
+juliaPreviewCloser.addEventListener('click', (evt) => {
+    juliaPreviewContainer.style.display = 'none';
+});
+
+const downloadResXInput = <HTMLInputElement>document.getElementById('download-resolution-x');
+const downloadResYInput = <HTMLInputElement>document.getElementById('download-resolution-y');
+
+const downloadResolution = {
+    x: window.screen.width * window.devicePixelRatio,
+    y: window.screen.height * window.devicePixelRatio,
+};
+
+export const setupDownloadPreview = (juliaPrevContext: JuliaContext) => {
+    downloadResXInput.value = downloadResolution.x.toString();
+    downloadResYInput.value = downloadResolution.y.toString();
+    setAspectRatio(juliaPrevContext, downloadResolution.x / downloadResolution.y);
 };
 
 // Tries to resize the canvas to a a "medium" width and height if both are small

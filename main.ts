@@ -1,5 +1,10 @@
 import { RGBToHex, denormalizeRGB, getCanvasElementById } from './utils.js';
-import { addDownloadBtnFunctionality, addDownloadResInputListener, addSaveJuliaPNGBtnListeners } from './ui.js';
+import {
+    addDownloadBtnFunctionality,
+    addDownloadResInputListener,
+    addSaveJuliaPNGBtnListeners,
+    setupDownloadPreview,
+} from './ui.js';
 import { getFragmentShaderText } from './glutils.js';
 import { JuliaContext } from './JuliaContext.js';
 import { MandelContext } from './MandelContext.js';
@@ -59,6 +64,8 @@ juliaPreviewContext.zoomFactor = 1.15; // Make zoom for preview less aggressive 
 addDownloadResInputListener(juliaPreviewContext);
 
 addDownloadBtnFunctionality(juliaDrawingContext, juliaPreviewContext);
+
+setupDownloadPreview(juliaPreviewContext);
 
 juliaPreviewContext.setCenterTo(0, 0);
 
