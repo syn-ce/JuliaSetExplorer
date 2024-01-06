@@ -93,6 +93,7 @@ juliaContext.setColorValues({ r: 0.1, g: 0.46, b: 0.0 });
 mandelContext.setColorValues({ r: 0.1, g: 0.46, b: 0.0 });
 
 juliaContext.setJuliaCCoords(0.0, 0.0);
+mandelContext.updateCenterIndicator({ x: 0.0, y: 0.0 });
 
 const colorPicker = <HTMLInputElement>document.getElementById('color-picker');
 colorPicker.value = RGBToHex(denormalizeRGB({ r: 0.1, g: 0.46, b: 0.0 }));

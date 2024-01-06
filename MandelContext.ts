@@ -21,8 +21,6 @@ export class MandelContext extends FractalContext {
         super(canvas, canvas2d, width, height, screenStart, fragmentShaderText, nrIterations);
 
         this.addCenterIndicator();
-        this.currentIndicatorPos = { x: 0.0, y: 0.0 };
-        this.indicatorFollowsMouse = true;
         this.setXYRenderingBounds(-1.5, 1.5, -2.1);
     }
 
@@ -31,6 +29,9 @@ export class MandelContext extends FractalContext {
         this.juliaCenterIndicatorWrapper = document.getElementById('julia-center-coords-indicator-wrapper');
         this.juliaCenterIndicator = document.getElementById('julia-center-coords-indicator');
         this.juliaCenterIndicatorDimensions = { x: 15, y: 15 };
+
+        this.currentIndicatorPos = { x: 0.0, y: 0.0 };
+        this.indicatorFollowsMouse = true;
 
         this.juliaCenterIndicatorWrapper.style.width = this.juliaCenterIndicatorDimensions.x.toString();
         this.juliaCenterIndicatorWrapper.style.height = this.juliaCenterIndicatorDimensions.y.toString();
@@ -52,7 +53,7 @@ export class MandelContext extends FractalContext {
             this.updateCenterIndicator(this.currentIndicatorPos);
         });
 
-        this.updateCenterIndicator({ x: 0, y: 0 });
+        this.updateCenterIndicator({ x: this.currentIndicatorPos.x, y: this.currentIndicatorPos.y });
     }
 
     updateCenterIndicator = (juliaCCoords: { x: number; y: number }) => {

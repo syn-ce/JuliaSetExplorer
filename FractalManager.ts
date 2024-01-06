@@ -116,7 +116,7 @@ export class FractalManager {
             nextDestination = { x: Math.random() * (xMax - xMin) + xMin, y: Math.random() * (yMax - yMin) + yMin };
             innerLoop(0, fractalManager)
                 .then(() => outerLoop(i, fractalManager))
-                .catch();
+                .catch((e) => {});
         }
 
         async function innerLoop(frameNr: number, fractalManager: FractalManager) {
@@ -136,9 +136,11 @@ export class FractalManager {
                 fractalManager.juliaContext.render();
                 if (frameNr < nrFrames && distance(nextDestination, currentCenter) > 0.0001) {
                     setTimeout(() => {
-                        innerLoop(frameNr + 1, fractalManager)
-                            .then(() => resolve(''))
-                            .catch(() => reject());
+                        if (fractalManager.movingRandom) {
+                            innerLoop(frameNr + 1, fractalManager)
+                                .then(() => resolve(''))
+                                .catch(() => reject());
+                        }
                     }, delay);
                 } else setTimeout(() => resolve(''), delay);
             });
