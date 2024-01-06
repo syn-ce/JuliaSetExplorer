@@ -123,7 +123,10 @@ export abstract class FractalContext {
         for (let y = 0; y < this.canvas2d.height; y++) {
             for (let x = 0; x < this.canvas2d.width; x++) {
                 let ind = (y * this.canvas2d.width + x) * 4;
-                let val = this.getColorValueForPoint(this.vp.xToCoord(x), this.vp.yToCoord(y));
+                let val = this.getColorValueForPoint(
+                    this.vp.xToCoord(x + this.vp.screenStart.x),
+                    this.vp.yToCoord(y + this.vp.screenStart.y)
+                );
                 //if (val == 0) zeroValues++;
 
                 data[ind] = val.x * 255;
