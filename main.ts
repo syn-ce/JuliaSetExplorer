@@ -11,8 +11,10 @@ import { MandelContext } from './MandelContext.js';
 import { FractalManager } from './FractalManager.js';
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
+const canvasMandel2d = getCanvasElementById('mandel-canvas-2d');
 
 const canvasJulia = getCanvasElementById('julia-canvas');
+const canvasJulia2d = getCanvasElementById('julia-canvas-2d');
 
 const nrIterations = 300;
 
@@ -21,10 +23,12 @@ export var escapeRadius = 4.0;
 const fragmentShaderTextMandel = getFragmentShaderText(nrIterations, 'vec2(0.0,0.0)', 'vec2(x,y)', '');
 const mandelContext = new MandelContext(
     canvasMandel,
+    canvasMandel2d,
     window.innerWidth / 2,
     window.innerHeight,
     { x: 0, y: 0 },
-    fragmentShaderTextMandel
+    fragmentShaderTextMandel,
+    nrIterations + 300
 );
 
 mandelContext.addColorInputListener('color-picker');
@@ -34,13 +38,15 @@ mandelContext.addExponentInputListener('exponent');
 const fragmentShaderTextJulia = getFragmentShaderText(nrIterations, 'vec2(x,y)', 'cCoords', 'uniform vec2 cCoords;');
 const juliaContext = new JuliaContext(
     canvasJulia,
+    canvasJulia2d,
     window.innerWidth / 2,
     window.innerHeight,
     {
         x: mandelContext.vp.vWidth,
         y: 0,
     },
-    fragmentShaderTextJulia
+    fragmentShaderTextJulia,
+    nrIterations
 );
 
 juliaContext.addColorInputListener('color-picker');
@@ -48,15 +54,27 @@ juliaContext.addEscapeRadiusInputListener('escape-radius');
 juliaContext.addExponentInputListener('exponent');
 
 const juliaDrawingCanvas = <HTMLCanvasElement>document.createElement('canvas');
-const juliaDrawingContext = new JuliaContext(juliaDrawingCanvas, 3092, 1920, { x: 0, y: 0 }, fragmentShaderTextJulia);
+const juliaDrawingCanvas2d = <HTMLCanvasElement>document.createElement('canvas');
+const juliaDrawingContext = new JuliaContext(
+    juliaDrawingCanvas,
+    juliaDrawingCanvas2d,
+    3092,
+    1920,
+    { x: 0, y: 0 },
+    fragmentShaderTextJulia,
+    nrIterations
+);
 
 const juliaPreviewCanvas = <HTMLCanvasElement>document.getElementById('download-preview-canvas');
+const juliaPreviewCanvas2d = document.createElement('canvas');
 const juliaPreviewContext = new JuliaContext(
     juliaPreviewCanvas,
+    juliaPreviewCanvas2d,
     window.innerWidth / 2,
     window.innerHeight / 2,
     { x: window.innerWidth / 4, y: window.innerHeight / 4 },
-    fragmentShaderTextJulia
+    fragmentShaderTextJulia,
+    nrIterations
 );
 
 juliaPreviewContext.zoomFactor = 1.15; // Make zoom for preview less aggressive (easier to "fine-tune")
@@ -146,3 +164,8 @@ hideUIButton.onclick = () => {
 // Render
 juliaContext.render();
 mandelContext.render();
+
+const btn = document.createElement('button');
+uiControlDiv.appendChild(btn);
+btn.innerText = 'CPU Render';
+btn.onclick = () => mandelContext.setCPURendering(true);

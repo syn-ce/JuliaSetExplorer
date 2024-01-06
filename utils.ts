@@ -16,6 +16,8 @@ export type PanningObj = {
 
 export type ColorSettings = number[];
 
+export type Vec3D = { x: number; y: number; z: number };
+
 export const getCanvasElementById = (id: string): HTMLCanvasElement => {
     const canvas = document.getElementById(id);
 
@@ -87,4 +89,23 @@ export const normalizeRGB = (rgbColor: RGBColor) => {
 
 export const denormalizeRGB = (rgbColor: RGBColor) => {
     return { r: Math.round(rgbColor.r * 255), g: Math.round(rgbColor.g * 255), b: Math.round(rgbColor.b * 255) };
+};
+
+export const scaleVec = (scalar: number, vec3d: Vec3D) => {
+    return { x: vec3d.x * scalar, y: vec3d.y * scalar, z: vec3d.z * scalar };
+};
+
+export const addVecs = (vec3d1: Vec3D, vec3d2: Vec3D) => {
+    return { x: vec3d1.x + vec3d2.x, y: vec3d1.y + vec3d2.y, z: vec3d1.z + vec3d2.z };
+};
+
+// c = x + i*y
+export const complexExp = (x: number, y: number, exponent: number) => {
+    const arg = Math.atan2(y, x);
+    const r = Math.sqrt(x * x + y * y);
+    // De Moivre's formula
+    const r_n = Math.pow(r, exponent);
+    x = r_n * Math.cos(exponent * arg);
+    y = r_n * Math.sin(exponent * arg);
+    return { real: x, imag: y };
 };

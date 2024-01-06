@@ -3,6 +3,8 @@ import {
     ColorSettings,
     PanningObj,
     RGBColor,
+    Vec3D,
+    getCanvasRenderingContext2D,
     getWebGL2RenderingContext,
     hexToRGB,
     normalizeRGB,
@@ -10,9 +12,11 @@ import {
 } from './utils.js';
 import { Viewport } from './viewport.js';
 
-export class FractalContext {
+export abstract class FractalContext {
     gl: WebGL2RenderingContext;
     glProgram: WebGLProgram;
+    canvas2d: HTMLCanvasElement;
+    context2d: CanvasRenderingContext2D;
     vp: Viewport;
     canvas: HTMLCanvasElement;
     primitiveType: number;
@@ -28,19 +32,27 @@ export class FractalContext {
     frameInterval: number;
     zoomFactor: number;
     colorSettings: ColorSettings;
+    cpuRendering: boolean;
 
     constructor(
         canvas: HTMLCanvasElement,
+        canvas2d: HTMLCanvasElement,
         width: number,
         height: number,
         screenStart: { x: number; y: number },
-        fragmentShaderText: string
+        fragmentShaderText: string,
+        nrIterations: number
     ) {
         this.canvas = canvas;
         this.canvas.width = width;
         this.canvas.height = height;
 
-        this.nrIterations = 100;
+        this.canvas2d = canvas2d;
+        this.canvas2d.width = width;
+        this.canvas2d.height = height;
+        this.context2d = getCanvasRenderingContext2D(this.canvas2d);
+
+        this.nrIterations = nrIterations;
 
         this.vp = new Viewport(canvas.width, canvas.height, screenStart.x, screenStart.y, null);
         this.escapeRadius = 4.0;
@@ -101,11 +113,45 @@ export class FractalContext {
         return Date.now() - this.timeOfLastRender >= this.frameInterval;
     };
 
-    render = () => {
+    abstract getColorValueForPoint(x: number, y: number): Vec3D;
+
+    drawSetCPU = () => {
+        var startTime = performance.now();
+        let zeroValues = 0;
+        const imageData = this.context2d.getImageData(0, 0, this.canvas2d.width, this.canvas2d.height);
+        const data = imageData.data;
+        for (let y = 0; y < this.canvas2d.height; y++) {
+            for (let x = 0; x < this.canvas2d.width; x++) {
+                let ind = (y * this.canvas2d.width + x) * 4;
+                let val = this.getColorValueForPoint(this.vp.xToCoord(x), this.vp.yToCoord(y));
+                //if (val == 0) zeroValues++;
+
+                data[ind] = val.x * 255;
+                data[ind + 1] = val.y * 255;
+                data[ind + 2] = val.z * 255;
+                data[ind + 3] = 255;
+            }
+        }
+        //console.log((zeroValues / canvas.width / canvas.height) * (vp.xMax - vp.xMin) * (vp.yMax - vp.yMin)); // This is a VERY rough estimate for the area
+        // of the set; Moreover, this assumes the entirety of the set being visible on the screen. For the Mandelbrot set at 1000 iterations, it yields a
+        // value of ~1.51
+        console.log(`time taken: ${performance.now() - startTime}`);
+        this.context2d.putImageData(imageData, 0, 0, 0, 0, this.vp.vWidth, this.vp.vHeight);
+    };
+
+    render = (cpuRendering = false) => {
         // Could be improved by "Queuing" the render
         if (Date.now() - this.timeOfLastRender >= this.frameInterval) {
             this.timeOfLastRender = Date.now();
-            this.gl.drawArrays(this.primitiveType, this.offset, this.count);
+            if (cpuRendering || this.cpuRendering) {
+                this.drawSetCPU();
+                this.canvas2d.style.display = '';
+                this.canvas.style.display = 'none';
+            } else {
+                this.gl.drawArrays(this.primitiveType, this.offset, this.count);
+                this.canvas.style.display = '';
+                this.canvas2d.style.display = 'none';
+            }
         }
     };
 
@@ -151,7 +197,8 @@ export class FractalContext {
         this.setColorValues({ r: 0.0, g: 0.0, b: 0.0 });
 
         this.zoomFactor = 1.6;
-        this.addPanZoomToCanvas();
+        this.addPanZoomToCanvas(this.canvas);
+        this.addPanZoomToCanvas(this.canvas2d);
     };
 
     zoom = (x: number, y: number, z: number) => {
@@ -170,11 +217,11 @@ export class FractalContext {
         this.render();
     };
 
-    addPanZoomToCanvas = () => {
+    addPanZoomToCanvas = (canvas: HTMLCanvasElement) => {
         // Zoom
         this.panningObject = { panningCanvas: false, startXInCoords: 0, startYInCoords: 0 };
 
-        this.canvas.addEventListener('wheel', (evt) => {
+        canvas.addEventListener('wheel', (evt) => {
             let sign = evt.deltaY < 0 ? -1 : 1; // deltaY < 0 -> zoom in
             let vp = this.vp;
             let x = vp.xToCoord(evt.clientX);
@@ -187,19 +234,19 @@ export class FractalContext {
         });
 
         // Pan
-        this.canvas.addEventListener('mousedown', (evt) => {
+        canvas.addEventListener('mousedown', (evt) => {
             this.panningObject.panningCanvas = true;
             let vp = this.vp;
             this.panningObject.startXInCoords = vp.xToCoord(evt.clientX);
             this.panningObject.startYInCoords = vp.yToCoord(evt.clientY);
         });
-        this.canvas.addEventListener('mouseup', (evt) => {
+        canvas.addEventListener('mouseup', (evt) => {
             this.panningObject.panningCanvas = false;
         });
-        this.canvas.addEventListener('mouseleave', (evt) => {
+        canvas.addEventListener('mouseleave', (evt) => {
             this.panningObject.panningCanvas = false;
         });
-        this.canvas.addEventListener('mousemove', (evt) => {
+        canvas.addEventListener('mousemove', (evt) => {
             if (!this.panningObject.panningCanvas) return;
             let vp = this.vp;
 
@@ -272,8 +319,14 @@ export class FractalContext {
         var screenResAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenResolution');
         this.gl.uniform2f(screenResAttribLocation, width, height);
     };
+
     setScreenStart = (screenStartX: number, screenStartY: number) => {
         var screenStartAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenStart');
         this.gl.uniform2f(screenStartAttribLocation, screenStartX, screenStartY);
+    };
+
+    setCPURendering = (bool: boolean) => {
+        this.cpuRendering = bool;
+        this.render();
     };
 }
