@@ -11,50 +11,48 @@
             <circle id="julia-center-coords-indicator" cx="3" cy="3" r="3" fill="none" />
         </svg>
 
-        <div id="header">
-            <div id="controls" class="controls">
-                <div class="input-wrapper" id="julia-coords-wrapper">
-                    <label id="julia-coords-label" for="julia-coords">Julia Coordinates</label>
-                    <div id="julia-coords">
-                        <input type="number" step="0.00000001" class="julia-center-input" id="julia-center-x" />
-                        <input type="number" step="0.00000001" class="julia-center-input" id="julia-center-y" />
-                    </div>
-                </div>
-                <div class="input-wrapper">
-                    <label for="escape-radius">Escape Radius</label>
-                    <input type="number" step="0.1" id="escape-radius" />
-                </div>
-                <div class="input-wrapper">
-                    <label for="exponent">Exponent</label>
-                    <input type="number" step="0.1" id="exponent" />
-                </div>
-                <div class="input-wrapper">
-                    <label for="color-picker">Color</label>
-                    <input type="color" id="color-picker" />
-                    <div id="color-dropdown">
-                        <label for="color-setting-1">Smooth Coloring</label>
-                        <input type="checkbox" id="color-setting-1" />
-                        <label for="color-setting-2">Static Orange</label>
-                        <input type="checkbox" id="color-setting-2" />
-                        <label for="color-setting-3">Linear RGB</label>
-                        <input type="checkbox" id="color-setting-3" />
-                        <label for="color-setting-4">Nonlinear 1</label>
-                        <input type="checkbox" id="color-setting-4" />
-                        <label for="color-setting-4">Nonlinear 2</label>
-                        <input type="checkbox" id="color-setting-5" />
-                    </div>
-                </div>
-                <div class="input-wrapper">
-                    <button id="random-movement">Random Movement</button>
+        <div id="controls" class="controls">
+            <div class="input-wrapper" id="julia-coords-wrapper">
+                <label id="julia-coords-label" for="julia-coords">Julia Coordinates</label>
+                <div id="julia-coords">
+                    <input type="number" step="0.00000001" class="julia-center-input" id="julia-center-x" />
+                    <input type="number" step="0.00000001" class="julia-center-input" id="julia-center-y" />
                 </div>
             </div>
-            <div id="meta-controls">
-                <div class="input-wrapper" id="hide-ui-wrapper">
-                    <button id="hide-ui-btn">Hide UI</button>
+            <div class="input-wrapper">
+                <label for="escape-radius">Escape Radius</label>
+                <input type="number" step="0.1" id="escape-radius" />
+            </div>
+            <div class="input-wrapper">
+                <label for="exponent">Exponent</label>
+                <input type="number" step="0.1" id="exponent" />
+            </div>
+            <div class="input-wrapper">
+                <label for="color-picker">Color</label>
+                <input type="color" id="color-picker" />
+                <div id="color-dropdown">
+                    <label for="color-setting-1">Smooth Coloring</label>
+                    <input type="checkbox" id="color-setting-1" />
+                    <label for="color-setting-2">Static Orange</label>
+                    <input type="checkbox" id="color-setting-2" />
+                    <label for="color-setting-3">Linear RGB</label>
+                    <input type="checkbox" id="color-setting-3" />
+                    <label for="color-setting-4">Nonlinear 1</label>
+                    <input type="checkbox" id="color-setting-4" />
+                    <label for="color-setting-4">Nonlinear 2</label>
+                    <input type="checkbox" id="color-setting-5" />
                 </div>
-                <div class="input-wrapper" id="save-julia-wrapper">
-                    <button id="save-julia-png-btn">Save as png</button>
-                </div>
+            </div>
+            <div class="input-wrapper">
+                <button id="random-movement">Random Movement</button>
+            </div>
+        </div>
+        <div id="meta-controls">
+            <div class="input-wrapper" id="hide-ui-wrapper">
+                <button id="hide-ui-btn">Hide UI</button>
+            </div>
+            <div class="input-wrapper" id="save-julia-wrapper">
+                <button id="save-julia-png-btn">Save as png</button>
             </div>
         </div>
         <div id="download-preview-container">

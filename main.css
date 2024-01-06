@@ -10,6 +10,7 @@ html {
     width: 100%;
     height: 4em;
 }
+
 #julia-center-coords-indicator {
     fill: white;
     mix-blend-mode: difference;
@@ -18,14 +19,28 @@ html {
 #controls {
     transition: opacity 1s ease-in-out;
     transition-duration: 200ms;
+    height: 4em;
+    position: absolute;
 }
 
 .controls {
     display: flex;
 }
 
+#meta-controls {
+    margin-left: auto;
+    display: flex;
+    height: 4em;
+    right: 10px;
+    position: absolute;
+}
+
+#hide-ui-btn {
+    width: 5em;
+}
 .invisible {
     opacity: 0;
+    pointer-events: none;
 }
 
 #canvas-container {
@@ -98,16 +113,6 @@ input[type='color']::-webkit-color-swatch {
 
 #color-dropdown label {
     font-size: 15px;
-}
-
-#meta-controls {
-    margin-left: auto;
-    margin-right: 1em;
-    display: flex;
-}
-
-#hide-ui-btn {
-    width: 5em;
 }
 
 #download-preview-container {
