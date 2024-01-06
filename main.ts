@@ -66,7 +66,7 @@ const juliaDrawingContext = new JuliaContext(
 );
 
 const juliaPreviewCanvas = <HTMLCanvasElement>document.getElementById('download-preview-canvas');
-const juliaPreviewCanvas2d = document.createElement('canvas');
+const juliaPreviewCanvas2d = <HTMLCanvasElement>document.getElementById('download-preview-canvas-2d');
 const juliaPreviewContext = new JuliaContext(
     juliaPreviewCanvas,
     juliaPreviewCanvas2d,
@@ -165,7 +165,13 @@ hideUIButton.onclick = () => {
 juliaContext.render();
 mandelContext.render();
 
-const btn = document.createElement('button');
-uiControlDiv.appendChild(btn);
-btn.innerText = 'CPU Render';
-btn.onclick = () => mandelContext.setCPURendering(true);
+//const btn = document.createElement('button');
+//uiControlDiv.appendChild(btn);
+//btn.innerText = 'CPU Render';
+//btn.onclick = () => juliaContext.render(true);
+
+const previewCPURenderButton = document.getElementById('preview-cpu-render-btn');
+previewCPURenderButton.onclick = () => {
+    juliaPreviewContext.setCPURendering(!juliaPreviewContext.cpuRendering);
+    previewCPURenderButton.innerText = 'Turn CPU Rendering ' + (juliaPreviewContext.cpuRendering ? 'OFF' : 'ON');
+};

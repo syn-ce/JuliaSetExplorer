@@ -152,10 +152,15 @@ const resizeCanvas = (
     let newWidth = xScreenRight - xScreenLeft;
     let newHeight = yScreenTop - yScreenBot;
 
-    // Update the canvas
+    // Update the webgl canvas
     let canvas = <HTMLCanvasElement>juliaContext.canvas;
     canvas.width = newWidth;
     canvas.height = newHeight;
+
+    // Update the 2d canvas
+    let canvas2d = <HTMLCanvasElement>juliaContext.canvas2d;
+    canvas2d.width = newWidth;
+    canvas2d.height = newHeight;
 
     // Extrapolate new boundaries
     let newXMin = juliaContext.vp.xToCoord(xScreenLeft);
@@ -180,7 +185,7 @@ const moveCanvas = (juliaContext: JuliaContext, borderElement: HTMLElement) => {
     borderElement.style.top = `${juliaContext.vp.screenStart.y.toString()}px`;
 };
 
-const download = (juliaDrawingContext: JuliaContext, juliaPreviewContext: JuliaContext) => {
+const downloadJuliaPNG = (juliaDrawingContext: JuliaContext, juliaPreviewContext: JuliaContext) => {
     let downloadLink = document.createElement('a');
     downloadLink.setAttribute(
         'download',
@@ -206,17 +211,25 @@ const download = (juliaDrawingContext: JuliaContext, juliaPreviewContext: JuliaC
     juliaDrawingContext.setColorSettings(juliaPreviewContext.colorSettings);
     juliaDrawingContext.setJuliaCCoords(juliaPreviewContext.juliaCCoords.x, juliaPreviewContext.juliaCCoords.y);
 
-    juliaDrawingContext.render();
+    juliaDrawingContext.render(juliaPreviewContext.cpuRendering);
 
-    juliaDrawingContext.canvas.toBlob((blob) => {
-        let url = URL.createObjectURL(blob);
-        downloadLink.setAttribute('href', url);
-        downloadLink.click();
-    });
+    if (juliaPreviewContext.cpuRendering) {
+        juliaDrawingContext.canvas2d.toBlob((blob) => {
+            let url = URL.createObjectURL(blob);
+            downloadLink.setAttribute('href', url);
+            downloadLink.click();
+        });
+    } else {
+        juliaDrawingContext.canvas.toBlob((blob) => {
+            let url = URL.createObjectURL(blob);
+            downloadLink.setAttribute('href', url);
+            downloadLink.click();
+        });
+    }
 };
 
 // Download button
-const DownloadCanvasAsImage = (
+const openSaveJuliaModal = (
     juliaContext: JuliaContext,
     juliaDrawingContext: JuliaContext,
     juliaPreviewContext: JuliaContext
@@ -226,7 +239,7 @@ const DownloadCanvasAsImage = (
 };
 
 export const addDownloadBtnFunctionality = (juliaDrawingContext: JuliaContext, juliaPreviewContext: JuliaContext) => {
-    downloadJuliaBtn.onclick = (evt) => download(juliaDrawingContext, juliaPreviewContext);
+    downloadJuliaBtn.onclick = (evt) => downloadJuliaPNG(juliaDrawingContext, juliaPreviewContext);
 };
 
 const downloadJuliaBtn = <HTMLElement>document.getElementById('download-julia-btn');
@@ -239,6 +252,6 @@ export const addSaveJuliaPNGBtnListeners = (
 ) => {
     const saveJuliaPNGBtn = document.getElementById(btnId);
     saveJuliaPNGBtn.onclick = (evt) => {
-        DownloadCanvasAsImage(juliaContext, juliaDrawingContext, juliaPreviewContext);
+        openSaveJuliaModal(juliaContext, juliaDrawingContext, juliaPreviewContext);
     };
 };

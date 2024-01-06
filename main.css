@@ -130,7 +130,8 @@ input[type='color']::-webkit-color-swatch {
     border: 10px solid #333;
 }
 
-#download-preview-canvas {
+#download-preview-canvas,
+#download-preview-canvas-2d {
     display: block;
 }
 
@@ -158,6 +159,14 @@ input[type='color']::-webkit-color-swatch {
     height: 30px;
     bottom: 30px;
     left: 130px;
+}
+
+#preview-cpu-render-btn {
+    position: absolute;
+    height: 30px;
+    bottom: 20px;
+    right: 30px;
+    width: 23ch;
 }
 
 .close {
