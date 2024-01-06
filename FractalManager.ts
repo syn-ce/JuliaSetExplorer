@@ -79,11 +79,26 @@ export class FractalManager {
         });
     }
 
+    addListenersToRandomMovementBtn(btnId: string) {
+        const randomMovementBtn = document.getElementById(btnId);
+        randomMovementBtn.onclick = (evt) => {
+            if (!this.movingRandom) {
+                this.randomMovement();
+            } else {
+                this.stopRandomMovement();
+            }
+        };
+    }
+
     // Enable pausing of reactive julia rendering
     addPausingUpdateJulia() {
         window.addEventListener('keydown', (evt) => {
-            if (evt.code == 'Space')
+            if (evt.code == 'KeyF')
                 this.mandelContext.indicatorFollowsMouse = !this.mandelContext.indicatorFollowsMouse;
+            else if (evt.code == 'KeyR') {
+                if (!this.movingRandom) this.randomMovement();
+                else this.stopRandomMovement();
+            }
         });
     }
 

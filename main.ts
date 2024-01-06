@@ -1,9 +1,11 @@
 import { RGBToHex, denormalizeRGB, getCanvasElementById } from './utils.js';
 import {
-    addDownloadBtnFunctionality,
-    addDownloadResInputListener,
+    setupColorSettingsInputs,
     addSaveJuliaPNGBtnListeners,
-    setupDownloadPreview,
+    setupHideUIButton,
+    setupPreviewCenterOriginBtn,
+    setupPreviewCPURenderBtn,
+    setupPreviewDownload,
 } from './ui.js';
 import { getFragmentShaderText } from './glutils.js';
 import { JuliaContext } from './JuliaContext.js';
@@ -18,8 +20,6 @@ const canvasJulia2d = getCanvasElementById('julia-canvas-2d');
 
 const nrIterations = 300;
 
-export var escapeRadius = 4.0;
-
 const fragmentShaderTextMandel = getFragmentShaderText(nrIterations, 'vec2(0.0,0.0)', 'vec2(x,y)', '');
 const mandelContext = new MandelContext(
     canvasMandel,
@@ -28,7 +28,7 @@ const mandelContext = new MandelContext(
     window.innerHeight,
     { x: 0, y: 0 },
     fragmentShaderTextMandel,
-    nrIterations + 300
+    nrIterations
 );
 
 mandelContext.addColorInputListener('color-picker');
@@ -79,100 +79,48 @@ const juliaPreviewContext = new JuliaContext(
 
 juliaPreviewContext.zoomFactor = 1.15; // Make zoom for preview less aggressive (easier to "fine-tune")
 
-addDownloadResInputListener(juliaPreviewContext);
-
-addDownloadBtnFunctionality(juliaDrawingContext, juliaPreviewContext);
-
-setupDownloadPreview(juliaPreviewContext);
+// Add event listeners to buttons, inputs
+setupPreviewDownload(
+    juliaDrawingContext,
+    juliaPreviewContext,
+    'download-julia-btn',
+    'download-resolution-x',
+    'download-resolution-y'
+);
 
 juliaPreviewContext.setCenterTo(0, 0);
 
 addSaveJuliaPNGBtnListeners(juliaContext, juliaDrawingContext, 'save-julia-png-btn', juliaPreviewContext);
 
+// Set initial color
 juliaContext.setColorValues({ r: 0.1, g: 0.46, b: 0.0 });
 mandelContext.setColorValues({ r: 0.1, g: 0.46, b: 0.0 });
-
-juliaContext.setJuliaCCoords(0.0, 0.0);
-mandelContext.updateCenterIndicator({ x: 0.0, y: 0.0 });
 
 const colorPicker = <HTMLInputElement>document.getElementById('color-picker');
 colorPicker.value = RGBToHex(denormalizeRGB({ r: 0.1, g: 0.46, b: 0.0 }));
 
+// Set initial center value
+juliaContext.setJuliaCCoords(0.0, 0.0);
+mandelContext.updateCenterIndicator({ x: 0.0, y: 0.0 });
+
 // Enables communication between mandel and julia context
 const fractalManager = new FractalManager(mandelContext, juliaContext, 'julia-center-x', 'julia-center-y');
 
-const randomMovementBtn = document.getElementById('random-movement');
-randomMovementBtn.onclick = (evt) => {
-    if (!fractalManager.movingRandom) {
-        fractalManager.randomMovement();
-    } else {
-        fractalManager.stopRandomMovement();
-    }
-};
+// Random movement button
+fractalManager.addListenersToRandomMovementBtn('random-movement');
 
-const previewCenterOriginBtn = <HTMLInputElement>document.getElementById('preview-center-origin-btn');
-previewCenterOriginBtn.onclick = (evt) => {
-    juliaPreviewContext.setCenterTo(0, 0);
-    juliaPreviewContext.render();
-};
-
-const getColorSettings = () => {
-    return colorSettingsInputs.map((input) => ((<HTMLInputElement>input).checked ? 1.0 : 0.0));
-};
-
-const colorDropdown = document.getElementById('color-dropdown');
-const colorSettingsInputs: HTMLInputElement[] = Array.from(colorDropdown.getElementsByTagName('input'));
-colorSettingsInputs.forEach((input) =>
-    input.addEventListener('input', (evt) => {
-        const colorSettings = getColorSettings();
-        juliaContext.setColorSettings(colorSettings);
-        juliaContext.render();
-        mandelContext.setColorSettings(colorSettings);
-        mandelContext.render();
-    })
-);
-
-// Initial color settings
-colorSettingsInputs[0].checked = true;
-colorSettingsInputs[2].checked = true;
-const colorSettings = getColorSettings();
-juliaContext.setColorSettings(colorSettings);
-mandelContext.setColorSettings(colorSettings);
+// Color settings
+setupColorSettingsInputs(juliaContext, mandelContext, 'color-dropdown');
 
 // Hide-UI-Button
-const hideUIButton = <HTMLInputElement>document.getElementById('hide-ui-btn');
-const uiControlDiv = document.getElementById('controls');
-const uiControlInputs = Array.from(uiControlDiv.getElementsByTagName('input'));
-const uiControlButtons = Array.from(uiControlDiv.getElementsByTagName('button'));
+setupHideUIButton();
 
-var uiShown = true;
+// Center origin in preview button
+setupPreviewCenterOriginBtn(juliaPreviewContext, 'preview-center-origin-btn');
 
-hideUIButton.onclick = () => {
-    if (uiShown) {
-        uiControlInputs.forEach((el) => (el.tabIndex = -1));
-        uiControlButtons.forEach((el) => (el.tabIndex = -1));
-        hideUIButton.innerText = 'Show UI';
-        uiControlDiv.classList.add('invisible');
-    } else {
-        uiControlInputs.forEach((el) => (el.tabIndex = 1));
-        uiControlButtons.forEach((el) => (el.tabIndex = 1));
-        hideUIButton.innerText = 'Hide UI';
-        uiControlDiv.classList.remove('invisible');
-    }
-    uiShown = !uiShown;
-};
+// CPU Rendering button in preview
+setupPreviewCPURenderBtn(juliaPreviewContext, 'preview-cpu-render-btn');
 
 // Render
 juliaContext.render();
 mandelContext.render();
-
-//const btn = document.createElement('button');
-//uiControlDiv.appendChild(btn);
-//btn.innerText = 'CPU Render';
-//btn.onclick = () => juliaContext.render(true);
-
-const previewCPURenderButton = document.getElementById('preview-cpu-render-btn');
-previewCPURenderButton.onclick = () => {
-    juliaPreviewContext.setCPURendering(!juliaPreviewContext.cpuRendering);
-    previewCPURenderButton.innerText = 'Turn CPU Rendering ' + (juliaPreviewContext.cpuRendering ? 'OFF' : 'ON');
-};

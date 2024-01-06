@@ -1,4 +1,5 @@
 import { JuliaContext } from './JuliaContext.js';
+import { MandelContext } from './MandelContext.js';
 
 // Will change the x-value so that the result matches the aspect ratio, will move the window to the center of the screen
 const setAspectRatio = (juliaPreviewContext: JuliaContext, aspectRatio: number) => {
@@ -49,18 +50,9 @@ juliaPreviewCloser.addEventListener('click', (evt) => {
     juliaPreviewContainer.style.display = 'none';
 });
 
-const downloadResXInput = <HTMLInputElement>document.getElementById('download-resolution-x');
-const downloadResYInput = <HTMLInputElement>document.getElementById('download-resolution-y');
-
 const downloadResolution = {
     x: window.screen.width * window.devicePixelRatio,
     y: window.screen.height * window.devicePixelRatio,
-};
-
-export const setupDownloadPreview = (juliaPrevContext: JuliaContext) => {
-    downloadResXInput.value = downloadResolution.x.toString();
-    downloadResYInput.value = downloadResolution.y.toString();
-    setAspectRatio(juliaPrevContext, downloadResolution.x / downloadResolution.y);
 };
 
 // Tries to resize the canvas to a a "medium" width and height if both are small
@@ -86,38 +78,6 @@ const tryResizeCanvasMediumSize = (juliaPrevContext: JuliaContext) => {
             window.innerHeight * 0.5 + height * 0.5
         );
     }
-};
-
-export const addDownloadResInputListener = (juliaPreviewContext: JuliaContext) => {
-    addDownloadResXInputListener(juliaPreviewContext);
-    addDownloadResYInputListener(juliaPreviewContext);
-};
-
-const addDownloadResXInputListener = (juliaPreviewContext: JuliaContext) => {
-    downloadResXInput.addEventListener('input', (evt) => {
-        let xVal = parseInt((<HTMLInputElement>evt.currentTarget).value);
-        if (Number.isNaN(xVal) || xVal < 9) {
-            // Too small
-            return;
-        } // Change ratio accordingly
-        let ratio = xVal / downloadResolution.y;
-        setAspectRatio(juliaPreviewContext, ratio);
-        downloadResolution.x = xVal;
-    });
-};
-
-const addDownloadResYInputListener = (juliaPreviewContext: JuliaContext) => {
-    downloadResYInput.addEventListener('input', (evt) => {
-        let yVal = parseInt((<HTMLInputElement>evt.currentTarget).value);
-        if (Number.isNaN(yVal) || yVal < 9) {
-            // Too small
-            return;
-        }
-        // Change ratio accordingly
-        let ratio = downloadResolution.x / yVal;
-        setAspectRatio(juliaPreviewContext, ratio);
-        downloadResolution.y = yVal;
-    });
 };
 
 const previewDownloadImage = (juliaContext: JuliaContext, juliaPreviewContext: JuliaContext, borderId?: string) => {
@@ -238,11 +198,75 @@ const openSaveJuliaModal = (
     previewDownloadImage(juliaContext, juliaPreviewContext, 'download-preview-canvas-border');
 };
 
-export const addDownloadBtnFunctionality = (juliaDrawingContext: JuliaContext, juliaPreviewContext: JuliaContext) => {
+export const setupDownloadPreview = (
+    juliaPrevContext: JuliaContext,
+    downloadResXInput: HTMLInputElement,
+    downloadResYInput: HTMLInputElement
+) => {
+    downloadResXInput.value = downloadResolution.x.toString();
+    downloadResYInput.value = downloadResolution.y.toString();
+    setAspectRatio(juliaPrevContext, downloadResolution.x / downloadResolution.y);
+};
+
+export const addDownloadBtnFunctionality = (
+    juliaDrawingContext: JuliaContext,
+    juliaPreviewContext: JuliaContext,
+    downloadJuliaBtn: HTMLInputElement
+) => {
     downloadJuliaBtn.onclick = (evt) => downloadJuliaPNG(juliaDrawingContext, juliaPreviewContext);
 };
 
-const downloadJuliaBtn = <HTMLElement>document.getElementById('download-julia-btn');
+//export const addDownloadResInputListeners = (juliaPreviewContext: JuliaContext) => {
+//    addDownloadResXInputListener(juliaPreviewContext);
+//    addDownloadResYInputListener(juliaPreviewContext);
+//};
+
+const addDownloadResXInputListener = (juliaPreviewContext: JuliaContext, downloadResXInput: HTMLInputElement) => {
+    downloadResXInput.addEventListener('input', (evt) => {
+        let xVal = parseInt((<HTMLInputElement>evt.currentTarget).value);
+        if (Number.isNaN(xVal) || xVal < 9) {
+            // Too small
+            return;
+        } // Change ratio accordingly
+        let ratio = xVal / downloadResolution.y;
+        setAspectRatio(juliaPreviewContext, ratio);
+        downloadResolution.x = xVal;
+    });
+};
+
+const addDownloadResYInputListener = (juliaPreviewContext: JuliaContext, downloadResYInput: HTMLInputElement) => {
+    downloadResYInput.addEventListener('input', (evt) => {
+        let yVal = parseInt((<HTMLInputElement>evt.currentTarget).value);
+        if (Number.isNaN(yVal) || yVal < 9) {
+            // Too small
+            return;
+        }
+        // Change ratio accordingly
+        let ratio = downloadResolution.x / yVal;
+        setAspectRatio(juliaPreviewContext, ratio);
+        downloadResolution.y = yVal;
+    });
+};
+
+export const setupPreviewDownload = (
+    juliaDrawingContext: JuliaContext,
+    juliaPreviewContext: JuliaContext,
+    downloadJuliaBtnId: string,
+    downloadResXInputId: string,
+    downloadResYInputId: string
+) => {
+    const downloadJuliaBtn = <HTMLInputElement>document.getElementById(downloadJuliaBtnId);
+
+    const downloadResXInput = <HTMLInputElement>document.getElementById(downloadResXInputId);
+    const downloadResYInput = <HTMLInputElement>document.getElementById(downloadResYInputId);
+
+    addDownloadResXInputListener(juliaPreviewContext, downloadResXInput);
+    addDownloadResYInputListener(juliaPreviewContext, downloadResYInput);
+
+    addDownloadBtnFunctionality(juliaDrawingContext, juliaPreviewContext, downloadJuliaBtn);
+
+    setupDownloadPreview(juliaPreviewContext, downloadResXInput, downloadResYInput);
+};
 
 export const addSaveJuliaPNGBtnListeners = (
     juliaContext: JuliaContext,
@@ -253,5 +277,74 @@ export const addSaveJuliaPNGBtnListeners = (
     const saveJuliaPNGBtn = document.getElementById(btnId);
     saveJuliaPNGBtn.onclick = (evt) => {
         openSaveJuliaModal(juliaContext, juliaDrawingContext, juliaPreviewContext);
+    };
+};
+
+export const setupColorSettingsInputs = (
+    juliaContext: JuliaContext,
+    mandelContext: MandelContext,
+    colorDropdownId: string
+) => {
+    const getColorSettings = () => {
+        return colorSettingsInputs.map((input) => ((<HTMLInputElement>input).checked ? 1.0 : 0.0));
+    };
+
+    const colorDropdown = document.getElementById(colorDropdownId);
+    const colorSettingsInputs: HTMLInputElement[] = Array.from(colorDropdown.getElementsByTagName('input'));
+    colorSettingsInputs.forEach((input) =>
+        input.addEventListener('input', (evt) => {
+            const colorSettings = getColorSettings();
+            juliaContext.setColorSettings(colorSettings);
+            juliaContext.render();
+            mandelContext.setColorSettings(colorSettings);
+            mandelContext.render();
+        })
+    );
+
+    // Initial color settings
+    colorSettingsInputs[0].checked = true;
+    colorSettingsInputs[2].checked = true;
+    const colorSettings = getColorSettings();
+    juliaContext.setColorSettings(colorSettings);
+    mandelContext.setColorSettings(colorSettings);
+};
+
+export const setupHideUIButton = () => {
+    const hideUIButton = <HTMLInputElement>document.getElementById('hide-ui-btn');
+    const uiControlDiv = document.getElementById('controls');
+    const uiControlInputs = Array.from(uiControlDiv.getElementsByTagName('input'));
+    const uiControlButtons = Array.from(uiControlDiv.getElementsByTagName('button'));
+
+    var uiShown = true;
+
+    hideUIButton.onclick = () => {
+        if (uiShown) {
+            uiControlInputs.forEach((el) => (el.tabIndex = -1));
+            uiControlButtons.forEach((el) => (el.tabIndex = -1));
+            hideUIButton.innerText = 'Show UI';
+            uiControlDiv.classList.add('invisible');
+        } else {
+            uiControlInputs.forEach((el) => (el.tabIndex = 1));
+            uiControlButtons.forEach((el) => (el.tabIndex = 1));
+            hideUIButton.innerText = 'Hide UI';
+            uiControlDiv.classList.remove('invisible');
+        }
+        uiShown = !uiShown;
+    };
+};
+
+export const setupPreviewCenterOriginBtn = (juliaPreviewContext: JuliaContext, centerOriginBtnId: string) => {
+    const previewCenterOriginBtn = <HTMLInputElement>document.getElementById(centerOriginBtnId);
+    previewCenterOriginBtn.onclick = (evt) => {
+        juliaPreviewContext.setCenterTo(0, 0);
+        juliaPreviewContext.render();
+    };
+};
+
+export const setupPreviewCPURenderBtn = (juliaPreviewContext: JuliaContext, previewCPURenderBtnId: string) => {
+    const previewCPURenderButton = document.getElementById(previewCPURenderBtnId);
+    previewCPURenderButton.onclick = () => {
+        juliaPreviewContext.setCPURendering(!juliaPreviewContext.cpuRendering);
+        previewCPURenderButton.innerText = 'Turn CPU Rendering ' + (juliaPreviewContext.cpuRendering ? 'OFF' : 'ON');
     };
 };
