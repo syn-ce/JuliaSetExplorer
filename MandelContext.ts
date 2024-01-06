@@ -85,7 +85,7 @@ export class MandelContext extends FractalContext {
             z.real += c.real;
             z.imag += c.imag;
 
-            if (z.real * z.real + z.imag * z.imag > 4) {
+            if (z.real * z.real + z.imag * z.imag > this.escapeRadius) {
                 const ismoothed =
                     i -
                     Math.log2(Math.log2(z.real * z.real + z.imag * z.imag) / Math.log2(this.escapeRadius)) /

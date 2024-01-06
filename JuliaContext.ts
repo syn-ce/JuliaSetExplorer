@@ -1,5 +1,5 @@
 import { FractalContext } from './FractalContext.js';
-import { addVecs, scaleVec } from './utils.js';
+import { addVecs, complexExp, scaleVec } from './utils.js';
 
 export class JuliaContext extends FractalContext {
     juliaCCoords: { x: number; y: number };
@@ -34,15 +34,11 @@ export class JuliaContext extends FractalContext {
         let c = { real: this.juliaCCoords.x, imag: this.juliaCCoords.y };
 
         for (let i = 0; i < this.nrIterations; i++) {
-            let real = z.real * z.real - z.imag * z.imag + c.real;
-            let imag = (z.imag = 2 * z.real * z.imag + c.imag);
+            z = complexExp(z.real, z.imag, this.exponent);
+            z.real += c.real;
+            z.imag += c.imag;
 
-            //let real = z.real ** 3 - 3 * z.real * z.imag * z.imag;
-            //let imag = -(z.imag ** 3) + 3 * z.real * z.real * y;
-            z.real = real;
-            z.imag = imag;
-
-            if (z.real * z.real + z.imag * z.imag > 4) {
+            if (z.real * z.real + z.imag * z.imag > this.escapeRadius) {
                 const ismoothed =
                     i -
                     Math.log2(Math.log2(z.real * z.real + z.imag * z.imag) / Math.log2(this.escapeRadius)) /
