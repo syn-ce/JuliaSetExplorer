@@ -127,7 +127,7 @@ input[type='color']::-webkit-color-swatch {
 #download-preview-canvas-border {
     position: absolute;
     display: block;
-    border: 10px solid #333;
+    border: 2px solid #333;
 }
 
 #download-preview-canvas,
