@@ -1,6 +1,18 @@
 import { JuliaContext } from './JuliaContext.js';
 import { MandelContext } from './MandelContext.js';
 
+// Closing of preview
+const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');
+const juliaPreviewContainer = document.getElementById('download-preview-container');
+juliaPreviewCloser.addEventListener('click', (evt) => {
+    juliaPreviewContainer.style.display = 'none';
+});
+
+const downloadResolution = {
+    x: window.screen.width * window.devicePixelRatio,
+    y: window.screen.height * window.devicePixelRatio,
+};
+
 // Will change the x-value so that the result matches the aspect ratio, will move the window to the center of the screen
 const setAspectRatio = (juliaPreviewContext: JuliaContext, aspectRatio: number) => {
     // Try adjusting width and height so that the image stays on screen and has a reasonable size
@@ -42,17 +54,6 @@ const setAspectRatio = (juliaPreviewContext: JuliaContext, aspectRatio: number) 
 
     moveCanvas(juliaPreviewContext, <HTMLElement>document.getElementById('download-preview-canvas-border'));
     juliaPreviewContext.render();
-};
-
-const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');
-const juliaPreviewContainer = document.getElementById('download-preview-container');
-juliaPreviewCloser.addEventListener('click', (evt) => {
-    juliaPreviewContainer.style.display = 'none';
-});
-
-const downloadResolution = {
-    x: window.screen.width * window.devicePixelRatio,
-    y: window.screen.height * window.devicePixelRatio,
 };
 
 // Tries to resize the canvas to a a "medium" width and height if both are small
@@ -112,12 +113,12 @@ const resizeCanvas = (
     let newWidth = xScreenRight - xScreenLeft;
     let newHeight = yScreenTop - yScreenBot;
 
-    // Update the webgl canvas
+    // Update webgl canvas
     let canvas = <HTMLCanvasElement>juliaContext.canvas;
     canvas.width = newWidth;
     canvas.height = newHeight;
 
-    // Update the 2d canvas
+    // Update 2d canvas
     let canvas2d = <HTMLCanvasElement>juliaContext.canvas2d;
     canvas2d.width = newWidth;
     canvas2d.height = newHeight;
@@ -145,6 +146,7 @@ const moveCanvas = (juliaContext: JuliaContext, borderElement: HTMLElement) => {
     borderElement.style.top = `${juliaContext.vp.screenStart.y.toString()}px`;
 };
 
+// Downloads the Julia Image as per the current settings and the center / zoom of the preview image
 const downloadJuliaPNG = (juliaDrawingContext: JuliaContext, juliaPreviewContext: JuliaContext) => {
     let downloadLink = document.createElement('a');
     downloadLink.setAttribute(
@@ -188,13 +190,13 @@ const downloadJuliaPNG = (juliaDrawingContext: JuliaContext, juliaPreviewContext
     }
 };
 
-// Download button
+// Open preview / editor for download of Julia-Image
 const openSaveJuliaModal = (
     juliaContext: JuliaContext,
     juliaDrawingContext: JuliaContext,
     juliaPreviewContext: JuliaContext
 ) => {
-    // This should open a small preview where one can select resolution and crop / zoom
+    // This opens a small preview where one can select resolution and crop / zoom
     previewDownloadImage(juliaContext, juliaPreviewContext, 'download-preview-canvas-border');
 };
 
@@ -215,11 +217,6 @@ export const addDownloadBtnFunctionality = (
 ) => {
     downloadJuliaBtn.onclick = (evt) => downloadJuliaPNG(juliaDrawingContext, juliaPreviewContext);
 };
-
-//export const addDownloadResInputListeners = (juliaPreviewContext: JuliaContext) => {
-//    addDownloadResXInputListener(juliaPreviewContext);
-//    addDownloadResYInputListener(juliaPreviewContext);
-//};
 
 const addDownloadResXInputListener = (juliaPreviewContext: JuliaContext, downloadResXInput: HTMLInputElement) => {
     downloadResXInput.addEventListener('input', (evt) => {
@@ -309,8 +306,8 @@ export const setupColorSettingsInputs = (
     mandelContext.setColorSettings(colorSettings);
 };
 
-export const setupHideUIButton = () => {
-    const hideUIButton = <HTMLInputElement>document.getElementById('hide-ui-btn');
+export const setupHideUIButton = (hideUIBtnId: string) => {
+    const hideUIButton = <HTMLInputElement>document.getElementById(hideUIBtnId);
     const uiControlDiv = document.getElementById('controls');
     const uiControlInputs = Array.from(uiControlDiv.getElementsByTagName('input'));
     const uiControlButtons = Array.from(uiControlDiv.getElementsByTagName('button'));

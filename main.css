@@ -115,6 +115,14 @@ input[type='color']::-webkit-color-swatch {
     font-size: 15px;
 }
 
+#random-movement {
+    width: 17ch;
+}
+
+#save-julia-png-btn {
+    width: 12ch;
+}
+
 #download-preview-container {
     display: none;
     position: absolute;

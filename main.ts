@@ -113,7 +113,7 @@ fractalManager.addListenersToRandomMovementBtn('random-movement');
 setupColorSettingsInputs(juliaContext, mandelContext, 'color-dropdown');
 
 // Hide-UI-Button
-setupHideUIButton();
+setupHideUIButton('hide-ui-btn');
 
 // Center origin in preview button
 setupPreviewCenterOriginBtn(juliaPreviewContext, 'preview-center-origin-btn');
