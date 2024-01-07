@@ -112,6 +112,12 @@ export abstract class FractalContext {
         this.gl.uniform1f(exponentAttribLocation, this.exponent);
     };
 
+    setNrIterations = (nrIterations: number) => {
+        this.nrIterations = nrIterations;
+        var nrIterationsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'nrIterations');
+        this.gl.uniform1f(nrIterationsAttribLocation, this.nrIterations);
+    };
+
     setProgressBarElement = (progressBarElementId: string) => {
         this.progressBar.HTMLBar = document.getElementById(progressBarElementId);
         this.progressBar.HTMLBar.style.display = 'none';
@@ -246,6 +252,8 @@ export abstract class FractalContext {
 
         this.setExponent(2.0);
 
+        this.setNrIterations(this.nrIterations);
+
         this.setColorValues({ r: 0.0, g: 0.0, b: 0.0 });
 
         this.zoomFactor = 1.6;
@@ -348,6 +356,17 @@ export abstract class FractalContext {
         exponentInput.addEventListener('input', (evt) => {
             let val = parseFloat((<HTMLInputElement>evt.currentTarget).value);
             this.setExponent(val);
+            this.render();
+        });
+    };
+
+    addNrIterationsInputListener = (nrIterationsInputId: string) => {
+        const nrIterationsInput = <HTMLInputElement>document.getElementById(nrIterationsInputId);
+        nrIterationsInput.value = this.nrIterations.toString();
+
+        nrIterationsInput.addEventListener('input', (evt) => {
+            let val = parseFloat((<HTMLInputElement>evt.currentTarget).value);
+            this.setNrIterations(val);
             this.render();
         });
     };

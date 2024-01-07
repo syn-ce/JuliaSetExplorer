@@ -93,6 +93,7 @@ const previewDownloadImage = (juliaContext: JuliaContext, juliaPreviewContext: J
     juliaPreviewContext.setXYRenderingBounds(juliaContext.vp.yMin, juliaContext.vp.yMax, juliaContext.vp.xMin);
     juliaPreviewContext.setColorValues(juliaContext.rgbColor);
     juliaPreviewContext.setExponent(juliaContext.exponent);
+    juliaPreviewContext.setNrIterations(juliaContext.nrIterations);
     // Need to set center explicitly because of the different canvas sizes and the way the bounds are set
     let xCenterJuliaContext2 = (juliaContext.vp.xMax + juliaContext.vp.xMin) * 0.5;
     let yCenterJuliaContext2 = (juliaContext.vp.yMax + juliaContext.vp.yMin) * 0.5;

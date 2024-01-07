@@ -39,7 +39,7 @@ export var vertexShaderText = `#version 300 es
         gl_Position = vec4(vertPosition, 0.0, 1.0);
     }`;
 
-export const getFragmentShaderText = (nrIterations: number, z: string, c: string, additionalVariables: string) => {
+export const getFragmentShaderText = (z: string, c: string, additionalVariables: string) => {
     var baseFragmentShaderText = `#version 300 es
     precision highp float;
     out vec4 myOutputColor;
@@ -50,6 +50,7 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
     uniform vec2 xBounds;
     uniform vec2 yBounds;
     uniform float exponent;
+    uniform float nrIterations; // Will effectively be ceiled 
     uniform float colorSettings[5]; // Array of ones and zeroes, used to calc the color of a pixel
     // colorSettings[0] Enables non-smooth rendering
 
@@ -71,13 +72,13 @@ export const getFragmentShaderText = (nrIterations: number, z: string, c: string
         float y = gl_FragCoord.y / screenResolution.y * (yBounds.y - yBounds.x) + yBounds.x;
         vec2 z = ${z};
         vec2 c = ${c};
-        for (float i = 0.0; i < ${nrIterations}.0; i++)
+        for (float i = 0.0; i < nrIterations; i++)
         {
             z = complexExp(z.x, z.y) + c;
             if (z.x*z.x + z.y*z.y > escapeRadius) {
                 float ismoothed = i - log2(log2(z.x*z.x+z.y*z.y)/log2(escapeRadius))/log2(exponent); // https://iquilezles.org/articles/msetsmooth
                 float gray = colorSettings[0] * (i + 1. - log(log(sqrt(z.x*z.x + z.y*z.y))) / log(exponent)) + (1. - colorSettings[0]) * i;
-                gray = gray / ${nrIterations}.0;
+                gray = gray / nrIterations;
 
                 vec3 tmp =  colorSettings[1] * (vec3(gray*4.2, gray*1.2, gray*gray)) + 
                             colorSettings[2] * (gray * 5.0 * rgbColor) +

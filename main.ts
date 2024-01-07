@@ -20,7 +20,7 @@ const canvasJulia2d = getCanvasElementById('julia-canvas-2d');
 
 const nrIterations = 300;
 
-const fragmentShaderTextMandel = getFragmentShaderText(nrIterations, 'vec2(0.0,0.0)', 'vec2(x,y)', '');
+const fragmentShaderTextMandel = getFragmentShaderText('vec2(0.0,0.0)', 'vec2(x,y)', '');
 const mandelContext = new MandelContext(
     canvasMandel,
     canvasMandel2d,
@@ -34,8 +34,9 @@ const mandelContext = new MandelContext(
 mandelContext.addColorInputListener('color-picker');
 mandelContext.addEscapeRadiusInputListener('escape-radius');
 mandelContext.addExponentInputListener('exponent');
+mandelContext.addNrIterationsInputListener('nr-iterations');
 
-const fragmentShaderTextJulia = getFragmentShaderText(nrIterations, 'vec2(x,y)', 'cCoords', 'uniform vec2 cCoords;');
+const fragmentShaderTextJulia = getFragmentShaderText('vec2(x,y)', 'cCoords', 'uniform vec2 cCoords;');
 const juliaContext = new JuliaContext(
     canvasJulia,
     canvasJulia2d,
@@ -52,6 +53,7 @@ const juliaContext = new JuliaContext(
 juliaContext.addColorInputListener('color-picker');
 juliaContext.addEscapeRadiusInputListener('escape-radius');
 juliaContext.addExponentInputListener('exponent');
+juliaContext.addNrIterationsInputListener('nr-iterations');
 
 const juliaDrawingCanvas = <HTMLCanvasElement>document.createElement('canvas');
 const juliaDrawingCanvas2d = <HTMLCanvasElement>document.createElement('canvas');
@@ -109,7 +111,7 @@ mandelContext.updateCenterIndicator({ x: 0.0, y: 0.0 });
 const fractalManager = new FractalManager(mandelContext, juliaContext, 'julia-center-x', 'julia-center-y');
 
 // Random movement button
-fractalManager.addListenersToRandomMovementBtn('random-movement');
+//fractalManager.addListenersToRandomMovementBtn('random-movement');
 
 // Color settings
 setupColorSettingsInputs(juliaContext, mandelContext, 'color-dropdown');
