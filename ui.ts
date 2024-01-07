@@ -167,6 +167,7 @@ const downloadJuliaPNG = (juliaDrawingContext: JuliaContext, juliaPreviewContext
     );
     juliaDrawingContext.setColorValues(juliaPreviewContext.rgbColor);
     juliaDrawingContext.setExponent(juliaPreviewContext.exponent);
+    juliaDrawingContext.setNrIterations(juliaPreviewContext.nrIterations);
     // Need to set center explicitly because of the different canvas sizes and the way the bounds are set
     let xCenterJuliaPreviewContext = (juliaPreviewContext.vp.xMax + juliaPreviewContext.vp.xMin) * 0.5;
     let yCenterJuliaPreviewContext = (juliaPreviewContext.vp.yMax + juliaPreviewContext.vp.yMin) * 0.5;
