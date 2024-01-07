@@ -33,7 +33,12 @@ export abstract class FractalContext {
     zoomFactor: number;
     colorSettings: ColorSettings;
     cpuRendering: boolean;
-    progressBar: { progress: number; HTMLBar: HTMLElement };
+    progressBar: {
+        progress: number;
+        HTMLBar: HTMLElement;
+        timeField: HTMLElement;
+        startTime: number;
+    };
 
     constructor(
         canvas: HTMLCanvasElement,
@@ -74,7 +79,12 @@ export abstract class FractalContext {
         this.FPS = 120;
         this.frameInterval = 1000 / this.FPS;
 
-        this.progressBar = { progress: 0, HTMLBar: null };
+        this.progressBar = {
+            progress: 0,
+            HTMLBar: null,
+            timeField: null,
+            startTime: 0,
+        };
 
         this.setupGL();
     }
@@ -118,9 +128,10 @@ export abstract class FractalContext {
         this.gl.uniform1f(nrIterationsAttribLocation, this.nrIterations);
     };
 
-    setProgressBarElement = (progressBarElementId: string) => {
+    setProgressBarElement = (progressBarElementId: string, timeDisplayElementId: string) => {
         this.progressBar.HTMLBar = document.getElementById(progressBarElementId);
-        this.progressBar.HTMLBar.style.display = 'none';
+        this.progressBar.timeField = document.getElementById(timeDisplayElementId);
+        this.progressBar.HTMLBar.parentElement.style.display = 'none';
     };
 
     canImmediatelyRender = () => {
@@ -132,6 +143,15 @@ export abstract class FractalContext {
     updateProgressBar = (progress: number) => {
         if (!this.progressBar.HTMLBar) return;
         const maxWidth = this.progressBar.HTMLBar.parentElement.getBoundingClientRect().width;
+
+        const currTime = performance.now();
+        const elapsedTime = currTime - this.progressBar.startTime;
+        const estimatedRemainingTime = (elapsedTime / (progress * maxWidth)) * (maxWidth * (1 - progress));
+
+        this.progressBar.timeField.innerText = `${(elapsedTime / 1000).toFixed(2)} | remaining: ~ ${(
+            estimatedRemainingTime / 1000
+        ).toFixed(0)}`;
+
         const width = Math.floor(maxWidth * progress);
         if (
             // Avoid unnecessary manipulation
@@ -144,12 +164,13 @@ export abstract class FractalContext {
         } else if (progress > 1) {
             // Value greater than one will remove the progress bar
             this.progressBar.progress = progress;
-            this.progressBar.HTMLBar.style.display = 'none';
+            this.progressBar.HTMLBar.parentElement.style.display = 'none';
         } else if (progress < 0) {
-            // Value smaller than zero will show the progress bar
-            this.progressBar.HTMLBar.style.display = '';
+            // Value smaller than zero will show the progress bar (reset it)
+            this.progressBar.HTMLBar.parentElement.style.display = '';
             this.progressBar.HTMLBar.style.width = '0px';
             this.progressBar.progress = 0;
+            this.progressBar.startTime = performance.now();
         }
     };
 

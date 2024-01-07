@@ -193,6 +193,13 @@ input[type='color']::-webkit-color-swatch {
     background-color: green;
 }
 
+#cpu-rendering-progress-bar-time {
+    position: absolute;
+    left: 50%;
+    translate: -50% -50%;
+    color: rgb(50, 50, 50);
+}
+
 .close {
     position: absolute;
     right: 32px;

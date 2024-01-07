@@ -67,7 +67,7 @@ const juliaDrawingContext = new JuliaContext(
     nrIterations
 );
 
-juliaDrawingContext.setProgressBarElement('cpu-rendering-progress-bar');
+juliaDrawingContext.setProgressBarElement('cpu-rendering-progress-bar', 'cpu-rendering-progress-bar-time');
 
 const juliaPreviewCanvas = <HTMLCanvasElement>document.getElementById('download-preview-canvas');
 const juliaPreviewCanvas2d = <HTMLCanvasElement>document.getElementById('download-preview-canvas-2d');
