@@ -33,6 +33,7 @@ export abstract class FractalContext {
     zoomFactor: number;
     colorSettings: ColorSettings;
     cpuRendering: boolean;
+    progressBar: { progress: number; HTMLBar: HTMLElement };
 
     constructor(
         canvas: HTMLCanvasElement,
@@ -73,6 +74,8 @@ export abstract class FractalContext {
         this.FPS = 120;
         this.frameInterval = 1000 / this.FPS;
 
+        this.progressBar = { progress: 0, HTMLBar: null };
+
         this.setupGL();
     }
 
@@ -109,47 +112,87 @@ export abstract class FractalContext {
         this.gl.uniform1f(exponentAttribLocation, this.exponent);
     };
 
+    setProgressBarElement = (progressBarElementId: string) => {
+        this.progressBar.HTMLBar = document.getElementById(progressBarElementId);
+        this.progressBar.HTMLBar.style.display = 'none';
+    };
+
     canImmediatelyRender = () => {
         return Date.now() - this.timeOfLastRender >= this.frameInterval;
     };
 
     abstract getColorValueForPoint(x: number, y: number): Vec3D;
 
-    drawSetCPU = () => {
+    updateProgressBar = (progress: number) => {
+        if (!this.progressBar.HTMLBar) return;
+        const maxWidth = this.progressBar.HTMLBar.parentElement.getBoundingClientRect().width;
+        const width = Math.floor(maxWidth * progress);
+        if (
+            // Avoid unnecessary manipulation
+            0 <= progress &&
+            progress <= 1 &&
+            width > Math.floor(this.progressBar.progress * maxWidth)
+        ) {
+            this.progressBar.progress = progress;
+            this.progressBar.HTMLBar.style.width = width + 'px';
+        } else if (progress > 1) {
+            // Value greater than one will remove the progress bar
+            this.progressBar.progress = progress;
+            this.progressBar.HTMLBar.style.display = 'none';
+        } else if (progress < 0) {
+            // Value smaller than zero will show the progress bar
+            this.progressBar.HTMLBar.style.display = '';
+            this.progressBar.HTMLBar.style.width = '0px';
+        }
+    };
+
+    async drawSetCPU() {
+        const drawNonBlocking = (y: number) => {
+            return new Promise((resolve, reject) => {
+                this.updateProgressBar(y / this.canvas2d.height); // Update progress bar
+                for (let x = 0; x < this.canvas2d.width; x++) {
+                    let ind = (y * this.canvas2d.width + x) * 4;
+                    let val = this.getColorValueForPoint(
+                        this.vp.xToCoord(x + this.vp.screenStart.x),
+                        this.vp.yToCoord(y + this.vp.screenStart.y)
+                    );
+                    //if (val == 0) zeroValues++;
+
+                    data[ind] = val.x * 255;
+                    data[ind + 1] = val.y * 255;
+                    data[ind + 2] = val.z * 255;
+                    data[ind + 3] = 255;
+                }
+                setTimeout(() => resolve(''), 0);
+            });
+        };
+
         var startTime = performance.now();
         let zeroValues = 0;
         const imageData = this.context2d.getImageData(0, 0, this.canvas2d.width, this.canvas2d.height);
         const data = imageData.data;
+        this.updateProgressBar(-1); // Displays the progress bar (if it exists)
         for (let y = 0; y < this.canvas2d.height; y++) {
-            for (let x = 0; x < this.canvas2d.width; x++) {
-                let ind = (y * this.canvas2d.width + x) * 4;
-                let val = this.getColorValueForPoint(
-                    this.vp.xToCoord(x + this.vp.screenStart.x),
-                    this.vp.yToCoord(y + this.vp.screenStart.y)
-                );
-                //if (val == 0) zeroValues++;
-
-                data[ind] = val.x * 255;
-                data[ind + 1] = val.y * 255;
-                data[ind + 2] = val.z * 255;
-                data[ind + 3] = 255;
-            }
+            await drawNonBlocking(y);
         }
         //console.log((zeroValues / canvas.width / canvas.height) * (vp.xMax - vp.xMin) * (vp.yMax - vp.yMin)); // This is a VERY rough estimate for the area
         // of the set; Moreover, this assumes the entirety of the set being visible on the screen. For the Mandelbrot set at 1000 iterations, it yields a
         // value of ~1.51
         console.log(`time taken: ${performance.now() - startTime}`);
         this.context2d.putImageData(imageData, 0, 0, 0, 0, this.vp.vWidth, this.vp.vHeight);
-    };
+
+        this.updateProgressBar(1.1); // Hides the progress bar
+    }
 
     render = (cpuRendering = false) => {
         // Could be improved by "Queuing" the render
         if (Date.now() - this.timeOfLastRender >= this.frameInterval) {
             this.timeOfLastRender = Date.now();
             if (cpuRendering || this.cpuRendering) {
-                this.drawSetCPU();
-                this.canvas2d.style.display = '';
-                this.canvas.style.display = 'none';
+                this.drawSetCPU().then(() => {
+                    this.canvas2d.style.display = '';
+                    this.canvas.style.display = 'none';
+                });
             } else {
                 this.gl.drawArrays(this.primitiveType, this.offset, this.count);
                 this.canvas.style.display = '';

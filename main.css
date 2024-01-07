@@ -177,6 +177,22 @@ input[type='color']::-webkit-color-swatch {
     width: 23ch;
 }
 
+/* Progress bar */
+#cpu-rendering-progress-bar-wrapper {
+    width: 25%;
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    bottom: 100px;
+    background-color: grey;
+}
+
+#cpu-rendering-progress-bar {
+    width: 0%;
+    height: 30px;
+    background-color: green;
+}
+
 .close {
     position: absolute;
     right: 32px;
