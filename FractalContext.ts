@@ -325,6 +325,31 @@ export abstract class FractalContext {
         });
     };
 
+    // When double clicking a point in the canvas, center it
+    addDoubleClickCenterPoint = () => {
+        const DOUBLE_CLICK_INTERVAL = 500;
+        const lastClick = { time: performance.now() - DOUBLE_CLICK_INTERVAL - 1, pos: { x: 0, y: 0 } };
+
+        const handleLastClick = (evt: MouseEvent) => {
+            console.log(lastClick.time - performance.now());
+            if (
+                performance.now() - lastClick.time <= DOUBLE_CLICK_INTERVAL &&
+                Math.abs(evt.clientX - lastClick.pos.x) <= 0 &&
+                Math.abs(evt.clientY - lastClick.pos.y) <= 0
+            ) {
+                // Center clicked point
+                this.setCenterTo(this.vp.xToCoord(evt.clientX), this.vp.yToCoord(evt.clientY));
+                this.render();
+            }
+
+            lastClick.time = performance.now();
+            lastClick.pos = { x: evt.clientX, y: evt.clientY };
+        };
+
+        this.canvas.addEventListener('click', (evt) => handleLastClick(evt));
+        this.canvas2d.addEventListener('click', (evt) => handleLastClick(evt));
+    };
+
     addColorInputListener = (colorPickerId: string) => {
         const colorPicker = document.getElementById(colorPickerId);
 

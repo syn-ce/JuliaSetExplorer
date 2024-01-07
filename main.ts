@@ -93,6 +93,7 @@ setupPreviewDownload(
 );
 
 juliaPreviewContext.setCenterTo(0, 0);
+juliaPreviewContext.addDoubleClickCenterPoint();
 
 addSaveJuliaPNGBtnListeners(juliaContext, juliaDrawingContext, 'save-julia-png-btn', juliaPreviewContext);
 
