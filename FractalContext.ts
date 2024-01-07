@@ -202,9 +202,7 @@ export abstract class FractalContext {
                         resolve('');
                     });
                 } else {
-                    let start = performance.now();
                     this.gl.drawArrays(this.primitiveType, this.offset, this.count);
-                    console.log(performance.now() - start);
                     this.canvas.style.display = '';
                     this.canvas2d.style.display = 'none';
                     resolve('');
@@ -331,7 +329,6 @@ export abstract class FractalContext {
         const colorPicker = document.getElementById(colorPickerId);
 
         colorPicker.addEventListener('input', (evt) => {
-            console.log(evt.currentTarget);
             let rgbColor = normalizeRGB(hexToRGB((<HTMLInputElement>evt.currentTarget).value));
             this.setColorValues(rgbColor);
             this.render();
