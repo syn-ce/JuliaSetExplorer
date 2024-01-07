@@ -149,6 +149,7 @@ export abstract class FractalContext {
             // Value smaller than zero will show the progress bar
             this.progressBar.HTMLBar.style.display = '';
             this.progressBar.HTMLBar.style.width = '0px';
+            this.progressBar.progress = 0;
         }
     };
 
