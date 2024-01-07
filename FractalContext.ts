@@ -185,20 +185,26 @@ export abstract class FractalContext {
     }
 
     render = (cpuRendering = false) => {
-        // Could be improved by "Queuing" the render
-        if (Date.now() - this.timeOfLastRender >= this.frameInterval) {
-            this.timeOfLastRender = Date.now();
-            if (cpuRendering || this.cpuRendering) {
-                this.drawSetCPU().then(() => {
-                    this.canvas2d.style.display = '';
-                    this.canvas.style.display = 'none';
-                });
-            } else {
-                this.gl.drawArrays(this.primitiveType, this.offset, this.count);
-                this.canvas.style.display = '';
-                this.canvas2d.style.display = 'none';
+        return new Promise((resolve, reject) => {
+            // Could be improved by "Queuing" the render
+            if (Date.now() - this.timeOfLastRender >= this.frameInterval) {
+                this.timeOfLastRender = Date.now();
+                if (cpuRendering || this.cpuRendering) {
+                    this.drawSetCPU().then(() => {
+                        this.canvas2d.style.display = '';
+                        this.canvas.style.display = 'none';
+                        resolve('');
+                    });
+                } else {
+                    let start = performance.now();
+                    this.gl.drawArrays(this.primitiveType, this.offset, this.count);
+                    console.log(performance.now() - start);
+                    this.canvas.style.display = '';
+                    this.canvas2d.style.display = 'none';
+                    resolve('');
+                }
             }
-        }
+        });
     };
 
     setupGL = () => {

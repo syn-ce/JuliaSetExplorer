@@ -173,21 +173,22 @@ const downloadJuliaPNG = (juliaDrawingContext: JuliaContext, juliaPreviewContext
     juliaDrawingContext.setColorSettings(juliaPreviewContext.colorSettings);
     juliaDrawingContext.setJuliaCCoords(juliaPreviewContext.juliaCCoords.x, juliaPreviewContext.juliaCCoords.y);
 
-    juliaDrawingContext.render(juliaPreviewContext.cpuRendering);
-
-    if (juliaPreviewContext.cpuRendering) {
-        juliaDrawingContext.canvas2d.toBlob((blob) => {
-            let url = URL.createObjectURL(blob);
-            downloadLink.setAttribute('href', url);
-            downloadLink.click();
-        });
-    } else {
-        juliaDrawingContext.canvas.toBlob((blob) => {
-            let url = URL.createObjectURL(blob);
-            downloadLink.setAttribute('href', url);
-            downloadLink.click();
-        });
-    }
+    juliaDrawingContext.render(juliaPreviewContext.cpuRendering).then(() => {
+        // Wait for render to finish, then download
+        if (juliaPreviewContext.cpuRendering) {
+            juliaDrawingContext.canvas2d.toBlob((blob) => {
+                let url = URL.createObjectURL(blob);
+                downloadLink.setAttribute('href', url);
+                downloadLink.click();
+            });
+        } else {
+            juliaDrawingContext.canvas.toBlob((blob) => {
+                let url = URL.createObjectURL(blob);
+                downloadLink.setAttribute('href', url);
+                downloadLink.click();
+            });
+        }
+    });
 };
 
 // Open preview / editor for download of Julia-Image
