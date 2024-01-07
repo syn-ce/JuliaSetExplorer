@@ -148,7 +148,14 @@ const moveCanvas = (juliaContext: JuliaContext, borderElement: HTMLElement) => {
 };
 
 // Downloads the Julia Image as per the current settings and the center / zoom of the preview image
-const downloadJuliaPNG = (juliaDrawingContext: JuliaContext, juliaPreviewContext: JuliaContext) => {
+const downloadJuliaPNG = (
+    juliaDrawingContext: JuliaContext,
+    juliaPreviewContext: JuliaContext,
+    disableDownloadBtn: () => void,
+    enableDownloadBtn: () => void
+) => {
+    disableDownloadBtn();
+
     let downloadLink = document.createElement('a');
     downloadLink.setAttribute(
         'download',
@@ -190,6 +197,8 @@ const downloadJuliaPNG = (juliaDrawingContext: JuliaContext, juliaPreviewContext
                 downloadLink.click();
             });
         }
+
+        enableDownloadBtn();
     });
 };
 
@@ -218,7 +227,13 @@ export const addDownloadBtnFunctionality = (
     juliaPreviewContext: JuliaContext,
     downloadJuliaBtn: HTMLInputElement
 ) => {
-    downloadJuliaBtn.onclick = (evt) => downloadJuliaPNG(juliaDrawingContext, juliaPreviewContext);
+    downloadJuliaBtn.onclick = (evt) =>
+        downloadJuliaPNG(
+            juliaDrawingContext,
+            juliaPreviewContext,
+            () => ((downloadJuliaBtn.disabled = true), console.log('disabled')),
+            () => (downloadJuliaBtn.disabled = false)
+        );
 };
 
 const addDownloadResXInputListener = (juliaPreviewContext: JuliaContext, downloadResXInput: HTMLInputElement) => {
