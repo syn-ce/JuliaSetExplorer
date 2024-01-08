@@ -109,3 +109,7 @@ export const complexExp = (x: number, y: number, exponent: number) => {
     y = r_n * Math.sin(exponent * arg);
     return { real: x, imag: y };
 };
+
+export const canvasMoveEvent = () => {
+    return new Event('moveCanvas');
+};

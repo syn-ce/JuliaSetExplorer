@@ -143,10 +143,19 @@ input[type='color']::-webkit-color-swatch {
     display: block;
 }
 
-#download-resolution-container {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
+#download-resolution-inputs-container {
+    position: relative;
+    margin-right: 20px;
+}
+
+#download-dimension-and-center-container {
+    display: flex;
+    margin: auto;
+    margin-left: 40px;
+}
+
+#download-center-container {
+    display: flex;
 }
 
 #download-resolution-y,
@@ -154,27 +163,32 @@ input[type='color']::-webkit-color-swatch {
     width: 80px;
 }
 
-#download-julia-btn {
+#download-inputs {
     position: absolute;
-    height: 30px;
-    bottom: 20px;
     left: 50%;
     translate: -50%;
+    display: flex;
+    bottom: 20px;
+}
+
+#download-julia-btn {
+    position: relative;
+    height: 30px;
+    margin: auto;
 }
 
 #preview-center-origin-btn {
-    position: absolute;
+    position: relative;
     height: 30px;
-    bottom: 30px;
-    left: 130px;
+    margin: auto;
+    margin-left: 10px;
 }
 
 #preview-cpu-render-btn {
-    position: absolute;
+    position: relative;
     height: 30px;
-    bottom: 20px;
-    right: 30px;
     width: 23ch;
+    margin: auto;
 }
 
 /* Progress bar */

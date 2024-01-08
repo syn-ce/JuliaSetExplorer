@@ -29,6 +29,28 @@ export class JuliaContext extends FractalContext {
         this.gl.uniform2f(cCoordsAttribLocation, this.juliaCCoords.x, this.juliaCCoords.y);
     };
 
+    addCenterInputs = (centerXInputId: string, centerYInputId: string) => {
+        const centerXInput = <HTMLInputElement>document.getElementById(centerXInputId);
+        const centerYInput = <HTMLInputElement>document.getElementById(centerYInputId);
+
+        // Update center values on input
+        const setCenterToInputValues = () =>
+            this.setCenterTo(parseFloat(centerXInput.value), parseFloat(centerYInput.value));
+
+        centerXInput.addEventListener('input', () => setCenterToInputValues());
+        centerYInput.addEventListener('input', () => setCenterToInputValues());
+
+        // Update inputs on pan, zoom
+        const setInputValuesToCenter = () => {
+            let currCenter = this.getCurrentCenter();
+            centerXInput.value = currCenter.cX.toString().substring(0, 10 + (currCenter.cX < 0 ? 1 : 0));
+            centerYInput.value = currCenter.cY.toString().substring(0, 10 + (currCenter.cY < 0 ? 1 : 0));
+        };
+
+        this.canvas.addEventListener('moveCanvas', () => setInputValuesToCenter());
+        this.canvas2d.addEventListener('moveCanvas', () => setInputValuesToCenter());
+    };
+
     getColorValueForPoint = (x: number, y: number) => {
         let z = { real: x, imag: y };
         let c = { real: this.juliaCCoords.x, imag: this.juliaCCoords.y };

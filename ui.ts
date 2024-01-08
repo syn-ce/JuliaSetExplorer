@@ -182,9 +182,12 @@ const downloadJuliaPNG = (
     juliaDrawingContext.setColorSettings(juliaPreviewContext.colorSettings);
     juliaDrawingContext.setJuliaCCoords(juliaPreviewContext.juliaCCoords.x, juliaPreviewContext.juliaCCoords.y);
 
-    juliaDrawingContext.render(juliaPreviewContext.cpuRendering).then(() => {
+    const cpuRendering = juliaPreviewContext.cpuRendering; // Save the current state so changes (i.e. cpu rendering gets
+    // deactivated) during the render won't affect download
+
+    juliaDrawingContext.render(cpuRendering).then(() => {
         // Wait for render to finish, then download
-        if (juliaPreviewContext.cpuRendering) {
+        if (cpuRendering) {
             juliaDrawingContext.canvas2d.toBlob((blob) => {
                 let url = URL.createObjectURL(blob);
                 downloadLink.setAttribute('href', url);

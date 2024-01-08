@@ -8,6 +8,7 @@ import {
     getWebGL2RenderingContext,
     hexToRGB,
     normalizeRGB,
+    canvasMoveEvent,
     zoomPoint,
 } from './utils.js';
 import { Viewport } from './viewport.js';
@@ -114,6 +115,8 @@ export abstract class FractalContext {
         this.gl.uniform2f(xBoundsAttribLocation, this.vp.xMin, this.vp.xMax);
         var yBoundsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'yBounds');
         this.gl.uniform2f(yBoundsAttribLocation, this.vp.yMin, this.vp.yMax);
+
+        this.dispatchCanvasMoveEvent();
     };
 
     setExponent = (exponent: number) => {
@@ -347,6 +350,12 @@ export abstract class FractalContext {
         });
     };
 
+    dispatchCanvasMoveEvent = () => {
+        const canvasMoveEvt = canvasMoveEvent();
+        if (!this.cpuRendering) this.canvas2d.dispatchEvent(canvasMoveEvt);
+        else this.canvas2d.dispatchEvent(canvasMoveEvt);
+    };
+
     // When double clicking a point in the canvas, center it
     addDoubleClickCenterPoint = () => {
         const DOUBLE_CLICK_INTERVAL = 500;
@@ -415,13 +424,18 @@ export abstract class FractalContext {
         });
     };
 
-    setCenterTo = (cX: number, cY: number) => {
-        // Keep current zoom level, simply adjust the bounds
+    getCurrentCenter = () => {
         let currCX = (this.vp.xMin + this.vp.xMax) * 0.5;
         let currCY = (this.vp.yMin + this.vp.yMax) * 0.5;
+        return { cX: currCX, cY: currCY };
+    };
 
-        let xOffset = cX - currCX;
-        let yOffset = cY - currCY;
+    setCenterTo = (cX: number, cY: number) => {
+        // Keep current zoom level, simply adjust the bounds
+        let currCenter = this.getCurrentCenter();
+
+        let xOffset = cX - currCenter.cX;
+        let yOffset = cY - currCenter.cY;
 
         let newXMin = this.vp.xMin + xOffset;
         let newYMin = this.vp.yMin + yOffset;
