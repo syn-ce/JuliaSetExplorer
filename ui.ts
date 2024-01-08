@@ -333,17 +333,31 @@ export const setupHideUIButton = (hideUIBtnId: string) => {
     const uiControlInputs = Array.from(uiControlDiv.getElementsByTagName('input'));
     const uiControlButtons = Array.from(uiControlDiv.getElementsByTagName('button'));
 
+    const metaControlDiv = document.getElementById('meta-controls');
+    const metaControlButtons = Array.from(metaControlDiv.getElementsByTagName('button'));
+
     var uiShown = true;
 
     hideUIButton.onclick = () => {
         if (uiShown) {
             uiControlInputs.forEach((el) => (el.tabIndex = -1));
             uiControlButtons.forEach((el) => (el.tabIndex = -1));
+            metaControlButtons.forEach((el) => {
+                el.tabIndex = -1;
+                el.classList.add('invisible');
+            });
+            hideUIButton.classList.remove('invisible');
+            hideUIButton.style.opacity = '0.2';
             hideUIButton.innerText = 'Show UI';
             uiControlDiv.classList.add('invisible');
         } else {
             uiControlInputs.forEach((el) => (el.tabIndex = 1));
             uiControlButtons.forEach((el) => (el.tabIndex = 1));
+            metaControlButtons.forEach((el) => {
+                el.tabIndex = 1;
+                el.classList.remove('invisible');
+            });
+            hideUIButton.style.opacity = '1.0';
             hideUIButton.innerText = 'Hide UI';
             uiControlDiv.classList.remove('invisible');
         }

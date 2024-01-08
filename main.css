@@ -17,14 +17,15 @@ html {
 }
 
 #controls {
-    transition: opacity 1s ease-in-out;
-    transition-duration: 200ms;
     height: 4em;
     position: absolute;
+    display: flex;
 }
 
-.controls {
-    display: flex;
+.controls,
+#meta-controls button {
+    transition: opacity 1s ease-in-out;
+    transition-duration: 200ms;
 }
 
 #meta-controls {
