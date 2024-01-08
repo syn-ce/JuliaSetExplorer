@@ -329,6 +329,7 @@ export const setupColorSettingsInputs = (
 
 export const setupHideUIButton = (hideUIBtnId: string) => {
     const hideUIButton = <HTMLInputElement>document.getElementById(hideUIBtnId);
+
     const uiControlDiv = document.getElementById('controls');
     const uiControlInputs = Array.from(uiControlDiv.getElementsByTagName('input'));
     const uiControlButtons = Array.from(uiControlDiv.getElementsByTagName('button'));
@@ -337,6 +338,11 @@ export const setupHideUIButton = (hideUIBtnId: string) => {
     const metaControlButtons = Array.from(metaControlDiv.getElementsByTagName('button'));
 
     var uiShown = true;
+
+    // Pressing "h" will hide / show the ui
+    document.addEventListener('keydown', (evt) => {
+        if (evt.key == 'h') hideUIButton.click();
+    });
 
     hideUIButton.onclick = () => {
         if (uiShown) {
