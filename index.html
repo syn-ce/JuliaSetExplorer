@@ -64,7 +64,7 @@
             <div id="close-save-preview" class="close"></div>
 
             <div id="download-inputs">
-                <div id="download-dimension-and-center-container">
+                <div id="download-dimension-and-center-container" class="box">
                     <div id="download-resolution-inputs-container">
                         <div class="download-resolution-wrapper">
                             <label for="download-resolution-x">x</label>
@@ -89,12 +89,16 @@
                         <button id="preview-center-origin-btn">Center origin</button>
                     </div>
                 </div>
-                <button id="download-julia-btn">Download</button>
-                <button id="preview-cpu-render-btn">Turn CPU Rendering ON</button>
-                <div id="cpu-rendering-progress-bar-wrapper">
-                    <p id="cpu-rendering-progress-bar-time">fslkdj</p>
-                    <div id="cpu-rendering-progress-bar"></div>
+                <div class="box">
+                    <button id="download-julia-btn">Download</button>
                 </div>
+                <div class="box">
+                    <button id="preview-cpu-render-btn">Turn CPU Rendering ON</button>
+                </div>
+            </div>
+            <div id="cpu-rendering-progress-bar-wrapper">
+                <p id="cpu-rendering-progress-bar-time">fslkdj</p>
+                <div id="cpu-rendering-progress-bar"></div>
             </div>
         </div>
         <div id="canvas-container">

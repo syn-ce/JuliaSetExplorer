@@ -151,7 +151,6 @@ input[type='color']::-webkit-color-swatch {
 #download-dimension-and-center-container {
     display: flex;
     margin: auto;
-    margin-left: 40px;
 }
 
 #download-center-container {
@@ -164,17 +163,21 @@ input[type='color']::-webkit-color-swatch {
 }
 
 #download-inputs {
+    width: 100%;
     position: absolute;
-    left: 50%;
-    translate: -50%;
     display: flex;
     bottom: 20px;
 }
 
+.box {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
 #download-julia-btn {
-    position: relative;
-    height: 30px;
     margin: auto;
+    height: 30px;
 }
 
 #preview-center-origin-btn {
@@ -185,10 +188,9 @@ input[type='color']::-webkit-color-swatch {
 }
 
 #preview-cpu-render-btn {
-    position: relative;
+    margin: auto;
     height: 30px;
     width: 23ch;
-    margin: auto;
 }
 
 /* Progress bar */
