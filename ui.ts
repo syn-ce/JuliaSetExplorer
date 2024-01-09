@@ -292,10 +292,24 @@ export const addSaveJuliaPNGBtnListeners = (
     btnId: string,
     juliaPreviewContext: JuliaContext
 ) => {
-    const saveJuliaPNGBtn = document.getElementById(btnId);
-    saveJuliaPNGBtn.onclick = (evt) => {
+    const openJuliaSavePreviewBtn = document.getElementById(btnId);
+
+    openJuliaSavePreviewBtn.onclick = (evt) => {
         openSaveJuliaModal(juliaContext, juliaDrawingContext, juliaPreviewContext);
     };
+
+    window.addEventListener('keydown', (evt) => {
+        // Pressing "s" will open the save preview
+        if (evt.code == 'KeyS') {
+            if (juliaPreviewContainer.style.display == 'block') {
+                // Close preview
+                juliaPreviewCloser.click();
+            } else {
+                // Open preview
+                openJuliaSavePreviewBtn.click();
+            }
+        }
+    });
 };
 
 export const setupColorSettingsInputs = (
