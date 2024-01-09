@@ -184,6 +184,7 @@ input[type='color']::-webkit-color-swatch {
 #preview-center-origin-btn {
     position: relative;
     height: 30px;
+    width: 14ch;
     margin: auto;
     margin-left: 10px;
 }
