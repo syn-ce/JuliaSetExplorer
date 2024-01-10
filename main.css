@@ -4,6 +4,23 @@ html {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
+#dropzone {
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity 175ms;
+}
+
+.dropzone-hover {
+    visibility: visible;
+    opacity: 1;
+}
+
 #header {
     position: absolute;
     display: flex;

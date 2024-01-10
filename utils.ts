@@ -114,8 +114,19 @@ export const canvasMoveEvent = () => {
     return new Event('moveCanvas');
 };
 
-export const getColorSettingsAbbreviations = (colorSettings: ColorSettings) => {
-    const colorSettingsAbbreviations = ['SC', 'SO', 'LC', 'NL1', 'NL2'];
+const colorSettingsAbbreviations = ['SC', 'SO', 'LC', 'NL1', 'NL2'];
 
+export const getColorSettingsAbbreviations = (colorSettings: ColorSettings) => {
     return colorSettingsAbbreviations.filter((colorSettingAbbr, index) => colorSettings[index] != 0);
+};
+
+export const getColorSettingsFromAbbreviations = (colorSettingsAbbrvs: string[]) => {
+    const colorSettings = Array(5).fill(0);
+
+    colorSettingsAbbrvs.forEach(
+        // Set corresponding settings to 1
+        (colorSettingAbbr) => (colorSettings[colorSettingsAbbreviations.indexOf(colorSettingAbbr)] = 1)
+    );
+
+    return colorSettings;
 };

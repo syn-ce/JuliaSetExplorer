@@ -33,7 +33,6 @@ export class FractalManager {
     setCurrentJuliaCenter(xCoord: number, yCoord: number) {
         this.mandelContext.updateCenterIndicator({ x: xCoord, y: yCoord });
         this.juliaContext.setJuliaCCoords(xCoord, yCoord);
-        this.juliaContext.render();
         this.updateJuliaCenterDisplayValues();
     }
 
@@ -78,18 +77,8 @@ export class FractalManager {
             let y = this.mandelContext.vp.yToCoord(evt.clientY);
 
             this.setCurrentJuliaCenter(x, y);
+            this.juliaContext.render();
         });
-    }
-
-    addListenersToRandomMovementBtn(btnId: string) {
-        const randomMovementBtn = document.getElementById(btnId);
-        randomMovementBtn.onclick = (evt) => {
-            if (!this.movingRandom) {
-                this.randomMovement();
-            } else {
-                this.stopRandomMovement();
-            }
-        };
     }
 
     // Enable pausing of reactive julia rendering

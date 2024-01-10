@@ -24,16 +24,21 @@ export abstract class FractalContext {
     offset: number;
     count: number;
     escapeRadius: number;
+    escapeRadiusInput: HTMLInputElement;
     nrIterations: number;
+    nrIterationsInput: HTMLInputElement;
     exponent: number;
+    exponentInput: HTMLInputElement;
     rgbColor: RGBColor;
+    colorInput: HTMLInputElement;
+    colorSettings: ColorSettings;
+    colorSettingsInputs: HTMLInputElement[];
     panningObject: PanningObj;
     timeOfLastRender: number;
     FPS: number;
     frameInterval: number;
     zoomLevel: number;
     zoomFactor: number;
-    colorSettings: ColorSettings;
     cpuRendering: boolean;
     progressBar: {
         progress: number;
@@ -386,9 +391,9 @@ export abstract class FractalContext {
     };
 
     addColorInputListener = (colorPickerId: string) => {
-        const colorPicker = document.getElementById(colorPickerId);
+        this.colorInput = <HTMLInputElement>document.getElementById(colorPickerId);
 
-        colorPicker.addEventListener('input', (evt) => {
+        this.colorInput.addEventListener('input', (evt) => {
             let rgbColor = normalizeRGB(hexToRGB((<HTMLInputElement>evt.currentTarget).value));
             this.setColorValues(rgbColor);
             this.render();
@@ -396,10 +401,10 @@ export abstract class FractalContext {
     };
 
     addEscapeRadiusInputListener = (escapeRadiusInputId: string) => {
-        const escapeRadiusInput = <HTMLInputElement>document.getElementById(escapeRadiusInputId);
-        escapeRadiusInput.value = this.escapeRadius.toString();
+        this.escapeRadiusInput = <HTMLInputElement>document.getElementById(escapeRadiusInputId);
+        this.escapeRadiusInput.value = this.escapeRadius.toString();
 
-        escapeRadiusInput.addEventListener('input', (evt) => {
+        this.escapeRadiusInput.addEventListener('input', (evt) => {
             let val = parseFloat((<HTMLInputElement>evt.currentTarget).value);
             this.setEscapeRadius(val);
             this.render();
@@ -407,10 +412,10 @@ export abstract class FractalContext {
     };
 
     addExponentInputListener = (exponentInputId: string) => {
-        const exponentInput = <HTMLInputElement>document.getElementById(exponentInputId);
-        exponentInput.value = this.exponent.toString();
+        this.exponentInput = <HTMLInputElement>document.getElementById(exponentInputId);
+        this.exponentInput.value = this.exponent.toString();
 
-        exponentInput.addEventListener('input', (evt) => {
+        this.exponentInput.addEventListener('input', (evt) => {
             let val = parseFloat((<HTMLInputElement>evt.currentTarget).value);
             this.setExponent(val);
             this.render();
@@ -418,14 +423,36 @@ export abstract class FractalContext {
     };
 
     addNrIterationsInputListener = (nrIterationsInputId: string) => {
-        const nrIterationsInput = <HTMLInputElement>document.getElementById(nrIterationsInputId);
-        nrIterationsInput.value = this.nrIterations.toString();
+        this.nrIterationsInput = <HTMLInputElement>document.getElementById(nrIterationsInputId);
+        this.nrIterationsInput.value = this.nrIterations.toString();
 
-        nrIterationsInput.addEventListener('input', (evt) => {
+        this.nrIterationsInput.addEventListener('input', (evt) => {
             let val = parseFloat((<HTMLInputElement>evt.currentTarget).value);
             this.setNrIterations(val);
             this.render();
         });
+    };
+
+    addColorSettingsInputs = (colorDropdownId: string) => {
+        const parseColorSettings = () => {
+            return this.colorSettingsInputs.map((input) => ((<HTMLInputElement>input).checked ? 1.0 : 0.0));
+        };
+
+        const colorDropdown = document.getElementById(colorDropdownId);
+        this.colorSettingsInputs = Array.from(colorDropdown.getElementsByTagName('input'));
+        this.colorSettingsInputs.forEach((input) =>
+            input.addEventListener('input', (evt) => {
+                const colorSettings = parseColorSettings();
+                this.setColorSettings(colorSettings);
+                this.render();
+            })
+        );
+
+        // Initial color settings
+        this.colorSettingsInputs[0].checked = true;
+        this.colorSettingsInputs[2].checked = true;
+        const colorSettings = parseColorSettings();
+        this.setColorSettings(colorSettings);
     };
 
     getCurrentCenter = () => {
@@ -460,6 +487,5 @@ export abstract class FractalContext {
 
     setCPURendering = (bool: boolean) => {
         this.cpuRendering = bool;
-        this.render();
     };
 }

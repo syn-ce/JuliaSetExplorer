@@ -4,9 +4,6 @@ import { addVecs, complexExp, scaleVec } from './utils.js';
 export class JuliaContext extends FractalContext {
     juliaCCoords: { x: number; y: number };
 
-    juliaXCoordInput: HTMLInputElement;
-    juliaYCoordInput: HTMLInputElement;
-
     constructor(
         canvas: HTMLCanvasElement,
         canvas2d: HTMLCanvasElement,

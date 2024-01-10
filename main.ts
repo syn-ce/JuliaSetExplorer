@@ -1,11 +1,11 @@
 import { RGBToHex, denormalizeRGB, getCanvasElementById } from './utils.js';
 import {
-    setupColorSettingsInputs,
     addSaveJuliaPNGBtnListeners,
     setupHideUIButton,
     setupPreviewCenterOriginBtn,
     setupPreviewCPURenderBtn,
     setupPreviewDownload,
+    addDragEventListeners,
 } from './ui.js';
 import { getFragmentShaderText } from './glutils.js';
 import { JuliaContext } from './JuliaContext.js';
@@ -35,6 +35,7 @@ mandelContext.addColorInputListener('color-picker');
 mandelContext.addEscapeRadiusInputListener('escape-radius');
 mandelContext.addExponentInputListener('exponent');
 mandelContext.addNrIterationsInputListener('nr-iterations');
+mandelContext.addColorSettingsInputs('color-dropdown');
 
 const fragmentShaderTextJulia = getFragmentShaderText('vec2(x,y)', 'cCoords', 'uniform vec2 cCoords;');
 const juliaContext = new JuliaContext(
@@ -54,6 +55,7 @@ juliaContext.addColorInputListener('color-picker');
 juliaContext.addEscapeRadiusInputListener('escape-radius');
 juliaContext.addExponentInputListener('exponent');
 juliaContext.addNrIterationsInputListener('nr-iterations');
+juliaContext.addColorSettingsInputs('color-dropdown');
 
 const juliaDrawingCanvas = <HTMLCanvasElement>document.createElement('canvas');
 const juliaDrawingCanvas2d = <HTMLCanvasElement>document.createElement('canvas');
@@ -113,11 +115,8 @@ mandelContext.updateCenterIndicator({ x: 0.0, y: 0.0 });
 // Enables communication between mandel and julia context
 const fractalManager = new FractalManager(mandelContext, juliaContext, 'julia-center-x', 'julia-center-y');
 
-// Random movement button
-//fractalManager.addListenersToRandomMovementBtn('random-movement');
-
-// Color settings
-setupColorSettingsInputs(juliaContext, mandelContext, 'color-dropdown');
+// Enable dropping of files
+addDragEventListeners(fractalManager, juliaPreviewContext);
 
 // Hide-UI-Button
 setupHideUIButton('hide-ui-btn');
