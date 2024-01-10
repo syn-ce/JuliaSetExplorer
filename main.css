@@ -176,6 +176,12 @@ input[type='color']::-webkit-color-swatch {
     justify-content: center;
 }
 
+.outer-box {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+}
+
 #download-julia-btn {
     margin: auto;
     height: 30px;
@@ -193,6 +199,11 @@ input[type='color']::-webkit-color-swatch {
     margin: auto;
     height: 30px;
     width: 23ch;
+}
+
+#preview-zoom-wrapper {
+    margin: auto;
+    margin-left: 10px;
 }
 
 /* Progress bar */

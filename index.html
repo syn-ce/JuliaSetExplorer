@@ -64,7 +64,7 @@
             <div id="close-save-preview" class="close"></div>
 
             <div id="download-inputs">
-                <div id="download-dimension-and-center-container" class="box">
+                <div id="download-dimension-and-center-container" class="outer-box">
                     <div id="download-resolution-inputs-container">
                         <div class="download-resolution-wrapper">
                             <label for="download-resolution-x">x</label>
@@ -86,8 +86,8 @@
                                 <input type="number" step="0.00000001" id="download-center-y" />
                             </div>
                         </div>
-                        <div>
-                            <label for="preview-zoom"></label>
+                        <div id="preview-zoom-wrapper">
+                            <label for="preview-zoom">z</label>
                             <input type="number" id="preview-zoom" />
                         </div>
                         <button id="preview-center-origin-btn">Center origin</button>
@@ -96,7 +96,7 @@
                 <div class="box">
                     <button id="download-julia-btn">Download</button>
                 </div>
-                <div class="box">
+                <div class="outer-box">
                     <button id="preview-cpu-render-btn">Turn CPU Rendering ON</button>
                 </div>
             </div>
