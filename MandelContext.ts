@@ -33,8 +33,8 @@ export class MandelContext extends FractalContext {
         this.currentIndicatorPos = { x: 0.0, y: 0.0 };
         this.indicatorFollowsMouse = true;
 
-        this.juliaCenterIndicatorWrapper.style.width = this.juliaCenterIndicatorDimensions.x.toString();
-        this.juliaCenterIndicatorWrapper.style.height = this.juliaCenterIndicatorDimensions.y.toString();
+        this.juliaCenterIndicatorWrapper.style.width = `${this.juliaCenterIndicatorDimensions.x.toString()}px`;
+        this.juliaCenterIndicatorWrapper.style.height = `${this.juliaCenterIndicatorDimensions.y.toString()}px`;
 
         // Adjust position of indicator on zoom
         this.canvas.addEventListener('wheel', (evt) => {
@@ -73,8 +73,8 @@ export class MandelContext extends FractalContext {
             this.juliaCenterIndicatorWrapper.style.display = '';
         }
 
-        this.juliaCenterIndicatorWrapper.style.left = xIndicator.toString();
-        this.juliaCenterIndicatorWrapper.style.top = yIndicator.toString();
+        this.juliaCenterIndicatorWrapper.style.left = `${xIndicator.toString()}px`;
+        this.juliaCenterIndicatorWrapper.style.top = `${yIndicator.toString()}px`;
     };
 
     getColorValueForPoint = (x: number, y: number) => {
