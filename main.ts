@@ -95,6 +95,7 @@ setupPreviewDownload(
 juliaPreviewContext.setCenterTo(0, 0);
 juliaPreviewContext.addDoubleClickCenterPoint();
 juliaPreviewContext.addCenterInputs('download-center-x', 'download-center-y');
+juliaPreviewContext.addZoomInput('preview-zoom');
 
 addSaveJuliaPNGBtnListeners(juliaContext, juliaDrawingContext, 'save-julia-png-btn', juliaPreviewContext);
 

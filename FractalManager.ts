@@ -40,8 +40,8 @@ export class FractalManager {
     updateJuliaCenterDisplayValues = () => {
         let x = this.juliaContext.juliaCCoords.x;
         let y = this.juliaContext.juliaCCoords.y;
-        this.juliaXCoordInput.value = x.toString().substring(0, 10 + (x < 0 ? 1 : 0));
-        this.juliaYCoordInput.value = y.toString().substring(0, 10 + (y < 0 ? 1 : 0));
+        this.juliaXCoordInput.value = parseFloat(x.toFixed(10)).toString(); //.substring(0, 10 + (x < 0 ? 1 : 0));
+        this.juliaYCoordInput.value = parseFloat(y.toFixed(10)).toString(); //.substring(0, 10 + (y < 0 ? 1 : 0));
     };
 
     addJuliaCoordInputListeners = (juliaCenterXInputId: string, juliaCenterYInputId: string) => {
@@ -53,12 +53,14 @@ export class FractalManager {
 
         this.juliaXCoordInput.addEventListener('input', (evt) => {
             let x = parseFloat((<HTMLInputElement>evt.currentTarget).value);
+            if (Number.isNaN(x)) return;
             this.setCurrentJuliaCenter(x, this.juliaContext.juliaCCoords.y);
             this.juliaContext.render();
         });
 
         this.juliaYCoordInput.addEventListener('input', (evt) => {
             let y = parseFloat((<HTMLInputElement>evt.currentTarget).value);
+            if (Number.isNaN(y)) return;
             this.setCurrentJuliaCenter(this.juliaContext.juliaCCoords.x, y);
             this.juliaContext.render();
         });

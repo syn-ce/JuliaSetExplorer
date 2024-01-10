@@ -33,22 +33,51 @@ export class JuliaContext extends FractalContext {
         const centerXInput = <HTMLInputElement>document.getElementById(centerXInputId);
         const centerYInput = <HTMLInputElement>document.getElementById(centerYInputId);
 
-        // Update center values on input
-        const setCenterToInputValues = () =>
-            this.setCenterTo(parseFloat(centerXInput.value), parseFloat(centerYInput.value));
-
-        centerXInput.addEventListener('input', () => setCenterToInputValues());
-        centerYInput.addEventListener('input', () => setCenterToInputValues());
+        centerXInput.addEventListener('input', (evt) => {
+            let x = parseFloat((<HTMLInputElement>evt.currentTarget).value);
+            if (Number.isNaN(x)) return;
+            let currCenter = this.getCurrentCenter();
+            this.setCenterTo(x, currCenter.cY);
+            this.render();
+        });
+        centerYInput.addEventListener('input', (evt) => {
+            let y = parseFloat((<HTMLInputElement>evt.currentTarget).value);
+            if (Number.isNaN(y)) return;
+            let currCenter = this.getCurrentCenter();
+            this.setCenterTo(currCenter.cX, y);
+            this.render();
+        });
 
         // Update inputs on pan, zoom
         const setInputValuesToCenter = () => {
             let currCenter = this.getCurrentCenter();
-            centerXInput.value = currCenter.cX.toString().substring(0, 10 + (currCenter.cX < 0 ? 1 : 0));
-            centerYInput.value = currCenter.cY.toString().substring(0, 10 + (currCenter.cY < 0 ? 1 : 0));
+            centerXInput.value = parseFloat(currCenter.cX.toFixed(10)).toString(); //.substring(0, 10 + (currCenter.cX < 0 ? 1 : 0));
+            centerYInput.value = parseFloat(currCenter.cY.toFixed(10)).toString(); //.substring(0, 10 + (currCenter.cY < 0 ? 1 : 0));
         };
 
         this.canvas.addEventListener('moveCanvas', () => setInputValuesToCenter());
         this.canvas2d.addEventListener('moveCanvas', () => setInputValuesToCenter());
+    };
+
+    addZoomInput = (zoomInputId: string) => {
+        // Zoom of 1 corresponds to default bounds of -2.0, 2.0, -2.0
+
+        const zoomInput = <HTMLInputElement>document.getElementById(zoomInputId);
+
+        zoomInput.addEventListener('input', (evt) => {
+            let newZoomLevel = parseFloat(zoomInput.value);
+            if (Number.isNaN(newZoomLevel) || newZoomLevel <= 0) return;
+            let currCenter = this.getCurrentCenter();
+            this.zoom(currCenter.cX, currCenter.cY, newZoomLevel);
+        });
+
+        this.canvas.addEventListener('moveCanvas', () => {
+            zoomInput.value = parseFloat(this.zoomLevel.toFixed(5)).toString();
+        });
+
+        this.canvas2d.addEventListener('moveCanvas', () => {
+            zoomInput.value = parseFloat(this.zoomLevel.toFixed(5)).toString();
+        });
     };
 
     getColorValueForPoint = (x: number, y: number) => {

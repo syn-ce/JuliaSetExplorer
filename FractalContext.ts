@@ -31,6 +31,7 @@ export abstract class FractalContext {
     timeOfLastRender: number;
     FPS: number;
     frameInterval: number;
+    zoomLevel: number;
     zoomFactor: number;
     colorSettings: ColorSettings;
     cpuRendering: boolean;
@@ -64,6 +65,8 @@ export abstract class FractalContext {
         this.vp = new Viewport(canvas.width, canvas.height, screenStart.x, screenStart.y, null);
         this.escapeRadius = 4.0;
         this.exponent = 2.0;
+
+        this.zoomLevel = 1;
 
         this.gl = getWebGL2RenderingContext(canvas);
         var vertexShader = createShader(this.gl, this.gl.VERTEX_SHADER, vertexShaderText);
@@ -284,15 +287,19 @@ export abstract class FractalContext {
         this.addPanZoomToCanvas(this.canvas2d);
     };
 
-    zoom = (x: number, y: number, z: number) => {
+    zoom = (x: number, y: number, zoomLevel: number) => {
         // (x,y) - Center of zoom
+        // zoomLevel - New level of zoom, i.e. 2.0 for zoom of two compared to the original setting
         // z - Factor of zoom
+        let z = this.zoomLevel / zoomLevel;
 
         let vp = this.vp;
         // Transform the defining points of the viewport
         let xMin = zoomPoint(x, y, z, vp.xMin, 0).x;
         let yMin = zoomPoint(x, y, z, 0, vp.yMin).y;
         let yMax = zoomPoint(x, y, z, 0, vp.yMax).y;
+
+        this.zoomLevel = zoomLevel;
 
         this.setXYRenderingBounds(yMin, yMax, xMin);
 
@@ -310,9 +317,9 @@ export abstract class FractalContext {
             let x = vp.xToCoord(evt.clientX);
             let y = vp.yToCoord(evt.clientY);
             if (sign < 0) {
-                this.zoom(x, y, 1 / this.zoomFactor);
+                this.zoom(x, y, this.zoomLevel * this.zoomFactor);
             } else {
-                this.zoom(x, y, this.zoomFactor);
+                this.zoom(x, y, this.zoomLevel / this.zoomFactor);
             }
         });
 
@@ -362,7 +369,6 @@ export abstract class FractalContext {
         const lastClick = { time: performance.now() - DOUBLE_CLICK_INTERVAL - 1, pos: { x: 0, y: 0 } };
 
         const handleLastClick = (evt: MouseEvent) => {
-            console.log(lastClick.time - performance.now());
             if (
                 performance.now() - lastClick.time <= DOUBLE_CLICK_INTERVAL &&
                 Math.abs(evt.clientX - lastClick.pos.x) <= 0 &&
@@ -434,8 +440,8 @@ export abstract class FractalContext {
         // Keep current zoom level, simply adjust the bounds
         let currCenter = this.getCurrentCenter();
 
-        let xOffset = cX - currCenter.cX;
-        let yOffset = cY - currCenter.cY;
+        let xOffset = Number.isNaN(cX) ? 0 : cX - currCenter.cX;
+        let yOffset = Number.isNaN(cY) ? 0 : cY - currCenter.cY;
 
         let newXMin = this.vp.xMin + xOffset;
         let newYMin = this.vp.yMin + yOffset;

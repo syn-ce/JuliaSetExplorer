@@ -79,12 +79,16 @@
                         <div id="download-center-inputs-container">
                             <div class="download-center-inputs-wrapper">
                                 <label for="download-center-x">cx</label>
-                                <input type="number" id="download-center-x" />
+                                <input type="number" step="0.00000001" id="download-center-x" />
                             </div>
                             <div class="download-center-wrapper">
                                 <label for="download-center-y">cy</label>
-                                <input type="number" id="download-center-y" />
+                                <input type="number" step="0.00000001" id="download-center-y" />
                             </div>
+                        </div>
+                        <div>
+                            <label for="preview-zoom"></label>
+                            <input type="number" id="preview-zoom" />
                         </div>
                         <button id="preview-center-origin-btn">Center origin</button>
                     </div>
