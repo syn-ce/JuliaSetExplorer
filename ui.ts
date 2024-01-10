@@ -159,9 +159,10 @@ const downloadJuliaPNG = (
 
     let downloadLink = document.createElement('a');
     let color = denormalizeRGB(juliaPreviewContext.rgbColor);
+    let center = juliaPreviewContext.getCurrentCenter();
     downloadLink.setAttribute(
         'download',
-        `JuliaSet_${color.r}_${color.g}_${color.b}_${juliaPreviewContext.nrIterations}_${juliaPreviewContext.exponent}_${juliaPreviewContext.escapeRadius}_${juliaPreviewContext.juliaCCoords.x}_${juliaPreviewContext.juliaCCoords.y}.png`
+        `JuliaSet_${color.r}_${color.g}_${color.b}_${juliaPreviewContext.nrIterations}_${juliaPreviewContext.exponent}_${juliaPreviewContext.escapeRadius}_${juliaPreviewContext.juliaCCoords.x}_${juliaPreviewContext.juliaCCoords.y}_${center.cX}_${center.cY}_${juliaPreviewContext.zoomLevel}.png`
     );
 
     // Copy the values of the preview juliaContext with the selected resolution
