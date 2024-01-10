@@ -410,18 +410,16 @@ export const addDragEventListeners = (fractalManager: FractalManager, juliaPrevi
         evt.preventDefault();
 
         let file = evt.dataTransfer.files[0];
-        console.log(file);
         if (!file) return;
 
         fractalManager.mandelContext.indicatorFollowsMouse = false;
 
         let name = file.name;
-        console.log(name);
 
         // Extract parameters
         let params = name.split('_').slice(1); // Split into attributes, remove "JuliaSet"-prefix
-        console.log(params);
         if (params.length < 12) return; // Not enough params
+
         let color = { r: parseFloat(params[0]), g: parseFloat(params[1]), b: parseFloat(params[2]) };
         let nrIterations = parseFloat(params[3]);
         let exponent = parseFloat(params[4]);
@@ -449,12 +447,24 @@ export const addDragEventListeners = (fractalManager: FractalManager, juliaPrevi
         fractalManager.juliaContext.setEscapeRadius(escapeRadius);
         fractalManager.juliaContext.escapeRadiusInput.value = escapeRadius.toString();
         fractalManager.juliaContext.setColorSettings(colorSettings);
-        console.log(colorSettings);
         fractalManager.juliaContext.colorSettingsInputs.forEach(
+            (colorSettingInput, index) => (colorSettingInput.checked = colorSettings[index] != 0)
+        );
+        fractalManager.mandelContext.setColorValues(normalizeRGB(color));
+        fractalManager.mandelContext.colorInput.value = RGBToHex(color);
+        fractalManager.mandelContext.setExponent(exponent);
+        fractalManager.mandelContext.exponentInput.value = exponent.toString();
+        fractalManager.mandelContext.setNrIterations(nrIterations);
+        fractalManager.mandelContext.nrIterationsInput.value = nrIterations.toString();
+        fractalManager.mandelContext.setEscapeRadius(escapeRadius);
+        fractalManager.mandelContext.escapeRadiusInput.value = escapeRadius.toString();
+        fractalManager.mandelContext.setColorSettings(colorSettings);
+        fractalManager.mandelContext.colorSettingsInputs.forEach(
             (colorSettingInput, index) => (colorSettingInput.checked = colorSettings[index] != 0)
         );
 
         fractalManager.juliaContext.render();
+        fractalManager.mandelContext.render();
     };
 
     document.body.ondragleave = (evt) => {
