@@ -1,6 +1,6 @@
 import { JuliaContext } from './JuliaContext.js';
 import { MandelContext } from './MandelContext.js';
-import { denormalizeRGB } from './utils.js';
+import { getColorSettingsAbbreviations, denormalizeRGB } from './utils.js';
 
 // Closing of preview
 const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');
@@ -159,9 +159,16 @@ const downloadJuliaPNG = (
     let downloadLink = document.createElement('a');
     let color = denormalizeRGB(juliaPreviewContext.rgbColor);
     let center = juliaPreviewContext.getCurrentCenter();
+    let colorSettingsAbbreviations = getColorSettingsAbbreviations(juliaPreviewContext.colorSettings);
     downloadLink.setAttribute(
         'download',
-        `JuliaSet_${color.r}_${color.g}_${color.b}_${juliaPreviewContext.nrIterations}_${juliaPreviewContext.exponent}_${juliaPreviewContext.escapeRadius}_${juliaPreviewContext.juliaCCoords.x}_${juliaPreviewContext.juliaCCoords.y}_${center.cX}_${center.cY}_${juliaPreviewContext.zoomLevel}.png`
+        `JuliaSet_${color.r}_${color.g}_${color.b}_${juliaPreviewContext.nrIterations}_${
+            juliaPreviewContext.exponent
+        }_${juliaPreviewContext.escapeRadius}_${juliaPreviewContext.juliaCCoords.x}_${
+            juliaPreviewContext.juliaCCoords.y
+        }_${center.cX}_${center.cY}_${juliaPreviewContext.zoomLevel}${
+            (getColorSettingsAbbreviations.length == 0 ? '' : '_') + colorSettingsAbbreviations.join('_')
+        }_${juliaPreviewContext.cpuRendering ? 1 : 0}.png`
     );
 
     // Copy the values of the preview juliaContext with the selected resolution

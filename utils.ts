@@ -113,3 +113,9 @@ export const complexExp = (x: number, y: number, exponent: number) => {
 export const canvasMoveEvent = () => {
     return new Event('moveCanvas');
 };
+
+export const getColorSettingsAbbreviations = (colorSettings: ColorSettings) => {
+    const colorSettingsAbbreviations = ['SC', 'SO', 'LC', 'NL1', 'NL2'];
+
+    return colorSettingsAbbreviations.filter((colorSettingAbbr, index) => colorSettings[index] != 0);
+};
