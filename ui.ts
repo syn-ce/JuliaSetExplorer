@@ -1,5 +1,6 @@
 import { JuliaContext } from './JuliaContext.js';
 import { MandelContext } from './MandelContext.js';
+import { denormalizeRGB } from './utils.js';
 
 // Closing of preview
 const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');
@@ -157,9 +158,10 @@ const downloadJuliaPNG = (
     disableDownloadBtn();
 
     let downloadLink = document.createElement('a');
+    let color = denormalizeRGB(juliaPreviewContext.rgbColor);
     downloadLink.setAttribute(
         'download',
-        `JuliaSet_${juliaPreviewContext.rgbColor.r}_${juliaPreviewContext.rgbColor.g}_${juliaPreviewContext.rgbColor.b}_${juliaPreviewContext.nrIterations}_${juliaPreviewContext.exponent}_${juliaPreviewContext.escapeRadius}_${juliaPreviewContext.juliaCCoords.x}_${juliaPreviewContext.juliaCCoords.y}.png`
+        `JuliaSet_${color.r}_${color.g}_${color.b}_${juliaPreviewContext.nrIterations}_${juliaPreviewContext.exponent}_${juliaPreviewContext.escapeRadius}_${juliaPreviewContext.juliaCCoords.x}_${juliaPreviewContext.juliaCCoords.y}.png`
     );
 
     // Copy the values of the preview juliaContext with the selected resolution
