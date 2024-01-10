@@ -302,9 +302,6 @@ export abstract class FractalContext {
         this.zoomLevel = zoomLevel;
 
         this.setXYRenderingBounds(yMin, yMax, xMin);
-
-        // Render
-        this.render();
     };
 
     addPanZoomToCanvas = (canvas: HTMLCanvasElement) => {
@@ -321,6 +318,7 @@ export abstract class FractalContext {
             } else {
                 this.zoom(x, y, this.zoomLevel / this.zoomFactor);
             }
+            this.render();
         });
 
         // Pan

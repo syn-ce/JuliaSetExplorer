@@ -69,6 +69,7 @@ export class JuliaContext extends FractalContext {
             if (Number.isNaN(newZoomLevel) || newZoomLevel <= 0) return;
             let currCenter = this.getCurrentCenter();
             this.zoom(currCenter.cX, currCenter.cY, newZoomLevel);
+            this.render();
         });
 
         this.canvas.addEventListener('moveCanvas', () => {

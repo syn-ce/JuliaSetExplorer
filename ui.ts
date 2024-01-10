@@ -91,14 +91,13 @@ const previewDownloadImage = (juliaContext: JuliaContext, juliaPreviewContext: J
     if (borderId) moveCanvas(juliaPreviewContext, borderElement);
 
     juliaPreviewContext.setEscapeRadius(juliaContext.escapeRadius);
-    juliaPreviewContext.setXYRenderingBounds(juliaContext.vp.yMin, juliaContext.vp.yMax, juliaContext.vp.xMin);
     juliaPreviewContext.setColorValues(juliaContext.rgbColor);
     juliaPreviewContext.setExponent(juliaContext.exponent);
     juliaPreviewContext.setNrIterations(juliaContext.nrIterations);
     // Need to set center explicitly because of the different canvas sizes and the way the bounds are set
-    let xCenterJuliaContext2 = (juliaContext.vp.xMax + juliaContext.vp.xMin) * 0.5;
-    let yCenterJuliaContext2 = (juliaContext.vp.yMax + juliaContext.vp.yMin) * 0.5;
-    juliaPreviewContext.setCenterTo(xCenterJuliaContext2, yCenterJuliaContext2);
+    let center = juliaContext.getCurrentCenter();
+    juliaPreviewContext.zoom(center.cX, center.cY, juliaContext.zoomLevel);
+    juliaPreviewContext.setCenterTo(center.cX, center.cY);
     juliaPreviewContext.setColorSettings(juliaContext.colorSettings);
     juliaPreviewContext.setJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y);
 
