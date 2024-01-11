@@ -450,6 +450,9 @@ export const addDragEventListeners = (fractalManager: FractalManager, juliaPrevi
         fractalManager.juliaContext.colorSettingsInputs.forEach(
             (colorSettingInput, index) => (colorSettingInput.checked = colorSettings[index] != 0)
         );
+        fractalManager.juliaContext.setCenterTo(juliaPreviewCenter.x, juliaPreviewCenter.y); // Set center and zoom as specified in filename
+        fractalManager.juliaContext.zoom(juliaPreviewCenter.x, juliaPreviewCenter.y, zoomLevel);
+
         fractalManager.mandelContext.setColorValues(normalizeRGB(color));
         fractalManager.mandelContext.colorInput.value = RGBToHex(color);
         fractalManager.mandelContext.setExponent(exponent);
