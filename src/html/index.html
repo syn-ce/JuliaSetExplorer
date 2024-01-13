@@ -113,7 +113,34 @@
             <canvas id="julia-canvas"></canvas>
             <canvas id="julia-canvas-2d"></canvas>
         </div>
-        <div class="help">?</div>
+        <div id="help-modal">
+            <div id="help-modal-content">
+                <p>This website lets you explore julia sets.</p>
+                <div id="help-modal-controls">
+                    <table id="help-modal-controls-table">
+                        <th>Character</th>
+                        <th>Action</th>
+                        <tr>
+                            <td>f</td>
+                            <td>start/stop the indicator following the mouse</td>
+                        </tr>
+                        <tr>
+                            <td>s</td>
+                            <td>open/close preview for saving image</td>
+                        </tr>
+                        <tr>
+                            <td>i</td>
+                            <td>open/close info-modal</td>
+                        </tr>
+                        <tr>
+                            <td>r</td>
+                            <td>start/stop random movement of indicator</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="help">?</div>
         <script src="../ts/main.js" type="module"></script>
     </body>
     <style></style>

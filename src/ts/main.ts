@@ -11,6 +11,7 @@ import { getFragmentShaderText } from './utils/glutils.js';
 import { JuliaContext } from './fractal/JuliaContext.js';
 import { MandelContext } from './fractal/MandelContext.js';
 import { FractalManager } from './fractal/FractalManager.js';
+import { setupHelpModal } from './ui/helpmodal.js';
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
 const canvasMandel2d = getCanvasElementById('mandel-canvas-2d');
@@ -126,6 +127,9 @@ setupPreviewCenterOriginBtn(juliaPreviewContext, 'preview-center-origin-btn');
 
 // CPU Rendering button in preview
 setupPreviewCPURenderBtn(juliaPreviewContext, 'preview-cpu-render-btn');
+
+// Help modal
+setupHelpModal();
 
 // Render
 juliaContext.render();
