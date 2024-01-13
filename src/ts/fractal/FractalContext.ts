@@ -40,6 +40,7 @@ export abstract class FractalContext {
     zoomLevel: number;
     zoomFactor: number;
     cpuRendering: boolean;
+    renderQueued: boolean;
     progressBar: {
         progress: number;
         HTMLBar: HTMLElement;
@@ -233,13 +234,26 @@ export abstract class FractalContext {
                         this.canvas2d.style.display = '';
                         this.canvas.style.display = 'none';
                         resolve('');
+                        if (this.renderQueued) {
+                            // setup next render if there was another one queued
+                            this.renderQueued = false;
+                            setTimeout(this.render, this.frameInterval + 1 - (Date.now() - this.timeOfLastRender)); // 1 millisecond as a buffer
+                        }
                     });
                 } else {
                     this.gl.drawArrays(this.primitiveType, this.offset, this.count);
                     this.canvas.style.display = '';
                     this.canvas2d.style.display = 'none';
                     resolve('');
+                    if (this.renderQueued) {
+                        // setup next render if there was another one queued
+                        this.renderQueued = false;
+                        setTimeout(this.render, this.frameInterval + 1 - (Date.now() - this.timeOfLastRender)); // 1 millisecond as a buffer
+                    }
                 }
+            } else {
+                this.renderQueued = true;
+                resolve('');
             }
         });
     };
