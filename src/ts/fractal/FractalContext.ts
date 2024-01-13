@@ -41,6 +41,7 @@ export abstract class FractalContext {
     zoomFactor: number;
     cpuRendering: boolean;
     renderQueued: boolean;
+    renderInProgress: boolean;
     progressBar: {
         progress: number;
         HTMLBar: HTMLElement;
@@ -229,13 +230,15 @@ export abstract class FractalContext {
     render = (cpuRendering = false) => {
         return new Promise((resolve, reject) => {
             // Could be improved by "Queuing" the render
-            if (Date.now() - this.timeOfLastRender >= this.frameInterval) {
+            if (Date.now() - this.timeOfLastRender >= this.frameInterval && !this.renderInProgress) {
+                this.renderInProgress = true;
                 this.timeOfLastRender = Date.now();
                 if (cpuRendering || this.cpuRendering) {
                     this.drawSetCPU().then(() => {
                         this.canvas2d.style.display = '';
                         this.canvas.style.display = 'none';
                         resolve('');
+                        this.renderInProgress = false;
                         if (this.renderQueued) {
                             // setup next render if there was another one queued
                             this.renderQueued = false;
@@ -247,8 +250,9 @@ export abstract class FractalContext {
                     this.canvas.style.display = '';
                     this.canvas2d.style.display = 'none';
                     resolve('');
+                    this.renderInProgress = false;
                     if (this.renderQueued) {
-                        // setup next render if there was another one queued
+                        // setup next renderprogress-bar if there was another one queued
                         this.renderQueued = false;
                         setTimeout(this.render, this.frameInterval + 1 - (Date.now() - this.timeOfLastRender)); // 1 millisecond as a buffer
                     }
