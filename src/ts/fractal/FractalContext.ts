@@ -1,4 +1,4 @@
-import { createProgram, createShader, vertexShaderText } from './glutils.js';
+import { createProgram, createShader, vertexShaderText } from '../utils/glutils.js';
 import {
     ColorSettings,
     PanningObj,
@@ -10,7 +10,7 @@ import {
     normalizeRGB,
     canvasMoveEvent,
     zoomPoint,
-} from './utils.js';
+} from '../utils/utils.js';
 import { Viewport } from './viewport.js';
 
 export abstract class FractalContext {

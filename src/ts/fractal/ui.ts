@@ -1,13 +1,12 @@
 import { FractalManager } from './FractalManager.js';
 import { JuliaContext } from './JuliaContext.js';
-import { MandelContext } from './MandelContext.js';
 import {
     getColorSettingsAbbreviations,
     denormalizeRGB,
     getColorSettingsFromAbbreviations,
     normalizeRGB,
     RGBToHex,
-} from './utils.js';
+} from '../utils/utils.js';
 
 // Closing of preview
 const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');

@@ -1,6 +1,6 @@
 import { JuliaContext } from './JuliaContext.js';
 import { MandelContext } from './MandelContext.js';
-import { distance, limitLength } from './utils.js';
+import { distance, limitLength } from '../utils/utils.js';
 
 // Enables the communication between two FractalContexts via events
 export class FractalManager {

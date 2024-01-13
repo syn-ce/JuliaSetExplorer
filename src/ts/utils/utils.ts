@@ -1,6 +1,3 @@
-import { FractalContext } from './FractalContext';
-import { Viewport } from './viewport';
-
 export type Complex = {
     real: number;
     imag: number;
