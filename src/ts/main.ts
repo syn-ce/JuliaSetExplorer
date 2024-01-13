@@ -85,6 +85,7 @@ const juliaPreviewContext = new JuliaContext(
 );
 
 juliaPreviewContext.zoomFactor = 1.15; // Make zoom for preview less aggressive (easier to "fine-tune")
+juliaPreviewContext.setProgressBarElement('live-cpu-rendering-progress-bar', '');
 
 // Add event listeners to buttons, inputs
 setupPreviewDownload(

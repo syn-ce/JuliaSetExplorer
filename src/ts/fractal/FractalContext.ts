@@ -142,7 +142,9 @@ export abstract class FractalContext {
 
     setProgressBarElement = (progressBarElementId: string, timeDisplayElementId: string) => {
         this.progressBar.HTMLBar = document.getElementById(progressBarElementId);
-        this.progressBar.timeField = document.getElementById(timeDisplayElementId);
+        this.progressBar.timeField = timeDisplayElementId
+            ? document.getElementById(timeDisplayElementId)
+            : document.createElement('div'); // Dummy element
         this.progressBar.HTMLBar.parentElement.style.display = 'none';
     };
 

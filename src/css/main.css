@@ -275,6 +275,21 @@ input[type='color']::-webkit-color-swatch {
     margin-left: 10px;
 }
 
+#live-cpu-rendering-progress-bar-wrapper {
+    width: 25%;
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    bottom: 135px;
+    background-color: #333;
+}
+
+#live-cpu-rendering-progress-bar {
+    width: 0%;
+    height: 10px;
+    background-color: blue;
+}
+
 /* Progress bar */
 #cpu-rendering-progress-bar-wrapper {
     width: 25%;
