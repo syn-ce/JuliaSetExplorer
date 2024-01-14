@@ -11,6 +11,18 @@ Try it yourself: [click me](http://yesno.wtf)
 
 [What am I even looking at? - Mandelbrot and Julia](#mandelbrot-and-julia)
 
+&nbsp;&nbsp;[The Mandelbrot set](#the-mandelbrot-set)
+
+&nbsp;&nbsp;[Julia sets](#julia-sets)
+
+[Usage](#usage)
+
+&nbsp;&nbsp;[General](#general)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[Shortcuts](#shortcuts)
+
+&nbsp;&nbsp;[Saving Images](#saving-images)
+
 [Parameters](#parameters)
 
 &nbsp;&nbsp;[Julia Coordinates ($c$ value of the Julia set)](#julia-coordinates--value-of-the-julia-set)
@@ -46,10 +58,25 @@ Julia sets are defined using the same sequence of complex numbers as the Mandelb
 $$z_{n+1}=z_n²+c$$
 The only difference is that instead of asking for which $c$ the series diverges to infinity starting at $z_0=0$, we instead fixate the $c$ and ask for which starting points $z_0=x+iy$ the series diverges to infinity.
 
-# Controls
+# Usage
 
-A brief overview of the available shortcuts and what they do.
-[TODO]
+## General
+
+Both the Mandelbrot set on the left and the Julia set on the right will be rendered using the parameters configured by you.
+
+You can interact with them by panning and zooming. The dot rendered on top of the Mandelbrot set is the indicator for the coordinates of the current $c$ value used for rendering the Julia set. By default, that point will follow your mouse when hovering over the Mandelbrot set. This behavior can be (de-)activated by pressing the "f" key on your keyboard. You can also adjust the current $c$ value by directly entering values into the corresponding inputs.
+
+### Shortcuts
+
+| Key | Action                                            |
+| :-: | ------------------------------------------------- |
+|  f  | start/stop the $c$ value from following the mouse |
+|  s  | open/close preview for saving image               |
+|  i  | open/close info-modal                             |
+|  h  | hide/show user interface                          |
+|  r  | start/stop random movement of $c$ value           |
+
+In case you ever need a refresher on the shortcuts simply click question mark in the lower right corner of the screen or press the "i" key on your keyboard. This will open a modal listing all available keyboard-shortcuts.
 
 ## Saving Images
 
@@ -63,7 +90,8 @@ If you are making use of CPU rendering this will take some time. A progress bar 
 If you don't use CPU rendering (which is advised if it's not necessary) the render should, under most circumstances, finish after no longer than a couple of seconds at most and usually be perceived as instantaneous.
 
 By default the resolution should be set to match the resolution of your monitor. If that's not the case or you would like to change the resolution of the downloaded image for some other reason, you can do so by entering the values into the corresponding inputs. The preview will automatically try to adjust to display the correct aspect ratio. If the preview gets too small, it will try to resize itself to take up more space. However, it will only try to do so when the preview can fit on the screen. If the aspect ratio is very out of the ordinary (i.e. something like 50:1) it is very likely that the preview will extend beyond the bounds of the screen and not adjust its size.
-Note that changing the resolution will also not affect the quality of the image in the preview, meaning that there will be no visual difference between the preview of an image with resolution 3072x1920 (aspect ratio 16:10) and that of an image with a resolution of 1920x1200 (16:10 as well). The resulting image will of course be rendered in the desired resolution.
+
+Note that changing the resolution will not affect the quality of the image in the preview, meaning that there will be no visual difference between the preview of an image with resolution 3072x1920 (aspect ratio 16:10) and that of an image with a resolution of 1920x1200 (16:10 as well). The resulting image will of course be rendered in the desired resolution.
 
 ![example screenshot of the editor for / preview of the image to download](/imgs/controlsUI/downloadEditorAndPreview.png)
 
@@ -81,7 +109,7 @@ The following parameters can be adjusted to tweak the resulting image's appearan
 
 The Julia Coordinates determine the general shape of the Julia set. They can be adjusted by moving the mouse over the Mandelbrot set (if nothing happens, try pressing "f" to make the indicator follow the mouse; Look [here]() for more information about the controls) or entering the values in the corresponding input-fields.
 
-|                                            Julia Coordinates of about(0.3159,-0.0421)                                            |                                          Julia Coordinates of about (-1.4808,0.0014)                                           |
+|                                           Julia Coordinates of about (0.3159,-0.0421)                                            |                                          Julia Coordinates of about (-1.4808,0.0014)                                           |
 | :------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: |
 | ![](/imgs/juliaCoordinates/JuliaSet_14_7_7_800_2_100_0.315878380105945_-0.04211320165297236_0_0_1.7490062499999999_SC_NL1_0.png) | ![](/imgs/juliaCoordinates/JuliaSet_14_7_7_800_2_100_-1.480826496088234_0.0013867962695299548_0_0_24.25420005376_SC_NL1_1.png) |
 
