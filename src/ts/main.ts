@@ -1,5 +1,4 @@
 import { RGBToHex, denormalizeRGB, getCanvasElementById } from './utils/utils.js';
-import { setupHideUIButton } from './fractal/ui.js';
 import { getFragmentShaderText } from './utils/glutils.js';
 import { JuliaContext } from './fractal/JuliaContext.js';
 import { MandelContext } from './fractal/MandelContext.js';
@@ -12,6 +11,7 @@ import {
     setupPreviewDownload,
 } from './ui/juliaDownload.js';
 import { addDragEventListeners } from './ui/dragEvent.js';
+import { setupHideUIButton } from './ui/hideUIButton.js';
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
 const canvasMandel2d = getCanvasElementById('mandel-canvas-2d');

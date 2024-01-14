@@ -1,13 +1,3 @@
-import { FractalManager } from './FractalManager.js';
-import { JuliaContext } from './JuliaContext.js';
-import {
-    getColorSettingsAbbreviations,
-    denormalizeRGB,
-    getColorSettingsFromAbbreviations,
-    normalizeRGB,
-    RGBToHex,
-} from '../utils/utils.js';
-
 export const setupHideUIButton = (hideUIBtnId: string) => {
     const hideUIButton = <HTMLInputElement>document.getElementById(hideUIBtnId);
 
