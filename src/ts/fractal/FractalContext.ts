@@ -545,4 +545,65 @@ export abstract class FractalContext {
         borderElement.style.left = `${this.vp.screenStart.x.toString()}px`;
         borderElement.style.top = `${this.vp.screenStart.y.toString()}px`;
     };
+
+    // Will change the x-value so that the result matches the aspect ratio, will move the window to the center of the screen
+    setAspectRatio = (aspectRatio: number) => {
+        // Try adjusting width and height so that the image stays on screen and has a reasonable size
+        let newWidth = Math.round(this.canvas.height * aspectRatio);
+        let newHeight = Math.round(newWidth / aspectRatio);
+
+        if (100 < newWidth && newWidth <= window.innerWidth - 10) {
+            // Resize canvas
+            let xLeft = window.innerWidth / 2 - newWidth / 2;
+            let xRight = window.innerWidth / 2 + newWidth / 2;
+            this.resizeCanvas(xLeft, xRight, this.vp.screenStart.y, this.vp.screenStart.y + this.canvas.height);
+        } else {
+            // Got some fixing to do
+            // Try increasing the width from 300 pixels until it fits
+            let newNewWidth = 300;
+            let newNewHeight = newNewWidth / aspectRatio;
+            while (newNewWidth <= window.innerWidth - 10) {
+                if (50 < newNewHeight && newNewHeight <= window.innerHeight - 10) break;
+                newNewWidth += 20;
+                newNewHeight = newNewWidth / aspectRatio;
+            }
+            if (50 < newNewHeight && newNewHeight <= window.innerHeight - 10)
+                (newWidth = newNewWidth), (newHeight = newNewHeight);
+
+            let xLeft = window.innerWidth / 2 - newWidth / 2;
+            let xRight = window.innerWidth / 2 + newWidth / 2;
+            let yBot = window.innerHeight / 2 - newHeight / 2;
+            let yTop = window.innerHeight / 2 + newHeight / 2;
+            this.resizeCanvas(xLeft, xRight, yBot, yTop);
+        }
+
+        this.tryResizeCanvasMediumSize();
+
+        this.moveCanvas(<HTMLElement>document.getElementById('download-preview-canvas-border'));
+        this.render();
+    };
+
+    // Tries to resize the canvas to a a "medium" width and height if both are small
+    tryResizeCanvasMediumSize = () => {
+        let canvas = this.canvas;
+        let width = canvas.width;
+        let height = canvas.height;
+        let ratio = width / height;
+        if (width < window.innerWidth * 0.3 && height < window.innerHeight * 0.3) {
+            // Increase width
+            while (width <= window.innerWidth * 0.55 && height <= window.innerHeight * 0.55) {
+                width += 10;
+                height = width / ratio;
+            }
+            width -= 10;
+            height = width / ratio;
+
+            this.resizeCanvas(
+                window.innerWidth * 0.5 - width * 0.5,
+                window.innerWidth * 0.5 + width * 0.5,
+                window.innerHeight * 0.5 - height * 0.5,
+                window.innerHeight * 0.5 + height * 0.5
+            );
+        }
+    };
 }

@@ -20,72 +20,6 @@ const downloadResolution = {
     y: window.screen.height * window.devicePixelRatio,
 };
 
-// Will change the x-value so that the result matches the aspect ratio, will move the window to the center of the screen
-const setAspectRatio = (juliaPreviewContext: JuliaContext, aspectRatio: number) => {
-    // Try adjusting width and height so that the image stays on screen and has a reasonable size
-    let newWidth = Math.round(juliaPreviewContext.canvas.height * aspectRatio);
-    let newHeight = Math.round(newWidth / aspectRatio);
-
-    if (100 < newWidth && newWidth <= window.innerWidth - 10) {
-        // Resize canvas
-        let xLeft = window.innerWidth / 2 - newWidth / 2;
-        let xRight = window.innerWidth / 2 + newWidth / 2;
-        juliaPreviewContext.resizeCanvas(
-            xLeft,
-            xRight,
-            juliaPreviewContext.vp.screenStart.y,
-            juliaPreviewContext.vp.screenStart.y + juliaPreviewContext.canvas.height
-        );
-    } else {
-        // Got some fixing to do
-        // Try increasing the width from 300 pixels until it fits
-        let newNewWidth = 300;
-        let newNewHeight = newNewWidth / aspectRatio;
-        while (newNewWidth <= window.innerWidth - 10) {
-            if (50 < newNewHeight && newNewHeight <= window.innerHeight - 10) break;
-            newNewWidth += 20;
-            newNewHeight = newNewWidth / aspectRatio;
-        }
-        if (50 < newNewHeight && newNewHeight <= window.innerHeight - 10)
-            (newWidth = newNewWidth), (newHeight = newNewHeight);
-
-        let xLeft = window.innerWidth / 2 - newWidth / 2;
-        let xRight = window.innerWidth / 2 + newWidth / 2;
-        let yBot = window.innerHeight / 2 - newHeight / 2;
-        let yTop = window.innerHeight / 2 + newHeight / 2;
-        juliaPreviewContext.resizeCanvas(xLeft, xRight, yBot, yTop);
-    }
-
-    tryResizeCanvasMediumSize(juliaPreviewContext);
-
-    juliaPreviewContext.moveCanvas(<HTMLElement>document.getElementById('download-preview-canvas-border'));
-    juliaPreviewContext.render();
-};
-
-// Tries to resize the canvas to a a "medium" width and height if both are small
-const tryResizeCanvasMediumSize = (juliaPrevContext: JuliaContext) => {
-    let canvas = juliaPrevContext.canvas;
-    let width = canvas.width;
-    let height = canvas.height;
-    let ratio = width / height;
-    if (width < window.innerWidth * 0.3 && height < window.innerHeight * 0.3) {
-        // Increase width
-        while (width <= window.innerWidth * 0.55 && height <= window.innerHeight * 0.55) {
-            width += 10;
-            height = width / ratio;
-        }
-        width -= 10;
-        height = width / ratio;
-
-        juliaPrevContext.resizeCanvas(
-            window.innerWidth * 0.5 - width * 0.5,
-            window.innerWidth * 0.5 + width * 0.5,
-            window.innerHeight * 0.5 - height * 0.5,
-            window.innerHeight * 0.5 + height * 0.5
-        );
-    }
-};
-
 const previewDownloadImage = (juliaContext: JuliaContext, juliaPreviewContext: JuliaContext, borderId?: string) => {
     const juliaPreviewContainer = document.getElementById('download-preview-container');
     juliaPreviewContainer.style.display = 'block';
@@ -192,7 +126,7 @@ export const setupDownloadPreview = (
 ) => {
     downloadResXInput.value = downloadResolution.x.toString();
     downloadResYInput.value = downloadResolution.y.toString();
-    setAspectRatio(juliaPrevContext, downloadResolution.x / downloadResolution.y);
+    juliaPrevContext.setAspectRatio(downloadResolution.x / downloadResolution.y);
 };
 
 export const addDownloadBtnFunctionality = (
@@ -217,7 +151,7 @@ const addDownloadResXInputListener = (juliaPreviewContext: JuliaContext, downloa
             return;
         } // Change ratio accordingly
         let ratio = xVal / downloadResolution.y;
-        setAspectRatio(juliaPreviewContext, ratio);
+        juliaPreviewContext.setAspectRatio(ratio);
         downloadResolution.x = xVal;
     });
 };
@@ -231,7 +165,7 @@ const addDownloadResYInputListener = (juliaPreviewContext: JuliaContext, downloa
         }
         // Change ratio accordingly
         let ratio = downloadResolution.x / yVal;
-        setAspectRatio(juliaPreviewContext, ratio);
+        juliaPreviewContext.setAspectRatio(ratio);
         downloadResolution.y = yVal;
     });
 };
