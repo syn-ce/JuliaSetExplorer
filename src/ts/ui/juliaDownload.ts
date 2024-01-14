@@ -62,7 +62,7 @@ const downloadJuliaPNG = (
     // Copy the values of the preview juliaContext with the selected resolution
     juliaDrawingContext.setEscapeRadius(juliaPreviewContext.escapeRadius);
 
-    juliaPreviewContext.resizeCanvas(0, downloadResolution.x, 0, downloadResolution.y);
+    juliaDrawingContext.resizeCanvas(0, downloadResolution.x, 0, downloadResolution.y);
 
     juliaDrawingContext.setXYRenderingBounds(
         juliaPreviewContext.vp.yMin,
