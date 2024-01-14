@@ -1,4 +1,5 @@
-import { RGBToHex, denormalizeRGB, getCanvasElementById } from './utils/utils.js';
+import { RGBToHex, denormalizeRGB } from './utils/colorUtils.js';
+import { getCanvasElementById } from './utils/utils.js';
 import { getFragmentShaderText } from './utils/glutils.js';
 import { JuliaContext } from './fractal/JuliaContext.js';
 import { MandelContext } from './fractal/MandelContext.js';

@@ -1,5 +1,5 @@
 import { JuliaContext } from '../fractal/JuliaContext.js';
-import { denormalizeRGB, getColorSettingsAbbreviations } from '../utils/utils.js';
+import { denormalizeRGB, getColorSettingsAbbreviations } from '../utils/colorUtils.js';
 
 // Closing of preview
 const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');

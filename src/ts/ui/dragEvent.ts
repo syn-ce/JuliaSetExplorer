@@ -1,5 +1,5 @@
 import { FractalManager } from '../fractal/FractalManager.js';
-import { RGBToHex, getColorSettingsFromAbbreviations, normalizeRGB } from '../utils/utils.js';
+import { RGBToHex, getColorSettingsFromAbbreviations, normalizeRGB } from '../utils/colorUtils.js';
 
 export const addDragEventListeners = (fractalManager: FractalManager, dropzoneElementId: string) => {
     var dropzone = document.getElementById(dropzoneElementId);

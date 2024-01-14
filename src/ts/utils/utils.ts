@@ -3,15 +3,11 @@ export type Complex = {
     imag: number;
 };
 
-export type RGBColor = { r: number; g: number; b: number };
-
 export type PanningObj = {
     panningCanvas: boolean;
     startXInCoords: number;
     startYInCoords: number;
 };
-
-export type ColorSettings = number[];
 
 export type Vec3D = { x: number; y: number; z: number };
 
@@ -64,30 +60,6 @@ export const limitLength = (vec2d: { x: number; y: number }, limit: number) => {
     }
 };
 
-export const hexToRGB = (hexColor: string) => {
-    const r = parseInt(hexColor.substring(1, 1 + 2), 16);
-    const g = parseInt(hexColor.substring(3, 3 + 2), 16);
-    const b = parseInt(hexColor.substring(5, 5 + 2), 16);
-    return { r: r, g: g, b: b };
-};
-
-export const RGBToHex = (rgbColor: RGBColor) => {
-    return `#${componentToHex(rgbColor.r)}${componentToHex(rgbColor.g)}${componentToHex(rgbColor.b)}`;
-};
-
-export const componentToHex = (c: number) => {
-    var hex = c.toString(16);
-    return hex.length == 1 ? '0' + hex : hex;
-};
-
-export const normalizeRGB = (rgbColor: RGBColor) => {
-    return { r: rgbColor.r / 255, g: rgbColor.g / 255, b: rgbColor.b / 255 };
-};
-
-export const denormalizeRGB = (rgbColor: RGBColor) => {
-    return { r: Math.round(rgbColor.r * 255), g: Math.round(rgbColor.g * 255), b: Math.round(rgbColor.b * 255) };
-};
-
 export const scaleVec = (scalar: number, vec3d: Vec3D) => {
     return { x: vec3d.x * scalar, y: vec3d.y * scalar, z: vec3d.z * scalar };
 };
@@ -109,21 +81,4 @@ export const complexExp = (x: number, y: number, exponent: number) => {
 
 export const canvasMoveEvent = () => {
     return new Event('moveCanvas');
-};
-
-const colorSettingsAbbreviations = ['SC', 'SO', 'LC', 'NL1', 'NL2'];
-
-export const getColorSettingsAbbreviations = (colorSettings: ColorSettings) => {
-    return colorSettingsAbbreviations.filter((colorSettingAbbr, index) => colorSettings[index] != 0);
-};
-
-export const getColorSettingsFromAbbreviations = (colorSettingsAbbrvs: string[]) => {
-    const colorSettings = Array(5).fill(0);
-
-    colorSettingsAbbrvs.forEach(
-        // Set corresponding settings to 1
-        (colorSettingAbbr) => (colorSettings[colorSettingsAbbreviations.indexOf(colorSettingAbbr)] = 1)
-    );
-
-    return colorSettings;
 };
