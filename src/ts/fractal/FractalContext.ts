@@ -1,13 +1,7 @@
 import { createProgram, createShader, vertexShaderText } from '../utils/glutils.js';
-import {
-    PanningObj,
-    Vec3D,
-    getCanvasRenderingContext2D,
-    getWebGL2RenderingContext,
-    canvasMoveEvent,
-    zoomPoint,
-} from '../utils/utils.js';
+import { PanningObj, getCanvasRenderingContext2D, getWebGL2RenderingContext, canvasMoveEvent } from '../utils/utils.js';
 import { ColorSettings, RGBColor, hexToRGB, normalizeRGB } from '../utils/colorUtils.js';
+import { Vec3D, zoomPoint } from '../utils/vectorUtils.js';
 import { Viewport } from './viewport.js';
 
 export abstract class FractalContext {

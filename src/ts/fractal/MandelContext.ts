@@ -1,5 +1,5 @@
 import { FractalContext } from './FractalContext.js';
-import { addVecs, complexExp, scaleVec } from '../utils/utils.js';
+import { addVecs, complexExp, scaleVec } from '../utils/vectorUtils.js';
 
 export class MandelContext extends FractalContext {
     juliaCenterIndicatorWrapper: HTMLElement;
