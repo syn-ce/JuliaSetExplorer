@@ -508,4 +508,41 @@ export abstract class FractalContext {
     setCPURendering = (bool: boolean) => {
         this.cpuRendering = bool;
     };
+
+    resizeCanvas = (xScreenLeft: number, xScreenRight: number, yScreenBot: number, yScreenTop: number) => {
+        let newWidth = xScreenRight - xScreenLeft;
+        let newHeight = yScreenTop - yScreenBot;
+
+        // Update webgl canvas
+        let canvas = <HTMLCanvasElement>this.canvas;
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+
+        // Update 2d canvas
+        let canvas2d = <HTMLCanvasElement>this.canvas2d;
+        canvas2d.width = newWidth;
+        canvas2d.height = newHeight;
+
+        // Extrapolate new boundaries
+        let newXMin = this.vp.xToCoord(xScreenLeft);
+        let newYMin = this.vp.yToCoord(yScreenTop);
+        let newYMax = this.vp.yToCoord(yScreenBot);
+
+        // Update vp
+        this.vp.updateVP(xScreenLeft, yScreenBot, newWidth, newHeight);
+
+        // Update gl
+        this.gl.viewport(0, 0, newWidth, newHeight);
+        this.setScreenResolution(newWidth, newHeight);
+
+        this.setXYRenderingBounds(newYMin, newYMax, newXMin);
+    };
+
+    // Used to move the border around the canvas
+    moveCanvas = (borderElement: HTMLElement) => {
+        const canvas = this.canvas;
+
+        borderElement.style.left = `${this.vp.screenStart.x.toString()}px`;
+        borderElement.style.top = `${this.vp.screenStart.y.toString()}px`;
+    };
 }

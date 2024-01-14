@@ -30,8 +30,7 @@ const setAspectRatio = (juliaPreviewContext: JuliaContext, aspectRatio: number) 
         // Resize canvas
         let xLeft = window.innerWidth / 2 - newWidth / 2;
         let xRight = window.innerWidth / 2 + newWidth / 2;
-        resizeCanvas(
-            juliaPreviewContext,
+        juliaPreviewContext.resizeCanvas(
             xLeft,
             xRight,
             juliaPreviewContext.vp.screenStart.y,
@@ -54,12 +53,12 @@ const setAspectRatio = (juliaPreviewContext: JuliaContext, aspectRatio: number) 
         let xRight = window.innerWidth / 2 + newWidth / 2;
         let yBot = window.innerHeight / 2 - newHeight / 2;
         let yTop = window.innerHeight / 2 + newHeight / 2;
-        resizeCanvas(juliaPreviewContext, xLeft, xRight, yBot, yTop);
+        juliaPreviewContext.resizeCanvas(xLeft, xRight, yBot, yTop);
     }
 
     tryResizeCanvasMediumSize(juliaPreviewContext);
 
-    moveCanvas(juliaPreviewContext, <HTMLElement>document.getElementById('download-preview-canvas-border'));
+    juliaPreviewContext.moveCanvas(<HTMLElement>document.getElementById('download-preview-canvas-border'));
     juliaPreviewContext.render();
 };
 
@@ -78,8 +77,7 @@ const tryResizeCanvasMediumSize = (juliaPrevContext: JuliaContext) => {
         width -= 10;
         height = width / ratio;
 
-        resizeCanvas(
-            juliaPrevContext,
+        juliaPrevContext.resizeCanvas(
             window.innerWidth * 0.5 - width * 0.5,
             window.innerWidth * 0.5 + width * 0.5,
             window.innerHeight * 0.5 - height * 0.5,
@@ -94,7 +92,7 @@ const previewDownloadImage = (juliaContext: JuliaContext, juliaPreviewContext: J
 
     const borderElement = document.getElementById(borderId);
 
-    if (borderId) moveCanvas(juliaPreviewContext, borderElement);
+    if (borderId) juliaPreviewContext.moveCanvas(borderElement);
 
     juliaPreviewContext.setEscapeRadius(juliaContext.escapeRadius);
     juliaPreviewContext.setColorValues(juliaContext.rgbColor);
@@ -108,49 +106,6 @@ const previewDownloadImage = (juliaContext: JuliaContext, juliaPreviewContext: J
     juliaPreviewContext.setJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y);
 
     juliaPreviewContext.render();
-};
-
-const resizeCanvas = (
-    juliaContext: JuliaContext,
-    xScreenLeft: number,
-    xScreenRight: number,
-    yScreenBot: number,
-    yScreenTop: number
-) => {
-    let newWidth = xScreenRight - xScreenLeft;
-    let newHeight = yScreenTop - yScreenBot;
-
-    // Update webgl canvas
-    let canvas = <HTMLCanvasElement>juliaContext.canvas;
-    canvas.width = newWidth;
-    canvas.height = newHeight;
-
-    // Update 2d canvas
-    let canvas2d = <HTMLCanvasElement>juliaContext.canvas2d;
-    canvas2d.width = newWidth;
-    canvas2d.height = newHeight;
-
-    // Extrapolate new boundaries
-    let newXMin = juliaContext.vp.xToCoord(xScreenLeft);
-    let newYMin = juliaContext.vp.yToCoord(yScreenTop);
-    let newYMax = juliaContext.vp.yToCoord(yScreenBot);
-
-    // Update vp
-    juliaContext.vp.updateVP(xScreenLeft, yScreenBot, newWidth, newHeight);
-
-    // Update gl
-    juliaContext.gl.viewport(0, 0, newWidth, newHeight);
-    juliaContext.setScreenResolution(newWidth, newHeight);
-
-    juliaContext.setXYRenderingBounds(newYMin, newYMax, newXMin);
-};
-
-// Used to move the border around the canvas
-const moveCanvas = (juliaContext: JuliaContext, borderElement: HTMLElement) => {
-    const canvas = juliaContext.canvas;
-
-    borderElement.style.left = `${juliaContext.vp.screenStart.x.toString()}px`;
-    borderElement.style.top = `${juliaContext.vp.screenStart.y.toString()}px`;
 };
 
 // Downloads the Julia Image as per the current settings and the center / zoom of the preview image
@@ -180,7 +135,7 @@ const downloadJuliaPNG = (
     // Copy the values of the preview juliaContext with the selected resolution
     juliaDrawingContext.setEscapeRadius(juliaPreviewContext.escapeRadius);
 
-    resizeCanvas(juliaDrawingContext, 0, downloadResolution.x, 0, downloadResolution.y);
+    juliaPreviewContext.resizeCanvas(0, downloadResolution.x, 0, downloadResolution.y);
 
     juliaDrawingContext.setXYRenderingBounds(
         juliaPreviewContext.vp.yMin,
