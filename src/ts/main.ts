@@ -1,5 +1,5 @@
 import { RGBToHex, denormalizeRGB, getCanvasElementById } from './utils/utils.js';
-import { setupHideUIButton, addDragEventListeners } from './fractal/ui.js';
+import { setupHideUIButton } from './fractal/ui.js';
 import { getFragmentShaderText } from './utils/glutils.js';
 import { JuliaContext } from './fractal/JuliaContext.js';
 import { MandelContext } from './fractal/MandelContext.js';
@@ -11,6 +11,7 @@ import {
     setupPreviewCenterOriginBtn,
     setupPreviewDownload,
 } from './ui/juliaDownload.js';
+import { addDragEventListeners } from './ui/dragEvent.js';
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
 const canvasMandel2d = getCanvasElementById('mandel-canvas-2d');
@@ -117,7 +118,7 @@ mandelContext.updateCenterIndicator({ x: 0.0, y: 0.0 });
 const fractalManager = new FractalManager(mandelContext, juliaContext, 'julia-center-x', 'julia-center-y');
 
 // Enable dropping of files
-addDragEventListeners(fractalManager, juliaPreviewContext);
+addDragEventListeners(fractalManager, 'dropzone');
 
 // Hide-UI-Button
 setupHideUIButton('hide-ui-btn');
