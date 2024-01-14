@@ -8,14 +8,23 @@ Try it yourself: [click me](http://yesno.wtf)
 # Table of contents
 
 [Gallery](#gallery)
+
 [What am I even looking at? - Mandelbrot and Julia](#mandelbrot-and-julia)
+
 [Parameters](#parameters)
+
 &nbsp;&nbsp;[Julia Coordinates ($c$ value of the Julia set)](#julia-coordinates--value-of-the-julia-set)
+
 &nbsp;&nbsp;[Escape Radius](#escape-radius)
+
 &nbsp;&nbsp;[Exponent](#exponent)
+
 &nbsp;&nbsp;[Number of Iterations](#number-of-iterations)
+
 &nbsp;&nbsp;[Color](#color)
+
 [Double precision using CPU Rendering](#double-precision-using-cpu-rendering)
+
 &nbsp;&nbsp;[Avoiding pixelation with CPU rendering](#avoiding-pixelation-with-cpu-rendering)
 
 ## Gallery
@@ -45,10 +54,14 @@ A brief overview of the available shortcuts and what they do.
 ## Saving Images
 
 All generated Julia sets can be downloaded in PNG-format in arbitrary resolution (in practice, your browser probably won't like allocating a gigabyte of memory for a single tab so maybe don't go beyond the limits).
+
 In order to save an image, click on the corresponding button or press the "s"-key on your keyboard. This will open a preview in which you can adjust the center of the image, the zoom, the resolution, and turn on [CPU rendering](#avoiding-pixelation-with-cpu-rendering).
+
 You can start rendering the final image by pressing the associated button. Once the image has been rendered, it will be downloaded.
+
 If you are making use of CPU rendering this will take some time. A progress bar and an estimate of the remaining time will act as indicators.
 If you don't use CPU rendering (which is advised if it's not necessary) the render should, under most circumstances, finish after no longer than a couple of seconds at most and usually be perceived as instantaneous.
+
 By default the resolution should be set to match the resolution of your monitor. If that's not the case or you would like to change the resolution of the downloaded image for some other reason, you can do so by entering the values into the corresponding inputs. The preview will automatically try to adjust to display the correct aspect ratio. If the preview gets too small, it will try to resize itself to take up more space. However, it will only try to do so when the preview can fit on the screen. If the aspect ratio is very out of the ordinary (i.e. something like 50:1) it is very likely that the preview will extend beyond the bounds of the screen and not adjust its size.
 Note that changing the resolution will also not affect the quality of the image in the preview, meaning that there will be no visual difference between the preview of an image with resolution 3072x1920 (aspect ratio 16:10) and that of an image with a resolution of 1920x1200 (16:10 as well). The resulting image will of course be rendered in the desired resolution.
 
@@ -75,6 +88,7 @@ The Julia Coordinates determine the general shape of the Julia set. They can be 
 ### Escape Radius
 
 In order to check whether the aforementioned series diverges to infinity for a given point, we have to define a threshold value after which we "cut it off" since the range of 32 or even 64 bit numbers does not quite extend to actual infinity.
+
 Though a bit niche, the value of this parameter can have a significant effect on the look of the image:
 
 |                                                 Escape Radius of 1.1                                                 |                                                 Escape Radius of 100                                                 |
@@ -106,6 +120,7 @@ Naturally, increasing the number of iterations will come with the price of decre
 ### Smooth Coloring
 
 Despite being able to select the color used for rendering the image, there are certain functions one can apply:
+
 When using linear coloring methods (Static Orange or Linear RGB) bands of color will appear because of the way the colors are calculated with the escape radius (it essentially boils down to the color values being integers). This can have its own asthetic, however, by enabling Smooth Coloring these bands of color should be (mostly) eliminated (the bands in this image are not that noticeable):
 
 |                                                         Smooth Coloring off                                                          |                                                           Smooth Coloring on                                                            |
@@ -131,6 +146,7 @@ Static Orange does not take into account the color value provided but instead is
 ### Nonlinear 1 and 2
 
 Of course there are other ways to compose a color than just taking the input provided by the user and rendering directly from that. Both Nonlinear 1 and 2 take the input color into consideration, but transform it in a nonlinear fashion. That is, don't expect the resulting image to be red simply because you input a red color.
+
 There are of course infinite possibilities when it comes to combining and tinkering with these color values, but for now I have settled on these two. Note that Nonlinear 2 is somewhat special in that it's quite hard to get images which are not completely over the top. It should be considered as more of on "experimental" setting. Choosing color values closer to zero makes both Nonlinear 1 and 2 a bit easier to work with.
 
 |                                               Nonlinear 1 with value (17,39,33)                                                |                                               Nonlinear 2 with value (0,23,31)                                                |
@@ -142,7 +158,9 @@ Note that because of the nonlinearity, enabling Smooth Coloring will not have an
 ## Double precision using CPU rendering
 
 By default WebGL uses 32 bit floating numbers (single precision). For the majority of use cases this will be plenty, however, when dealing with fractals it imposes a firm limit on how far one can zoom into the fractals before things start to get very pixelated.
+
 Take a look at the following image, zoomed to a magnification of ~1183 compared to the initial display:
+
 ![image of Julia set around position (-0.167, 1.041) with a magnification of ~1183, resulting in a very pixelated image](./imgs/cpuRendering/JuliaSet_26_117_0_500_2_100_-0.16742_1.041285_0.0036808184336753905_-0.0032750417007097353_1183.213490258893_SC_NL1_0.png)
 As you can see, it would probably not quite be categorized as "sharp". Note that this is not a problem with the implementation itself; It is an issue arising solely from a lack of precision.
 Therefore this _can_ be mitigated by increasing the precision. The following image has been rendered using the exact same algorithms, the only difference being the employment of double precision:
