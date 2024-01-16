@@ -7,8 +7,6 @@ Try it yourself: [click me](http://yesno.wtf)
 
 # Table of contents
 
-[Gallery](#gallery)
-
 [What am I even looking at? - Mandelbrot and Julia](#mandelbrot-and-julia)
 
 &nbsp;&nbsp;[The Mandelbrot set](#the-mandelbrot-set)
@@ -39,7 +37,7 @@ Try it yourself: [click me](http://yesno.wtf)
 
 &nbsp;&nbsp;[Avoiding pixelation with CPU rendering](#avoiding-pixelation-with-cpu-rendering)
 
-## Gallery
+[Gallery](#gallery)
 
 ## Mandelbrot and Julia
 
@@ -65,6 +63,8 @@ The only difference is that instead of asking for which $c$ the series diverges 
 Both the Mandelbrot set on the left and the Julia set on the right will be rendered using the parameters configured by you.
 
 You can interact with them by panning and zooming. The dot rendered on top of the Mandelbrot set is the indicator for the coordinates of the current $c$ value used for rendering the Julia set. By default, that point will follow your mouse when hovering over the Mandelbrot set. This behavior can be (de-)activated by pressing the "f" key on your keyboard. You can also adjust the current $c$ value by directly entering values into the corresponding inputs.
+
+![](/imgs/usagePictures/usagePicture.png)
 
 ### Shortcuts
 
@@ -207,3 +207,97 @@ Turning CPU rendering on will render the current preview on the CPU **which will
 Enabling CPU rendering will not stop you from interacting with the canvas as usual, but keep in mind that this is **tremendously slow** and if you are not running on NASA-level hardware you should probably refrain from trying to actually use this for realtime interaction.
 
 Instead, **only activate CPU rendering when you want to download the currently displayed image**. If you have to make any adjustments other than simply centering a certain point (double clicking any point on the canvas will center it and result in only one frame being rendered) you are probably better off just turning the CPU rendering off, making your changes, turning it on again and then downloading your image.
+
+## Gallery
+
+![](/imgs/gallery/JuliaSet_26_117_0_300_2_100_-0.78014025688_0.14999212609_0_0_2.0113571874999994_SC_SO_0.png)
+
+![](/imgs/gallery/JuliaSet_8_196_21_500_2_100_-1.2571894763266953_0.043944953743533605_0_0_1.7490062499999994_SC_LC_0.png)
+
+![](/imgs/gallery/JuliaSet_0_255_255_300_2_100_-0.03520896708_0.68212169768_0_0_1.7_SC_SO_LC_0.png)
+
+![](/imgs/gallery/JuliaSet_29_13_89_400_3_100_0.15189491280043277_0.8262952878431588_0_0.19999999999999996_1.6000000000000005_SC_SO_LC_0.png)
+
+![](/imgs/gallery/JuliaSet_26_117_0_2000_2_100_-0.7496730814324626_0.09462390076501138_0_0_2.0113571875_SC_LC_0.png)
+
+![](/imgs/gallery/JuliaSet_26_117_0_2000_2_100_-0.7496730814324626_0.09462390076501138_0.5007149877928196_-0.04815466531405051_28.625176191121408_SC_LC_0.png)
+
+![](/imgs/gallery/JuliaSet_0_5_138_100_1.6_100_0.024453850672851773_0.6251531559765986_-0.34615652901785654_0.45744063654556705_5_SC_LC_0.png)
+
+![](/imgs/gallery/JuliaSet_117_0_0_300_2_100_-0.7475393749688978_-0.2100862511405278_0_0_1.7490062499999997_SC_LC_0.png)
+
+![](/imgs/gallery/JuliaSet_0_255_98_300_5_100_-0.66998524767_0.10462637826_0_0_1.7_SC_LC_0.png)
+
+![](/imgs/gallery/JuliaSet_26_117_0_300_4_100_-0.24539007092_0.44326241134_0_0_1.6_SC_SO_0.png)
+
+![](/imgs/gallery/JuliaSet_26_117_0_3000_2_100_-0.77788869438_0.11616126527_0_0_2_SC_LC_1.png)
+
+![](/imgs/gallery/JuliaSet_66_12_70_300_2.3_100_-0.68721290525_0.41840712662_-0.4505464126740924_0.29732234398657575_10.2_SC_LC_0.png)
+
+![](/imgs/gallery/JuliaSet_6_5_5_2000_2_100_-0.7496730814324626_0.09462390076501138_0_0_2.0113571875_SC_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_10_10_10_300_2_100_-0.16394123239_1.02832470755_0_0_10.485760000000006_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_10_10_11_300_5_100_-0.022375940834254315_-0.6003913825713039_-4.440892098500626e-16_0.10000000000000009_1.7490062499999994_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_8_8_8_300_2_100_-1.4022609899720428_-0.0001091379300751788_0_0_1.7490062499999994_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_10_10_11_300_5_100_-0.022375940834254315_-0.6003913825713039_2.220446049250313e-16_0.10000000000000009_1.7490062499999994_NL2_0.png)
+
+![](/imgs/gallery/JuliaSet_82_82_82_300_2_100_-1.4022609899720428_-0.0001091379300751788_0_0_1.7490062499999994_SC_LC_0.png)
+
+![](imgs/gallery/JuliaSet_4_32_27_300_2_100_-0.7914893617_0.15957446808_0_0_2.0113571875_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_3_17_18_300_2_100_-0.15170287943117378_-1.0317105973651144_0_0_17_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_3_2_2_2000_2_200_0.0025903758029869385_-0.8415233902387567_0.009638394367543851_0.007179008152411894_1844.674407370957_SC_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_3_2_2_3000_2_200_0.0025903758029869385_-0.8415233902387567_0.009656971802734473_0.007204487648551581_17261.763739293347_SC_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_143_240_164_800_2_100_-0.76691168686_0.100515236_0.019772085877568565_-0.010025942429340951_478_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_143_240_164_800_2_100_-0.76691168686_0.100515236_0.004039488060000929_0.005384618199999689_68.719487_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_143_240_164_800_2_100_-0.76691168686_0.100515236_0_0_323.696221_NL1_1.png)
+
+![](imgs/gallery/JuliaSet_64_64_64_300_2_100_0.3964912460069005_-0.11114750490363327_-0.3632525081259468_0.4064276521725143_1433.1369664947788_SC_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_64_64_64_300_2_100_0.396491246_-0.11114750490363327_-0.36130524106287065_0.4061376851749293_6.152787621294764_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_33_153_0_800_1.6_1.5_-0.250352790663022_0.000007719731867321736_-0.48337918252933576_0.140760256476548_16.5_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_33_153_0_800_1.6_1.5_-0.250352790663022_0.000007719731867321736_-0.48361040284183265_0.13917462789789015_80000_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_87_46_0_300_2_100_-1.732003181528324_0.0005689846081828028_0_0_292.4722788690716_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_87_46_0_300_2_100_-1.732003181528324_0.0005689846081828028_4.336808689942018e-19_0_1170_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_28_43_23_300_2_100_-1.7320181472671567_-0.00005375297762086844_0.004712710038807938_0.004132359312459068_676.506153284983_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_3_2_2_800_2_200_0.003099169998155022_-0.8415373683947535_0_0_49.39212390400001_SC_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_12_8_8_300_2_100_-0.15450244843651126_-1.030915463226788_0_0_16.36653739294609_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_12_8_8_800_2_100_-0.16742_1.041285_0_0_221.15106152670825_SC_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_3_7_7_1000_2_200_0.002882185548504547_-0.8418782290900625_0_0_1152.921504606848_SC_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_26_117_0_800_2_100_-0.7549402128886705_-0.06970267577711599_0_0_2.0113571874999994_SC_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_51_30_0_300_2_100_-0.21662323832659428_0.67901111222664_0_0_63_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_50_34_73_300_2_100_-0.10992117262385923_-0.6493566978792168_0.27425751438834145_0.23067446202430192_634.4004191673284_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_26_117_0_500_2_100_-0.16742077184165358_1.0412805126283333_0.0025636070166733423_-0.0027696611654754698_684.9412083277107_NL1_1.png)
+
+![](/imgs/gallery/JuliaSet_26_117_0_800_2_100_-1.7490147783251233_0_0_0_12.37545360525224_SC_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_17_77_0_800_2_100_-0.7718575599396327_0.1256264026270783_0.22664876374966858_0.2291911494640187_39.290583859262966_SC_LC_NL1.png)
+
+![](/imgs/gallery/JuliaSet_21_97_0_300_2_100_-0.23105193815979266_0.691394452200187_-0.3132332291843954_0.42493066485744435_110_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_28_13_13_800_2_100_-0.039716312056737646_0.6737588652482269_0.23415854718457418_0.05605793300612717_71_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_12_8_8_300_3_100_0.002241051209661497_1.097510307468028_-4.440892098500626e-16_0.1999999999999993_1.7490062499999994_NL1_0.png)
+
+![](/imgs/gallery/JuliaSet_12_8_8_300_3_100_0.40832336029491056_-0.005544262393407884_0_0_1.7490062499999994_NL1_1.png)
