@@ -31,9 +31,12 @@ export class FractalManager {
     }
 
     setCurrentJuliaCenter(xCoord: number, yCoord: number) {
-        this.mandelContext.updateCenterIndicator({ x: xCoord, y: yCoord });
-        this.juliaContext.setJuliaCCoords(xCoord, yCoord);
-        this.updateJuliaCenterDisplayValues();
+        if (xCoord != this.juliaContext.juliaCCoords.x || yCoord != this.juliaContext.juliaCCoords.y) {
+            // Check if update is necessary
+            this.mandelContext.updateCenterIndicator({ x: xCoord, y: yCoord });
+            this.juliaContext.setJuliaCCoords(xCoord, yCoord);
+            this.updateJuliaCenterDisplayValues();
+        }
     }
 
     updateJuliaCenterDisplayValues = () => {

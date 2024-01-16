@@ -48,8 +48,13 @@ export class JuliaContext extends FractalContext {
         // Update inputs on pan, zoom
         const setInputValuesToCenter = () => {
             let currCenter = this.getCurrentCenter();
-            centerXInput.value = parseFloat(currCenter.cX.toFixed(10)).toString(); //.substring(0, 10 + (currCenter.cX < 0 ? 1 : 0));
-            centerYInput.value = parseFloat(currCenter.cY.toFixed(10)).toString(); //.substring(0, 10 + (currCenter.cY < 0 ? 1 : 0));
+            let cX = parseFloat(currCenter.cX.toFixed(10));
+            let cY = parseFloat(currCenter.cY.toFixed(10));
+            if (cX != parseFloat(centerXInput.value) || cY != parseFloat(centerYInput.value)) {
+                // Only update when necessary -> avoids trimming trailing zeros
+                centerXInput.value = cX.toString(); //.substring(0, 10 + (currCenter.cX < 0 ? 1 : 0));
+                centerYInput.value = cY.toString(); //.substring(0, 10 + (currCenter.cY < 0 ? 1 : 0));
+            }
         };
 
         this.canvas.addEventListener('moveCanvas', () => setInputValuesToCenter());
@@ -70,11 +75,18 @@ export class JuliaContext extends FractalContext {
         });
 
         this.canvas.addEventListener('moveCanvas', () => {
-            zoomInput.value = parseFloat(this.zoomLevel.toFixed(5)).toString();
+            // Check if update is necessary
+            let prevZoomLevel = parseFloat(zoomInput.value);
+            if (prevZoomLevel != parseFloat(this.zoomLevel.toFixed(5))) {
+                zoomInput.value = parseFloat(this.zoomLevel.toFixed(5)).toString();
+            }
         });
 
         this.canvas2d.addEventListener('moveCanvas', () => {
-            zoomInput.value = parseFloat(this.zoomLevel.toFixed(5)).toString();
+            let prevZoomLevel = parseFloat(zoomInput.value);
+            if (prevZoomLevel != parseFloat(this.zoomLevel.toFixed(5))) {
+                zoomInput.value = parseFloat(this.zoomLevel.toFixed(5)).toString();
+            }
         });
     };
 
