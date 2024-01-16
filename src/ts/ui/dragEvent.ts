@@ -6,6 +6,8 @@ export const addDragEventListeners = (fractalManager: FractalManager, dropzoneEl
 
     document.body.ondragenter = (evt) => {
         fractalManager.mandelContext.indicatorFollowsMouse = false;
+        dropzone.style.visibility = 'visible';
+        dropzone.style.opacity = '1';
     };
 
     document.body.ondragover = (evt) => {
@@ -80,6 +82,7 @@ export const addDragEventListeners = (fractalManager: FractalManager, dropzoneEl
     };
 
     document.body.ondragleave = (evt) => {
+        if (evt.target != dropzone) return;
         dropzone.style.visibility = 'hidden';
         dropzone.style.opacity = '0';
     };
