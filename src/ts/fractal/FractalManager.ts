@@ -97,12 +97,10 @@ export class FractalManager {
         });
     }
 
-    tryUpdateRenderFractalsFromString = (filename: string) => {
-        this.mandelContext.indicatorFollowsMouse = false;
-
+    tryParseParamsFromFilename = (filename: string) => {
         // Extract parameters
         let params = filename.split('_').slice(1); // Split into attributes, remove "JuliaSet"-prefix
-        if (params.length < 12) return; // Not enough params
+        if (params.length < 12) return { parsedSuccessfully: false }; // Not enough params
 
         let color = { r: parseFloat(params[0]), g: parseFloat(params[1]), b: parseFloat(params[2]) };
         let nrIterations = parseFloat(params[3]);
@@ -117,6 +115,38 @@ export class FractalManager {
         let cpuRendering = params[params.length - 1] == '1' ? true : false;
 
         let colorSettings = getColorSettingsFromAbbreviations(params.slice(11, params.length - 1));
+
+        return {
+            color,
+            nrIterations,
+            exponent,
+            escapeRadius,
+            juliaCoords,
+            juliaPreviewCenter,
+            zoomLevel,
+            cpuRendering,
+            colorSettings,
+            parsedSuccessfully: true,
+        };
+    };
+
+    tryUpdateRenderFractalsFromString = (filename: string) => {
+        let params = this.tryParseParamsFromFilename(filename);
+        if (!params.parsedSuccessfully) return;
+
+        this.mandelContext.indicatorFollowsMouse = false;
+
+        const {
+            color,
+            nrIterations,
+            exponent,
+            escapeRadius,
+            juliaCoords,
+            juliaPreviewCenter,
+            zoomLevel,
+            cpuRendering,
+            colorSettings,
+        } = params;
 
         // Set the values
         this.setCurrentJuliaCenter(juliaCoords.x, juliaCoords.y);
