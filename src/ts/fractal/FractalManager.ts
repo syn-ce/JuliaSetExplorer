@@ -1,6 +1,7 @@
 import { JuliaContext } from './JuliaContext.js';
 import { MandelContext } from './MandelContext.js';
 import { distance, limitLength } from '../utils/vectorUtils.js';
+import { RGBToHex, getColorSettingsFromAbbreviations, normalizeRGB } from '../utils/colorUtils.js';
 
 // Enables the communication between two FractalContexts via events
 export class FractalManager {
@@ -95,6 +96,63 @@ export class FractalManager {
             }
         });
     }
+
+    tryUpdateRenderFractalsFromString = (filename: string) => {
+        this.mandelContext.indicatorFollowsMouse = false;
+
+        // Extract parameters
+        let params = filename.split('_').slice(1); // Split into attributes, remove "JuliaSet"-prefix
+        if (params.length < 12) return; // Not enough params
+
+        let color = { r: parseFloat(params[0]), g: parseFloat(params[1]), b: parseFloat(params[2]) };
+        let nrIterations = parseFloat(params[3]);
+        let exponent = parseFloat(params[4]);
+        let escapeRadius = parseFloat(params[5]);
+
+        let juliaCoords = { x: parseFloat(params[6]), y: parseFloat(params[7]) };
+        let juliaPreviewCenter = { x: parseFloat(params[8]), y: parseFloat(params[9]) };
+
+        let zoomLevel = parseFloat(params[10]);
+
+        let cpuRendering = params[params.length - 1] == '1' ? true : false;
+
+        let colorSettings = getColorSettingsFromAbbreviations(params.slice(11, params.length - 1));
+
+        // Set the values
+        this.setCurrentJuliaCenter(juliaCoords.x, juliaCoords.y);
+        //juliaPreviewContext.zoom(juliaPreviewCenter.x, juliaPreviewCenter.y, zoomLevel);
+        //juliaPreviewContext.setCenterTo(juliaPreviewCenter.x, juliaPreviewCenter.y);
+        this.juliaContext.setColorValues(normalizeRGB(color));
+        this.juliaContext.colorInput.value = RGBToHex(color);
+        this.juliaContext.setExponent(exponent);
+        this.juliaContext.exponentInput.value = exponent.toString();
+        this.juliaContext.setNrIterations(nrIterations);
+        this.juliaContext.nrIterationsInput.value = nrIterations.toString();
+        this.juliaContext.setEscapeRadius(escapeRadius);
+        this.juliaContext.escapeRadiusInput.value = escapeRadius.toString();
+        this.juliaContext.setColorSettings(colorSettings);
+        this.juliaContext.colorSettingsInputs.forEach(
+            (colorSettingInput, index) => (colorSettingInput.checked = colorSettings[index] != 0)
+        );
+        this.juliaContext.setCenterTo(juliaPreviewCenter.x, juliaPreviewCenter.y); // Set center and zoom as specified in filename
+        this.juliaContext.zoom(juliaPreviewCenter.x, juliaPreviewCenter.y, zoomLevel);
+
+        this.mandelContext.setColorValues(normalizeRGB(color));
+        this.mandelContext.colorInput.value = RGBToHex(color);
+        this.mandelContext.setExponent(exponent);
+        this.mandelContext.exponentInput.value = exponent.toString();
+        this.mandelContext.setNrIterations(nrIterations);
+        this.mandelContext.nrIterationsInput.value = nrIterations.toString();
+        this.mandelContext.setEscapeRadius(escapeRadius);
+        this.mandelContext.escapeRadiusInput.value = escapeRadius.toString();
+        this.mandelContext.setColorSettings(colorSettings);
+        this.mandelContext.colorSettingsInputs.forEach(
+            (colorSettingInput, index) => (colorSettingInput.checked = colorSettings[index] != 0)
+        );
+
+        this.juliaContext.render();
+        this.mandelContext.render();
+    };
 
     stopRandomMovement() {
         this.movingRandom = false;

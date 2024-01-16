@@ -13,6 +13,7 @@ import {
 } from './ui/juliaDownload.js';
 import { addDragEventListeners } from './ui/dragEvent.js';
 import { setupHideUIButton } from './ui/hideUIButton.js';
+import { addPasteEventListeners } from './ui/pasteEvent.js';
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
 const canvasMandel2d = getCanvasElementById('mandel-canvas-2d');
@@ -120,6 +121,9 @@ const fractalManager = new FractalManager(mandelContext, juliaContext, 'julia-ce
 
 // Enable dropping of files
 addDragEventListeners(fractalManager, 'dropzone');
+
+// Enable pasting of filenames
+addPasteEventListeners(fractalManager);
 
 // Hide-UI-Button
 setupHideUIButton('hide-ui-btn');
