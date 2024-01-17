@@ -32,7 +32,7 @@ export const getColorSettingsAbbreviations = (colorSettings: ColorSettings) => {
 };
 
 export const getColorSettingsFromAbbreviations = (colorSettingsAbbrvs: string[]) => {
-    const colorSettings = Array(5).fill(0);
+    const colorSettings: ColorSettings = Array(5).fill(0);
 
     colorSettingsAbbrvs.forEach(
         // Set corresponding settings to 1

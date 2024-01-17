@@ -1,7 +1,13 @@
 import { JuliaContext } from './JuliaContext.js';
 import { MandelContext } from './MandelContext.js';
 import { distance, limitLength } from '../utils/vectorUtils.js';
-import { RGBToHex, getColorSettingsFromAbbreviations, normalizeRGB } from '../utils/colorUtils.js';
+import {
+    ColorSettings,
+    RGBColor,
+    RGBToHex,
+    getColorSettingsFromAbbreviations,
+    normalizeRGB,
+} from '../utils/colorUtils.js';
 
 // Enables the communication between two FractalContexts via events
 export class FractalManager {
@@ -97,7 +103,22 @@ export class FractalManager {
         });
     }
 
-    tryParseParamsFromFilename = (filename: string) => {
+    tryParseParamsFromFilename = (
+        filename: string
+    ): // Explicit typing necessary to avoid returning all attributes when parsing was not successful
+    | { parsedSuccessfully: false }
+        | {
+              parsedSuccessfully: true;
+              color: RGBColor;
+              nrIterations: number;
+              exponent: number;
+              escapeRadius: number;
+              juliaCoords: { x: number; y: number };
+              juliaPreviewCenter: { x: number; y: number };
+              zoomLevel: number;
+              cpuRendering: boolean;
+              colorSettings: ColorSettings;
+          } => {
         // Extract parameters
         let params = filename.split('_').slice(1); // Split into attributes, remove "JuliaSet"-prefix
         if (params.length < 12) return { parsedSuccessfully: false }; // Not enough params
@@ -116,7 +137,7 @@ export class FractalManager {
 
         let colorSettings = getColorSettingsFromAbbreviations(params.slice(11, params.length - 1));
 
-        return {
+        let paramsObj = {
             color,
             nrIterations,
             exponent,
@@ -126,13 +147,23 @@ export class FractalManager {
             zoomLevel,
             cpuRendering,
             colorSettings,
+        };
+
+        for (var param of Object.keys(paramsObj)) {
+            // Assert that no value is null
+            if (param === null) return { parsedSuccessfully: false };
+        }
+
+        return {
+            ...paramsObj,
             parsedSuccessfully: true,
         };
     };
 
+    // Returns whether the rendering was successful or not
     tryUpdateRenderFractalsFromString = (filename: string) => {
         let params = this.tryParseParamsFromFilename(filename);
-        if (!params.parsedSuccessfully) return;
+        if (!params.parsedSuccessfully) return false;
 
         this.mandelContext.indicatorFollowsMouse = false;
 
@@ -182,6 +213,7 @@ export class FractalManager {
 
         this.juliaContext.render();
         this.mandelContext.render();
+        return true;
     };
 
     stopRandomMovement() {
