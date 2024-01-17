@@ -206,7 +206,7 @@ export class FractalManager {
 
         var nextDestination: { x: number; y: number };
 
-        let currentCenter = this.juliaContext.juliaCCoords;
+        let currentCenter = { x: this.juliaContext.juliaCCoords.x, y: this.juliaContext.juliaCCoords.y };
 
         async function outerLoop(i: number, fractalManager: FractalManager) {
             // Determine random next point to move to inside the defined area
@@ -219,6 +219,11 @@ export class FractalManager {
         async function innerLoop(frameNr: number, fractalManager: FractalManager) {
             return new Promise((resolve, reject) => {
                 if (!fractalManager.movingRandom) reject();
+                currentCenter = {
+                    // Update in case the values were changed by other events
+                    x: fractalManager.juliaContext.juliaCCoords.x,
+                    y: fractalManager.juliaContext.juliaCCoords.y,
+                };
                 // Adjust the acceleration to point towards the destination
                 acceleration = { x: nextDestination.x - currentCenter.x, y: nextDestination.y - currentCenter.y };
                 velocity.x += acceleration.x * 0.0001;
