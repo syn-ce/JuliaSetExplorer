@@ -95,6 +95,36 @@ Note that changing the resolution will not affect the quality of the image in th
 
 ![example screenshot of the editor for / preview of the image to download](/imgs/controlsUI/downloadEditorAndPreview.png)
 
+## Filenames
+
+All downloaded Julia sets will have a filename in a very particular format:
+
+```
+JuliaSet_RGB.R_RGB.G_RGB.B_NrIterations_Exponent_EscapeRadius_JuliaCoordX_JuliaCoordY_DownloadCenterX_DownloadCenterY_ZoomLevel_[COLOR-SETTINGS]_CPURendering.png
+```
+
+where
+
+-   `JuliaCoordX` and `JuliaCoordY` represent the $c$-value of the Julia set ($c=x+iy$)
+-   `DownloadCenterX` and `DownloadCenterY` represent the coordinates of the center of the Julia image
+-   `[COLOR-SETTINGS]` is an underscore-separated list containing any combination of the following color-options: `SC, SO, LC, NL1, NL2` representing Smooth Coloring, Static Orange, Linear RGB, Nonlinear 1 and Nonlinear 2.
+-   `CPURendering` is either of value 0 (CPU rendering off) or 1 (CPU rendering on). Note that because of performance reasons this is the only value which will always be set to 0 when [pasting Julia sets](#pasting-images), no matter the actual value in the filename. For more information, see [CPU rendering](#avoiding-pixelation-with-cpu-rendering)
+
+For more information refer to the [Parameters](#parameters)-section below.
+
+## Pasting Images
+
+All downloaded Julia sets can be pasted into the browser to immediately restore the state from when the image was downloaded. This is especially useful when the Julia set needs to be rendered in a different resolution, color or when other other arbitrary adjustments have to be made.
+
+Any Julia set can be pasted by either
+
+-   pasting the downloaded image or
+-   pasting the filename of the downloaded image.
+
+Please note that even when pasting the actual image, the **only thing taken into consideration is the filename**. Therefore the filename has to be the original one in the proprietary format - the only reason the pasting via the image itself is at all possible is because of convenience: Usually it will be faster to copy the image than to extract the filename.
+
+For this purpose the filenames of the images of the Julia sets in this README are available below the images for convenient copying.
+
 # Parameters
 
 The following parameters can be adjusted to tweak the resulting image's appearance:
