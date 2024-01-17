@@ -130,7 +130,7 @@ input[type='number'],
     color: white;
     box-shadow: none;
     border: none;
-    width: 14ch;
+    width: 12ch;
     font-size: 0.9em;
 }
 
@@ -161,11 +161,15 @@ button {
 }
 
 #escape-radius {
-    width: 8ch;
+    width: 6ch;
 }
 
 #exponent {
-    width: 5ch;
+    width: 3ch;
+}
+
+#nr-iterations {
+    width: 6ch;
 }
 
 /* Color input */
@@ -185,10 +189,6 @@ input[type='color']::-webkit-color-swatch {
 
 #color-dropdown label {
     font-size: 15px;
-}
-
-#random-movement {
-    width: 17ch;
 }
 
 #save-julia-png-btn {
