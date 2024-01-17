@@ -11,9 +11,9 @@ import {
     setupPreviewCenterOriginBtn,
     setupPreviewDownload,
 } from './ui/juliaDownload.js';
-import { addDragDropEventListeners } from './ui/dragDropEvent.js';
+import { addDragDropEventListeners } from './ui/fileDragDrop.js';
 import { setupHideUIButton } from './ui/hideUIButton.js';
-import { addPasteEventListeners } from './ui/pasteEvent.js';
+import { addPasteEventListeners } from './ui/filePaste.js';
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
 const canvasMandel2d = getCanvasElementById('mandel-canvas-2d');
