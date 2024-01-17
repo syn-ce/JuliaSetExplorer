@@ -1,7 +1,13 @@
 import { FractalManager } from '../fractal/FractalManager.js';
-import { RGBToHex, getColorSettingsFromAbbreviations, normalizeRGB } from '../utils/colorUtils.js';
+import { JuliaContext } from '../fractal/JuliaContext.js';
 
-export const addDragEventListeners = (fractalManager: FractalManager, dropzoneElementId: string) => {
+export const addDragDropEventListeners = (
+    fractalManager: FractalManager,
+    dropzoneElementId: string,
+    juliaPreviewContext: JuliaContext,
+    juliaDrawingContext: JuliaContext,
+    juliaPreviewContainerId: string
+) => {
     var dropzone = document.getElementById(dropzoneElementId);
 
     document.body.ondragenter = (evt) => {
@@ -25,7 +31,12 @@ export const addDragEventListeners = (fractalManager: FractalManager, dropzoneEl
 
         let name = file.name;
 
-        fractalManager.tryUpdateRenderFractalsFromString(name);
+        fractalManager.tryUpdateRenderFractalsFromString(
+            name,
+            juliaPreviewContext,
+            juliaDrawingContext,
+            juliaPreviewContainerId
+        );
     };
 
     document.body.ondragleave = (evt) => {

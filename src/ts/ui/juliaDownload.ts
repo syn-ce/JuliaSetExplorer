@@ -13,14 +13,26 @@ const downloadResolution = {
     y: window.screen.height * window.devicePixelRatio,
 };
 
-const previewDownloadImage = (juliaContext: JuliaContext, juliaPreviewContext: JuliaContext, borderId?: string) => {
-    const juliaPreviewContainer = document.getElementById('download-preview-container');
+const previewDownloadImage = (
+    juliaContext: JuliaContext,
+    juliaPreviewContext: JuliaContext,
+    juliaPreviewContainerId: string,
+    borderId?: string
+) => {
+    const juliaPreviewContainer = document.getElementById(juliaPreviewContainerId);
     juliaPreviewContainer.style.display = 'block';
 
     const borderElement = document.getElementById(borderId);
 
     if (borderId) juliaPreviewContext.moveCanvas(borderElement);
 
+    updateJuliaPreviewContext(juliaPreviewContext, juliaContext);
+
+    juliaPreviewContext.render();
+};
+
+// Update the values of the preview context with the values of the (main) julia context
+export const updateJuliaPreviewContext = (juliaPreviewContext: JuliaContext, juliaContext: JuliaContext) => {
     juliaPreviewContext.setEscapeRadius(juliaContext.escapeRadius);
     juliaPreviewContext.setColorValues(juliaContext.rgbColor);
     juliaPreviewContext.setExponent(juliaContext.exponent);
@@ -31,8 +43,6 @@ const previewDownloadImage = (juliaContext: JuliaContext, juliaPreviewContext: J
     juliaPreviewContext.setCenterTo(center.cX, center.cY);
     juliaPreviewContext.setColorSettings(juliaContext.colorSettings);
     juliaPreviewContext.setJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y);
-
-    juliaPreviewContext.render();
 };
 
 // Downloads the Julia Image as per the current settings and the center / zoom of the preview image
@@ -59,25 +69,8 @@ const downloadJuliaPNG = (
         }_${juliaPreviewContext.cpuRendering ? 1 : 0}.png`
     );
 
-    // Copy the values of the preview juliaContext with the selected resolution
-    juliaDrawingContext.setEscapeRadius(juliaPreviewContext.escapeRadius);
-
-    juliaDrawingContext.resizeCanvas(0, downloadResolution.x, 0, downloadResolution.y);
-
-    juliaDrawingContext.setXYRenderingBounds(
-        juliaPreviewContext.vp.yMin,
-        juliaPreviewContext.vp.yMax,
-        juliaPreviewContext.vp.xMin
-    );
-    juliaDrawingContext.setColorValues(juliaPreviewContext.rgbColor);
-    juliaDrawingContext.setExponent(juliaPreviewContext.exponent);
-    juliaDrawingContext.setNrIterations(juliaPreviewContext.nrIterations);
-    // Need to set center explicitly because of the different canvas sizes and the way the bounds are set
-    let xCenterJuliaPreviewContext = (juliaPreviewContext.vp.xMax + juliaPreviewContext.vp.xMin) * 0.5;
-    let yCenterJuliaPreviewContext = (juliaPreviewContext.vp.yMax + juliaPreviewContext.vp.yMin) * 0.5;
-    juliaDrawingContext.setCenterTo(xCenterJuliaPreviewContext, yCenterJuliaPreviewContext);
-    juliaDrawingContext.setColorSettings(juliaPreviewContext.colorSettings);
-    juliaDrawingContext.setJuliaCCoords(juliaPreviewContext.juliaCCoords.x, juliaPreviewContext.juliaCCoords.y);
+    // Update drawing context with values of preview context
+    updateJuliaDrawingContext(juliaDrawingContext, juliaPreviewContext);
 
     const cpuRendering = juliaPreviewContext.cpuRendering; // Save the current state so changes (i.e. cpu rendering gets
     // deactivated) during the render won't affect download
@@ -102,14 +95,38 @@ const downloadJuliaPNG = (
     });
 };
 
+// Update the values of the drawing context with the values of the preview context
+export const updateJuliaDrawingContext = (juliaDrawingContext: JuliaContext, juliaPreviewContext: JuliaContext) => {
+    // Copy the values of the preview juliaContext with the selected resolution
+    juliaDrawingContext.setEscapeRadius(juliaPreviewContext.escapeRadius);
+
+    juliaDrawingContext.resizeCanvas(0, downloadResolution.x, 0, downloadResolution.y);
+
+    juliaDrawingContext.setXYRenderingBounds(
+        juliaPreviewContext.vp.yMin,
+        juliaPreviewContext.vp.yMax,
+        juliaPreviewContext.vp.xMin
+    );
+    juliaDrawingContext.setColorValues(juliaPreviewContext.rgbColor);
+    juliaDrawingContext.setExponent(juliaPreviewContext.exponent);
+    juliaDrawingContext.setNrIterations(juliaPreviewContext.nrIterations);
+    // Need to set center explicitly because of the different canvas sizes and the way the bounds are set
+    let xCenterJuliaPreviewContext = (juliaPreviewContext.vp.xMax + juliaPreviewContext.vp.xMin) * 0.5;
+    let yCenterJuliaPreviewContext = (juliaPreviewContext.vp.yMax + juliaPreviewContext.vp.yMin) * 0.5;
+    juliaDrawingContext.setCenterTo(xCenterJuliaPreviewContext, yCenterJuliaPreviewContext);
+    juliaDrawingContext.setColorSettings(juliaPreviewContext.colorSettings);
+    juliaDrawingContext.setJuliaCCoords(juliaPreviewContext.juliaCCoords.x, juliaPreviewContext.juliaCCoords.y);
+};
+
 // Open preview / editor for download of Julia-Image
 const openSaveJuliaModal = (
     juliaContext: JuliaContext,
     juliaDrawingContext: JuliaContext,
-    juliaPreviewContext: JuliaContext
+    juliaPreviewContext: JuliaContext,
+    juliaPreviewContainerId: string
 ) => {
     // This opens a small preview where one can select resolution and crop / zoom
-    previewDownloadImage(juliaContext, juliaPreviewContext, 'download-preview-canvas-border');
+    previewDownloadImage(juliaContext, juliaPreviewContext, juliaPreviewContainerId, 'download-preview-canvas-border');
 };
 
 export const setupDownloadPreview = (
@@ -187,12 +204,13 @@ export const addSaveJuliaPNGBtnListeners = (
     juliaContext: JuliaContext,
     juliaDrawingContext: JuliaContext,
     btnId: string,
-    juliaPreviewContext: JuliaContext
+    juliaPreviewContext: JuliaContext,
+    juliaPreviewContainerId: string
 ) => {
     const openJuliaSavePreviewBtn = document.getElementById(btnId);
 
     openJuliaSavePreviewBtn.onclick = (evt) => {
-        openSaveJuliaModal(juliaContext, juliaDrawingContext, juliaPreviewContext);
+        openSaveJuliaModal(juliaContext, juliaDrawingContext, juliaPreviewContext, juliaPreviewContainerId);
     };
 
     window.addEventListener('keydown', (evt) => {

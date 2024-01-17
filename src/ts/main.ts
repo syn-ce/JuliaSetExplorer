@@ -11,7 +11,7 @@ import {
     setupPreviewCenterOriginBtn,
     setupPreviewDownload,
 } from './ui/juliaDownload.js';
-import { addDragEventListeners } from './ui/dragEvent.js';
+import { addDragDropEventListeners } from './ui/dragDropEvent.js';
 import { setupHideUIButton } from './ui/hideUIButton.js';
 import { addPasteEventListeners } from './ui/pasteEvent.js';
 
@@ -103,7 +103,15 @@ juliaPreviewContext.addDoubleClickCenterPoint();
 juliaPreviewContext.addCenterInputs('download-center-x', 'download-center-y');
 juliaPreviewContext.addZoomInput('preview-zoom');
 
-addSaveJuliaPNGBtnListeners(juliaContext, juliaDrawingContext, 'save-julia-png-btn', juliaPreviewContext);
+const juliaPreviewContainerId = 'download-preview-container';
+
+addSaveJuliaPNGBtnListeners(
+    juliaContext,
+    juliaDrawingContext,
+    'save-julia-png-btn',
+    juliaPreviewContext,
+    juliaPreviewContainerId
+);
 
 // Set initial color
 juliaContext.setColorValues({ r: 0.1, g: 0.46, b: 0.0 });
@@ -120,10 +128,16 @@ mandelContext.updateCenterIndicator({ x: 0.0, y: 0.0 });
 const fractalManager = new FractalManager(mandelContext, juliaContext, 'julia-center-x', 'julia-center-y');
 
 // Enable dropping of files
-addDragEventListeners(fractalManager, 'dropzone');
+addDragDropEventListeners(
+    fractalManager,
+    'dropzone',
+    juliaPreviewContext,
+    juliaDrawingContext,
+    juliaPreviewContainerId
+);
 
 // Enable pasting of filenames
-addPasteEventListeners(fractalManager);
+addPasteEventListeners(fractalManager, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId);
 
 // Hide-UI-Button
 setupHideUIButton('hide-ui-btn');

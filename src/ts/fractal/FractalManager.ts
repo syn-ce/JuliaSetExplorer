@@ -8,11 +8,15 @@ import {
     getColorSettingsFromAbbreviations,
     normalizeRGB,
 } from '../utils/colorUtils.js';
+import { updateJuliaPreviewContext } from '../ui/juliaDownload.js';
 
 // Enables the communication between two FractalContexts via events
 export class FractalManager {
     mandelContext: MandelContext;
     juliaContext: JuliaContext;
+
+    juliaPreviewContext: JuliaContext;
+    juliaDrawingContext: JuliaContext;
 
     currentJuliaCenter: { x: number; y: number };
     juliaXCoordInput: HTMLInputElement;
@@ -161,7 +165,12 @@ export class FractalManager {
     };
 
     // Returns whether the rendering was successful or not
-    tryUpdateRenderFractalsFromString = (filename: string) => {
+    tryUpdateRenderFractalsFromString = (
+        filename: string,
+        juliaPreviewContext: JuliaContext,
+        juliaDrawingContext: JuliaContext,
+        juliaPreviewContainerId: string
+    ) => {
         let params = this.tryParseParamsFromFilename(filename);
         if (!params.parsedSuccessfully) return false;
 
@@ -213,6 +222,13 @@ export class FractalManager {
 
         this.juliaContext.render();
         this.mandelContext.render();
+
+        // Update preview context if necessary
+        const juliaPreviewContainer = document.getElementById(juliaPreviewContainerId);
+        if (juliaPreviewContainer.style.display != 'block') return true;
+        updateJuliaPreviewContext(juliaPreviewContext, this.juliaContext);
+        juliaPreviewContext.render();
+
         return true;
     };
 
