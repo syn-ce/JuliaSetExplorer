@@ -113,6 +113,14 @@ The Julia Coordinates determine the general shape of the Julia set. They can be 
 | :------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: |
 | ![](/imgs/juliaCoordinates/JuliaSet_14_7_7_800_2_100_0.315878380105945_-0.04211320165297236_0_0_1.7490062499999999_SC_NL1_0.png) | ![](/imgs/juliaCoordinates/JuliaSet_14_7_7_800_2_100_-1.480826496088234_0.0013867962695299548_0_0_24.25420005376_SC_NL1_1.png) |
 
+```
+JuliaSet_14_7_7_800_2_100_0.315878380105945_-0.04211320165297236_0_0_1.7490062499999999_SC_NL1_0.png
+```
+
+```
+JuliaSet_14_7_7_800_2_100_-1.480826496088234_0.0013867962695299548_0_0_24.25420005376_SC_NL1_1.png
+```
+
 ### Escape Radius
 
 In order to check whether the aforementioned series diverges to infinity for a given point, we have to define a threshold value after which we "cut it off" since the range of 32 or even 64 bit numbers does not quite extend to actual infinity.
@@ -123,6 +131,14 @@ Though a bit niche, the value of this parameter can have a significant effect on
 | :------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------: |
 | ![](/imgs/escapeRadius/JuliaSet_9_19_6_800_2_1.1_-0.8463908030557178_0.19997727808059781_0_0_2.0113571875_NL1_0.png) | ![](/imgs/escapeRadius/JuliaSet_9_19_6_800_2_100_-0.8463908030557178_0.19997727808059781_0_0_2.0113571875_NL1_0.png) |
 
+```
+JuliaSet_9_19_6_800_2_1.1_-0.8463908030557178_0.19997727808059781_0_0_2.0113571875_NL1_0.png
+```
+
+```
+JuliaSet_9_19_6_800_2_100_-0.8463908030557178_0.19997727808059781_0_0_2.0113571875_NL1_0.png
+```
+
 ## Exponent
 
 The exponent (very informally) decides "the number of branches". Non-Integer values are allowed.
@@ -130,6 +146,14 @@ The exponent (very informally) decides "the number of branches". Non-Integer val
 |                                                Exponent of 2                                                |                                                       Exponent of 3                                                       |
 | :---------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: |
 | ![](/imgs/exponent/JuliaSet_0_157_255_500_2_100_0.3847086259435044_0.10924501630539399_0_0_1.6_SC_LC_0.png) | ![](/imgs/exponent/JuliaSet_0_157_255_500_3_100_0.501419741737431_0.06545088539276347_0_0_1.8400000000000005_SC_LC_0.png) |
+
+```
+JuliaSet_0_157_255_500_2_100_0.3847086259435044_0.10924501630539399_0_0_1.6_SC_LC_0.png
+```
+
+```
+JuliaSet_0_157_255_500_3_100_0.501419741737431_0.06545088539276347_0_0_1.8400000000000005_SC_LC_0.png
+```
 
 (Note that in these images not just the exponent was changed; Since the topology changes, the resulting images in the same position would not look similar. To emphasize the idea behind the exponent the position of the Julia Coordinates has been adjusted between the images)
 
@@ -140,6 +164,14 @@ The accuracy with which the fractals are rendered depends not only on the escape
 |                                                      nrIterations of 100                                                       |                                                      nrIterations of 1000                                                       |
 | :----------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------: |
 | ![](/imgs/nrIterations/JuliaSet_4_11_11_100_2_100_-0.07290343182904654_0.6543711836041501_0_0_1.7490062499999994_SC_NL1_0.png) | ![](/imgs/nrIterations/JuliaSet_4_11_11_1000_2_100_-0.07290343182904654_0.6543711836041501_0_0_1.7490062499999994_SC_NL1_0.png) |
+
+```
+JuliaSet_4_11_11_100_2_100_-0.07290343182904654_0.6543711836041501_0_0_1.7490062499999994_SC_NL1_0.png
+```
+
+```
+JuliaSet_4_11_11_1000_2_100_-0.07290343182904654_0.6543711836041501_0_0_1.7490062499999994_SC_NL1_0.png
+```
 
 Naturally, increasing the number of iterations will come with the price of decreased performance, though solely for rendering single frames even iteration counts in the thousands are considerably fast.
 
@@ -155,6 +187,14 @@ When using linear coloring methods (Static Orange or Linear RGB) bands of color 
 | :----------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------: |
 | ![](/imgs/color/smoothColoring/JuliaSet_33_186_176_300_2_100_-0.780858194066575_0.15140706860098566_0_0_2.0113571874999994_LC_0.png) | ![](/imgs/color/smoothColoring/JuliaSet_33_186_176_300_2_100_-0.780858194066575_0.15140706860098566_0_0_2.0113571874999994_SC_LC_0.png) |
 
+```
+JuliaSet_33_186_176_300_2_100_-0.780858194066575_0.15140706860098566_0_0_2.0113571874999994_LC_0.png
+```
+
+```
+JuliaSet_33_186_176_300_2_100_-0.780858194066575_0.15140706860098566_0_0_2.0113571874999994_SC_LC_0.png
+```
+
 ### Static Orange and Linear RGB
 
 Linear RGB is essentially taking the color value provided via the color picker and directly using it to render the fractal without modifying it any further.
@@ -163,6 +203,14 @@ Linear RGB is essentially taking the color value provided via the color picker a
 | :------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: |
 | ![](/imgs/color/linearRGB/JuliaSet_26_117_0_300_2_100_-0.780858194066575_0.15140706860098566_0_0_2.0113571874999994_SC_LC_0.png) | ![](/imgs/color/linearRGB/JuliaSet_26_11_176_300_2_100_-0.780858194066575_0.15140706860098566_0_0_1.8173403890875361_LC_0.png) |
 
+```
+JuliaSet_26_117_0_300_2_100_-0.780858194066575_0.15140706860098566_0_0_2.0113571874999994_SC_LC_0.png
+```
+
+```
+JuliaSet_26_11_176_300_2_100_-0.780858194066575_0.15140706860098566_0_0_1.8173403890875361_LC_0.png
+```
+
 ### Static Orange
 
 Static Orange does not take into account the color value provided but instead is just a static color (orange). The reason this has been included as its own option is simply because I think it looks awesome.
@@ -170,6 +218,10 @@ Static Orange does not take into account the color value provided but instead is
 | Static Orange |
 | :-----------------------------------------------------------------------------------------------------------------------------------:
 | ![](/imgs/color/staticOrange/JuliaSet_33_186_176_300_2_100_-0.780858194066575_0.15140706860098566_0_0_2.0113571874999994_SC_SO_0.png)
+
+```
+JuliaSet_33_186_176_300_2_100_-0.780858194066575_0.15140706860098566_0_0_2.0113571874999994_SC_SO_0.png
+```
 
 ### Nonlinear 1 and 2
 
@@ -181,6 +233,14 @@ There are of course infinite possibilities when it comes to combining and tinker
 | :----------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: |
 | ![](/imgs/color/nonlinear/JuliaSet_17_39_33_300_2_100_-0.780858194066575_0.15140706860098566_0_0_2.0113571874999994_NL1_0.png) | ![](/imgs/color/nonlinear/JuliaSet_0_23_31_300_2_100_-0.780858194066575_0.15140706860098566_0_0_2.0113571874999994_NL2_0.png) |
 
+```
+JuliaSet_17_39_33_300_2_100_-0.780858194066575_0.15140706860098566_0_0_2.0113571874999994_NL1_0.png
+```
+
+```
+JuliaSet_0_23_31_300_2_100_-0.780858194066575_0.15140706860098566_0_0_2.0113571874999994_NL2_0.png
+```
+
 Note that because of the nonlinearity, enabling Smooth Coloring will not have an effect on Nonlinear 1 and 2.
 
 ## Double precision using CPU rendering
@@ -190,9 +250,19 @@ By default WebGL uses 32 bit floating numbers (single precision). For the majori
 Take a look at the following image, zoomed to a magnification of ~1183 compared to the initial display:
 
 ![image of Julia set around position (-0.167, 1.041) with a magnification of ~1183, resulting in a very pixelated image](./imgs/cpuRendering/JuliaSet_26_117_0_500_2_100_-0.16742_1.041285_0.0036808184336753905_-0.0032750417007097353_1183.213490258893_SC_NL1_0.png)
+
+```
+JuliaSet_26_117_0_500_2_100_-0.16742_1.041285_0.0036808184336753905_-0.0032750417007097353_1183.213490258893_SC_NL1_0.png
+```
+
 As you can see, it would probably not quite be categorized as "sharp". Note that this is not a problem with the implementation itself; It is an issue arising solely from a lack of precision.
 Therefore this _can_ be mitigated by increasing the precision. The following image has been rendered using the exact same algorithms, the only difference being the employment of double precision:
 ![sharp image of Julia set around position (-0.167, 1.041) with a magnification of ~1183, rendered on the cpu using double precision](./imgs/cpuRendering/JuliaSet_26_117_0_500_2_100_-0.16742_1.041285_0.0036808184336753905_-0.0032750417007097353_1183.213490258893_SC_NL1_1.png)
+
+```
+JuliaSet_26_117_0_500_2_100_-0.16742_1.041285_0.0036808184336753905_-0.0032750417007097353_1183.213490258893_SC_NL1_1.png
+```
+
 There is a problem, though: WebGL does not natively support double precision. Claiming this to be an insurmountable obstacle would of course be an exaggeration: Naturally, there are ways to emulate double precision in WebGL, but this turns out to be a rather complicated endeavor which I, after some experimentation, for now have deemed to not be worth the effort - especially since we not only need the extra precision but the range as well.
 
 The current (and cognitively cheap) solution is to make use of the fact that any number in JavaScript will be stored using 64 bit, meaning rendering on the CPU will provide us with an abundance of precision. Well, "abundance" in the sense that you will be less likely to be running into precision issues than others. Namely, under these new circumstances, the main concern becomes the performance, e.g. the time it takes to render a single frame on the CPU.
