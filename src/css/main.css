@@ -137,6 +137,11 @@ input[type='number'],
 button {
     font-size: 0.9em;
     height: 70%;
+    cursor: pointer;
+}
+
+input[type='checkbox'] {
+    cursor: pointer;
 }
 
 .input-wrapper {
