@@ -32,7 +32,7 @@ export const setupTrulyRandomJuliaBtn = (
 
         for (let i = 0; i < 5; i++) colorSettings[i] = Math.random() < 0.3 ? 1 : 0;
 
-        if (colorSettings.slice(1).filter((val) => val == 0).length == 4) colorSettings[randInRange(0, 4)] = 1; // Set at least one color-option (excluding SC)
+        if (colorSettings.slice(1).filter((val) => val == 0).length == 4) colorSettings[randInRange(1, 4)] = 1; // Set at least one color-option (excluding SC)
 
         const params = {
             color,
