@@ -6,7 +6,8 @@ import { httpPostNewJulia } from '../utils/http.js';
 const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');
 const juliaPreviewContainer = document.getElementById('download-preview-container');
 juliaPreviewCloser.addEventListener('click', (evt) => {
-    juliaPreviewContainer.style.display = 'none';
+    juliaPreviewContainer.style.opacity = '0';
+    juliaPreviewContainer.style.visibility = 'hidden';
 });
 
 const downloadResolution = {
@@ -21,7 +22,8 @@ const previewDownloadImage = (
     borderId?: string
 ) => {
     const juliaPreviewContainer = document.getElementById(juliaPreviewContainerId);
-    juliaPreviewContainer.style.display = 'block';
+    juliaPreviewContainer.style.opacity = '1';
+    juliaPreviewContainer.style.visibility = 'visible';
 
     const borderElement = document.getElementById(borderId);
 
@@ -220,7 +222,7 @@ export const addSaveJuliaPNGBtnListeners = (
     window.addEventListener('keydown', (evt) => {
         // Pressing "s" will open the save preview
         if (evt.code == 'KeyS' && saveShortcutCheckbox.checked) {
-            if (juliaPreviewContainer.style.display == 'block') {
+            if (juliaPreviewContainer.style.visibility == 'visible') {
                 // Close preview
                 juliaPreviewCloser.click();
             } else {

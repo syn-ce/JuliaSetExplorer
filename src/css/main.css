@@ -17,7 +17,8 @@ html {
     height: 100%;
     z-index: 9999999;
     background-color: rgba(0, 0, 0, 0.5);
-    transition: opacity 175ms;
+    transition: opacity, visibility;
+    transition-duration: 175ms;
 }
 
 .dropzone-hover {
@@ -57,6 +58,8 @@ html {
     height: 100%;
     background-color: rgba(50, 50, 50, 0.3);
     visibility: hidden;
+    transition: opacity, visibility;
+    transition-duration: 175ms;
 }
 
 #help-modal-controls-table {
@@ -201,12 +204,15 @@ input[type='color']::-webkit-color-swatch {
 }
 
 #download-preview-container {
-    display: none;
+    visibility: hidden;
+    opacity: 0;
     position: absolute;
     width: 100%;
     height: 100%;
     backdrop-filter: blur(10px);
     overflow: hidden;
+    transition: opacity, visibility;
+    transition-duration: 175ms;
 }
 
 #download-preview-canvas-border {
