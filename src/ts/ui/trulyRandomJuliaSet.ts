@@ -8,13 +8,14 @@ export const setupTrulyRandomJuliaBtn = (
     juliaBtnId: string,
     fractalManager: FractalManager,
     juliaPreviewContext: JuliaContext,
-    juliaDrawingContext: JuliaContext,
-    juliaPreviewContainerId: string
+    juliaPreviewContainerId: string,
+    randjuliaShortcutCheckboxId: string
 ) => {
     const trulyRandomJuliaBtn = <HTMLInputElement>document.getElementById(juliaBtnId);
+    const randjuliaShortcutCheckbox = <HTMLInputElement>document.getElementById(randjuliaShortcutCheckboxId);
 
     window.addEventListener('keydown', (evt) => {
-        if (evt.code == 'KeyT') {
+        if (evt.code == 'KeyT' && randjuliaShortcutCheckbox.checked) {
             trulyRandomJuliaBtn.click();
         }
     });

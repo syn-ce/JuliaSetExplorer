@@ -164,8 +164,8 @@ setupTrulyRandomJuliaBtn(
     'truly-random-julia-btn',
     fractalManager,
     juliaPreviewContext,
-    juliaDrawingContext,
-    juliaPreviewContainerId
+    juliaPreviewContainerId,
+    'shortcut-randjulia-checkbox'
 );
 
 // CPU Rendering button in preview
