@@ -170,7 +170,7 @@ input[type='checkbox'] {
 }
 
 #exponent {
-    width: 3ch;
+    width: 5ch;
 }
 
 #nr-iterations {
@@ -280,6 +280,12 @@ input[type='color']::-webkit-color-swatch {
     margin: auto;
     margin-right: 10px;
     height: 30px;
+}
+
+#truly-random-julia-btn {
+    margin: auto 10px;
+    height: 30px;
+    width: 14ch;
 }
 
 #preview-cpu-render-btn {

@@ -1,7 +1,13 @@
+import { randInRange } from './utils.js';
+
 const colorSettingsAbbreviations = ['SC', 'SO', 'LC', 'NL1', 'NL2'];
 
 export type RGBColor = { r: number; g: number; b: number };
 export type ColorSettings = number[];
+
+export const randomRGB = () => {
+    return { r: randInRange(0, 255), g: randInRange(0, 255), b: randInRange(0, 255) };
+};
 
 export const hexToRGB = (hexColor: string) => {
     const r = parseInt(hexColor.substring(1, 1 + 2), 16);

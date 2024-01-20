@@ -4,6 +4,10 @@ export type PanningObj = {
     startYInCoords: number;
 };
 
+export const randInRange = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 export const getCanvasElementById = (id: string): HTMLCanvasElement => {
     const canvas = document.getElementById(id);
 

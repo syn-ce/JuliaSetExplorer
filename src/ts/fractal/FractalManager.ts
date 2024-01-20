@@ -164,18 +164,7 @@ export class FractalManager {
         };
     };
 
-    // Returns whether the rendering was successful or not
-    tryUpdateRenderFractalsFromString = (
-        filename: string,
-        juliaPreviewContext: JuliaContext,
-        juliaDrawingContext: JuliaContext,
-        juliaPreviewContainerId: string
-    ) => {
-        let params = this.tryParseParamsFromFilename(filename);
-        if (!params.parsedSuccessfully) return false;
-
-        this.mandelContext.indicatorFollowsMouse = false;
-
+    updateRenderFractals = (params, juliaPreviewContext: JuliaContext, juliaPreviewContainerId: string) => {
         const {
             color,
             nrIterations,
@@ -225,11 +214,26 @@ export class FractalManager {
 
         // Update preview context if necessary
         const juliaPreviewContainer = document.getElementById(juliaPreviewContainerId);
-        if (juliaPreviewContainer.style.display != 'block') return true;
+        if (juliaPreviewContainer.style.display != 'block') return;
         updateJuliaPreviewContext(juliaPreviewContext, this.juliaContext);
         juliaPreviewContext.render();
 
-        return true;
+        return;
+    };
+
+    // Returns whether the rendering was successful or not
+    tryUpdateRenderFractalsFromString = (
+        filename: string,
+        juliaPreviewContext: JuliaContext,
+        juliaDrawingContext: JuliaContext,
+        juliaPreviewContainerId: string
+    ) => {
+        let params = this.tryParseParamsFromFilename(filename);
+        if (!params.parsedSuccessfully) return false;
+
+        this.updateRenderFractals(params, juliaPreviewContext, juliaPreviewContainerId);
+
+        this.mandelContext.indicatorFollowsMouse = false;
     };
 
     stopRandomMovement() {
