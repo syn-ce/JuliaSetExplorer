@@ -79,7 +79,6 @@ export class FractalManager {
         });
 
         this.addUpdateJuliaOnMouseMove();
-        this.addPausingUpdateJulia();
     };
 
     // Update julia center when moving mouse on mandel canvas
@@ -96,11 +95,15 @@ export class FractalManager {
     }
 
     // Enable pausing of reactive julia rendering
-    addPausingUpdateJulia() {
+    addPausingUpdateJulia(indfollowmouseShortcutCheckboxId: string, randmoveShortcutCheckboxId: string) {
+        const indfollowmouseShortcutCheckbox = <HTMLInputElement>(
+            document.getElementById(indfollowmouseShortcutCheckboxId)
+        );
+        const randmoveShortcutCheckbox = <HTMLInputElement>document.getElementById(randmoveShortcutCheckboxId);
         window.addEventListener('keydown', (evt) => {
-            if (evt.code == 'KeyF')
+            if (evt.code == 'KeyF' && indfollowmouseShortcutCheckbox.checked)
                 this.mandelContext.indicatorFollowsMouse = !this.mandelContext.indicatorFollowsMouse;
-            else if (evt.code == 'KeyR') {
+            else if (evt.code == 'KeyR' && randmoveShortcutCheckbox.checked) {
                 if (!this.movingRandom) this.randomMovement();
                 else this.stopRandomMovement();
             }

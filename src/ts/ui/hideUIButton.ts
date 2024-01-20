@@ -1,5 +1,6 @@
-export const setupHideUIButton = (hideUIBtnId: string) => {
+export const setupHideUIButton = (hideUIBtnId: string, hideButtonShortcutCheckboxId: string) => {
     const hideUIButton = <HTMLInputElement>document.getElementById(hideUIBtnId);
+    const hideButtonShortcutCheckbox = <HTMLInputElement>document.getElementById(hideButtonShortcutCheckboxId);
 
     const uiControlDiv = document.getElementById('controls');
     const uiControlInputs = Array.from(uiControlDiv.getElementsByTagName('input'));
@@ -12,7 +13,7 @@ export const setupHideUIButton = (hideUIBtnId: string) => {
 
     // Pressing "h" will hide / show the ui
     document.addEventListener('keydown', (evt) => {
-        if (evt.key == 'h') hideUIButton.click();
+        if (evt.key == 'h' && hideButtonShortcutCheckbox.checked) hideUIButton.click();
     });
 
     hideUIButton.onclick = () => {

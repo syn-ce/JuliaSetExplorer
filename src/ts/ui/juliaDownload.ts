@@ -207,9 +207,11 @@ export const addSaveJuliaPNGBtnListeners = (
     juliaDrawingContext: JuliaContext,
     btnId: string,
     juliaPreviewContext: JuliaContext,
-    juliaPreviewContainerId: string
+    juliaPreviewContainerId: string,
+    saveShortcutCheckboxId: string
 ) => {
     const openJuliaSavePreviewBtn = document.getElementById(btnId);
+    const saveShortcutCheckbox = <HTMLInputElement>document.getElementById(saveShortcutCheckboxId);
 
     openJuliaSavePreviewBtn.onclick = (evt) => {
         openSaveJuliaModal(juliaContext, juliaDrawingContext, juliaPreviewContext, juliaPreviewContainerId);
@@ -217,7 +219,7 @@ export const addSaveJuliaPNGBtnListeners = (
 
     window.addEventListener('keydown', (evt) => {
         // Pressing "s" will open the save preview
-        if (evt.code == 'KeyS') {
+        if (evt.code == 'KeyS' && saveShortcutCheckbox.checked) {
             if (juliaPreviewContainer.style.display == 'block') {
                 // Close preview
                 juliaPreviewCloser.click();

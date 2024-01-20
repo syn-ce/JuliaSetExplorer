@@ -1,6 +1,8 @@
-export const setupHelpModal = () => {
+export const setupHelpModal = (infoModalShortcutCheckboxId: string) => {
     const helpElement = document.getElementById('help');
     const helpModal = document.getElementById('help-modal');
+
+    const infoModalShortcutCheckbox = <HTMLInputElement>document.getElementById(infoModalShortcutCheckboxId);
 
     const changeHelpModalVisib = () => {
         const currVisib = helpModal.style.visibility;
@@ -13,6 +15,6 @@ export const setupHelpModal = () => {
     };
 
     document.addEventListener('keydown', (evt) => {
-        if (evt.code == 'KeyI') changeHelpModalVisib();
+        if (evt.code == 'KeyI' && infoModalShortcutCheckbox.checked) changeHelpModalVisib();
     });
 };

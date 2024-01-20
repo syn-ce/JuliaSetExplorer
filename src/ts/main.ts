@@ -112,7 +112,8 @@ addSaveJuliaPNGBtnListeners(
     juliaDrawingContext,
     'save-julia-png-btn',
     juliaPreviewContext,
-    juliaPreviewContainerId
+    juliaPreviewContainerId,
+    'shortcut-save-checkbox'
 );
 
 // Set initial color
@@ -129,6 +130,8 @@ mandelContext.updateCenterIndicator({ x: 0.0, y: 0.0 });
 // Enables communication between mandel and julia context
 const fractalManager = new FractalManager(mandelContext, juliaContext, 'julia-center-x', 'julia-center-y');
 
+fractalManager.addPausingUpdateJulia('shortcut-indfollowmouse-checkbox', 'shortcut-randmove-checkbox');
+
 // Enable dropping of files
 addDragDropEventListeners(
     fractalManager,
@@ -142,7 +145,7 @@ addDragDropEventListeners(
 addPasteEventListeners(fractalManager, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId);
 
 // Hide-UI-Button
-setupHideUIButton('hide-ui-btn');
+setupHideUIButton('hide-ui-btn', 'shortcut-hide-checkbox');
 
 // Center origin in preview button
 setupPreviewCenterOriginBtn(juliaPreviewContext, 'preview-center-origin-btn');
@@ -169,7 +172,7 @@ setupTrulyRandomJuliaBtn(
 setupPreviewCPURenderBtn(juliaPreviewContext, 'preview-cpu-render-btn');
 
 // Help modal
-setupHelpModal();
+setupHelpModal('shortcut-info-checkbox');
 
 // Render
 juliaContext.render();
