@@ -1,5 +1,6 @@
 import { JuliaContext } from '../fractal/JuliaContext.js';
 import { denormalizeRGB, getColorSettingsAbbreviations } from '../utils/colorUtils.js';
+import { httpPostNewJulia } from '../utils/http.js';
 
 // Closing of preview
 const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');
@@ -58,16 +59,17 @@ const downloadJuliaPNG = (
     let color = denormalizeRGB(juliaPreviewContext.rgbColor);
     let center = juliaPreviewContext.getCurrentCenter();
     let colorSettingsAbbreviations = getColorSettingsAbbreviations(juliaPreviewContext.colorSettings);
-    downloadLink.setAttribute(
-        'download',
-        `JuliaSet_${color.r}_${color.g}_${color.b}_${juliaPreviewContext.nrIterations}_${
-            juliaPreviewContext.exponent
-        }_${juliaPreviewContext.escapeRadius}_${juliaPreviewContext.juliaCCoords.x}_${
-            juliaPreviewContext.juliaCCoords.y
-        }_${center.cX}_${center.cY}_${juliaPreviewContext.zoomLevel}${
-            (getColorSettingsAbbreviations.length == 0 ? '' : '_') + colorSettingsAbbreviations.join('_')
-        }_${juliaPreviewContext.cpuRendering ? 1 : 0}.png`
-    );
+    let filename = `JuliaSet_${color.r}_${color.g}_${color.b}_${juliaPreviewContext.nrIterations}_${
+        juliaPreviewContext.exponent
+    }_${juliaPreviewContext.escapeRadius}_${juliaPreviewContext.juliaCCoords.x}_${juliaPreviewContext.juliaCCoords.y}_${
+        center.cX
+    }_${center.cY}_${juliaPreviewContext.zoomLevel}${
+        (getColorSettingsAbbreviations.length == 0 ? '' : '_') + colorSettingsAbbreviations.join('_')
+    }_${juliaPreviewContext.cpuRendering ? 1 : 0}.png`;
+
+    downloadLink.setAttribute('download', filename);
+
+    httpPostNewJulia(filename);
 
     // Update drawing context with values of preview context
     updateJuliaDrawingContext(juliaDrawingContext, juliaPreviewContext);

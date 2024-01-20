@@ -14,6 +14,7 @@ import {
 import { addDragDropEventListeners } from './ui/fileDragDrop.js';
 import { setupHideUIButton } from './ui/hideUIButton.js';
 import { addPasteEventListeners } from './ui/filePaste.js';
+import { setupRandomJuliaSetBtn } from './ui/loadRandomJuliaSet.js';
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
 const canvasMandel2d = getCanvasElementById('mandel-canvas-2d');
@@ -144,6 +145,15 @@ setupHideUIButton('hide-ui-btn');
 
 // Center origin in preview button
 setupPreviewCenterOriginBtn(juliaPreviewContext, 'preview-center-origin-btn');
+
+// Random julia button in preview
+setupRandomJuliaSetBtn(
+    'random-julia-btn',
+    fractalManager,
+    juliaPreviewContext,
+    juliaDrawingContext,
+    juliaPreviewContainerId
+);
 
 // CPU Rendering button in preview
 setupPreviewCPURenderBtn(juliaPreviewContext, 'preview-cpu-render-btn');

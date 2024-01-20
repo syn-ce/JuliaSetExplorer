@@ -271,15 +271,22 @@ input[type='color']::-webkit-color-swatch {
     margin-left: 10px;
 }
 
-#preview-cpu-render-btn {
-    margin: auto;
-    height: 30px;
-    width: 23ch;
-}
-
 #preview-zoom-wrapper {
     margin: auto;
     margin-left: 10px;
+}
+
+#random-julia-btn {
+    margin: auto;
+    margin-right: 10px;
+    height: 30px;
+}
+
+#preview-cpu-render-btn {
+    margin: auto;
+    margin-left: 10px;
+    height: 30px;
+    width: 23ch;
 }
 
 #live-cpu-rendering-progress-bar-wrapper {
