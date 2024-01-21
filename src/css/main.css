@@ -282,7 +282,12 @@ input[type='color']::-webkit-color-swatch {
     margin-left: 10px;
 }
 
-#random-julia-btn {
+#random-selected-julia-btn {
+    margin: auto 10px;
+    height: 30px;
+}
+
+#random-community-julia-btn {
     margin: auto;
     margin-right: 10px;
     height: 30px;
@@ -291,7 +296,7 @@ input[type='color']::-webkit-color-swatch {
 #truly-random-julia-btn {
     margin: auto 10px;
     height: 30px;
-    width: 14ch;
+    width: 9ch;
 }
 
 #preview-cpu-render-btn {

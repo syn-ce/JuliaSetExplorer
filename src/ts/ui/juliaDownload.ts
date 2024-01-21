@@ -1,6 +1,6 @@
 import { JuliaContext } from '../fractal/JuliaContext.js';
 import { denormalizeRGB, getColorSettingsAbbreviations } from '../utils/colorUtils.js';
-import { httpPostNewJulia } from '../utils/http.js';
+import { httpPostNewCommunityJulia } from '../utils/http.js';
 
 // Closing of preview
 const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');
@@ -71,7 +71,7 @@ const downloadJuliaPNG = (
 
     downloadLink.setAttribute('download', filename);
 
-    httpPostNewJulia(filename);
+    httpPostNewCommunityJulia(filename);
 
     // Update drawing context with values of preview context
     updateJuliaDrawingContext(juliaDrawingContext, juliaPreviewContext);

@@ -14,7 +14,7 @@ import {
 import { addDragDropEventListeners } from './ui/fileDragDrop.js';
 import { setupHideUIButton } from './ui/hideUIButton.js';
 import { addPasteEventListeners } from './ui/filePaste.js';
-import { setupRandomJuliaSetBtn } from './ui/loadRandomJuliaSet.js';
+import { setupRandomCommunityJuliaSetBtn, setupRandomSelectedJuliaSetBtn } from './ui/loadRandomJuliaSet.js';
 import { setupTrulyRandomJuliaBtn } from './ui/trulyRandomJuliaSet.js';
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
@@ -150,9 +150,18 @@ setupHideUIButton('hide-ui-btn', 'shortcut-hide-checkbox');
 // Center origin in preview button
 setupPreviewCenterOriginBtn(juliaPreviewContext, 'preview-center-origin-btn');
 
-// Random julia button in preview
-setupRandomJuliaSetBtn(
-    'random-julia-btn',
+// Community julia button in preview
+setupRandomCommunityJuliaSetBtn(
+    'random-community-julia-btn',
+    fractalManager,
+    juliaPreviewContext,
+    juliaDrawingContext,
+    juliaPreviewContainerId
+);
+
+// Selected julia button in preview
+setupRandomSelectedJuliaSetBtn(
+    'random-selected-julia-btn',
     fractalManager,
     juliaPreviewContext,
     juliaDrawingContext,

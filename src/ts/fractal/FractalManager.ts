@@ -217,7 +217,7 @@ export class FractalManager {
 
         // Update preview context if necessary
         const juliaPreviewContainer = document.getElementById(juliaPreviewContainerId);
-        if (juliaPreviewContainer.style.display != 'block') return;
+        if (juliaPreviewContainer.style.visibility != 'visible') return;
         updateJuliaPreviewContext(juliaPreviewContext, this.juliaContext);
         juliaPreviewContext.render();
 
