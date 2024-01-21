@@ -72,7 +72,7 @@ const downloadJuliaPNG = (
 
     downloadLink.setAttribute('download', filename);
 
-    if (juliaCommunityCheckbox.checked) httpPostNewCommunityJulia(filename);
+    if (juliaCommunityCheckbox.checked) httpPostNewCommunityJulia(filename.slice(0, filename.length - 4));
 
     // Update drawing context with values of preview context
     updateJuliaDrawingContext(juliaDrawingContext, juliaPreviewContext);
