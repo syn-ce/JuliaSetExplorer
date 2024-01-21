@@ -90,6 +90,10 @@ Note that changing the resolution will not affect the quality of the image in th
 
 ![example screenshot of the editor for / preview of the image to download](/imgs/controlsUI/downloadEditorAndPreview.png)
 
+```
+JuliaSet_183_34_185_300_2_100_-1.0174876847290641_0.3214285714285714_0_0_1.7490062499999994_SC_LC_0.png
+```
+
 ## Filenames
 
 All downloaded Julia sets will have a filename in a very particular format:

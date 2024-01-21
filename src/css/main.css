@@ -301,6 +301,7 @@ input[type='color']::-webkit-color-swatch {
 
 #preview-cpu-render-btn {
     margin: auto;
+    margin-right: 100px;
     margin-left: 10px;
     height: 30px;
     width: 23ch;
