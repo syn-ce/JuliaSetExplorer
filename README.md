@@ -8,35 +8,26 @@ Try it yourself: [click me](http://yesno.wtf)
 # Table of contents
 
 [What am I even looking at? - Mandelbrot and Julia](#mandelbrot-and-julia)
-
-&nbsp;&nbsp;[The Mandelbrot set](#the-mandelbrot-set)
-
-&nbsp;&nbsp;[Julia sets](#julia-sets)
-
+&nbsp;&nbsp;&nbsp;&nbsp;[The Mandelbrot set](#the-mandelbrot-set)
+&nbsp;&nbsp;&nbsp;&nbsp;[Julia sets](#julia-sets)
 [Usage](#usage)
-
-&nbsp;&nbsp;[General](#general)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Shortcuts](#shortcuts)
-
-&nbsp;&nbsp;[Saving Images](#saving-images)
-
+&nbsp;&nbsp;&nbsp;&nbsp;[General](#general)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Shortcuts / Settings](#shortcuts--settings)
+&nbsp;&nbsp;&nbsp;&nbsp;[Saving Images](#saving-images)
+&nbsp;&nbsp;&nbsp;&nbsp;[Filenames](#filenames)
+&nbsp;&nbsp;&nbsp;&nbsp;[Pasting Images](#pasting-images)
+&nbsp;&nbsp;&nbsp;&nbsp;[Loading random Julia sets](#loading-random-julia-sets)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Random](#loading-random-julia-sets)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Selected](#loading-random-julia-sets)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Community](#loading-random-julia-sets)
 [Parameters](#parameters)
-
-&nbsp;&nbsp;[Julia Coordinates ($c$ value of the Julia set)](#julia-coordinates--value-of-the-julia-set)
-
-&nbsp;&nbsp;[Escape Radius](#escape-radius)
-
-&nbsp;&nbsp;[Exponent](#exponent)
-
-&nbsp;&nbsp;[Number of Iterations](#number-of-iterations)
-
-&nbsp;&nbsp;[Color](#color)
-
+&nbsp;&nbsp;&nbsp;&nbsp;[Julia Coordinates ($c$ value of the Julia set)](#julia-coordinates-c-value-of-the-julia-set)
+&nbsp;&nbsp;&nbsp;&nbsp;[Escape Radius](#escape-radius)
+&nbsp;&nbsp;&nbsp;&nbsp;[Exponent](#exponent)
+&nbsp;&nbsp;&nbsp;&nbsp;[Number of Iterations](#number-of-iterations)
+&nbsp;&nbsp;&nbsp;&nbsp;[Color](#color)
 [Double precision using CPU Rendering](#double-precision-using-cpu-rendering)
-
-&nbsp;&nbsp;[Avoiding pixelation with CPU rendering](#avoiding-pixelation-with-cpu-rendering)
-
+&nbsp;&nbsp;&nbsp;&nbsp;[Avoiding pixelation with CPU rendering](#avoiding-pixelation-with-cpu-rendering)
 [Gallery](#gallery)
 
 ## Mandelbrot and Julia
@@ -66,7 +57,7 @@ You can interact with them by panning and zooming. The dot rendered on top of th
 
 ![](/imgs/usagePictures/usagePicture.png)
 
-### Shortcuts
+### Shortcuts / Settings
 
 | Key | Action                                            |
 | :-: | ------------------------------------------------- |
@@ -75,8 +66,10 @@ You can interact with them by panning and zooming. The dot rendered on top of th
 |  i  | open/close info-modal                             |
 |  h  | hide/show user interface                          |
 |  r  | start/stop random movement of $c$ value           |
+|  t  | generate random Julia set                         |
+|     | send and load Julia sets (community)              |
 
-In case you ever need a refresher on the shortcuts simply click question mark in the lower right corner of the screen or press the "i" key on your keyboard. This will open a modal listing all available keyboard-shortcuts.
+In case you ever need a refresher on the shortcuts or want to enable/disable any of the options simply click the question mark in the lower right corner of the screen or press the "i" key on your keyboard. This will open a modal listing all available keyboard-shortcuts.
 
 ## Saving Images
 
@@ -88,6 +81,8 @@ You can start rendering the final image by pressing the associated button. Once 
 
 If you are making use of CPU rendering this will take some time. A progress bar and an estimate of the remaining time will act as indicators.
 If you don't use CPU rendering (which is advised if it's not necessary) the render should, under most circumstances, finish after no longer than a couple of seconds at most and usually be perceived as instantaneous.
+
+When saving an image the corresponding parameters will by default be sent to a server to share with others (see [Community](#community) for more information).
 
 By default the resolution should be set to match the resolution of your monitor. If that's not the case or you would like to change the resolution of the downloaded image for some other reason, you can do so by entering the values into the corresponding inputs. The preview will automatically try to adjust to display the correct aspect ratio. If the preview gets too small, it will try to resize itself to take up more space. However, it will only try to do so when the preview can fit on the screen. If the aspect ratio is very out of the ordinary (i.e. something like 50:1) it is very likely that the preview will extend beyond the bounds of the screen and not adjust its size.
 
@@ -125,17 +120,38 @@ Please note that even when pasting the actual image, the **only thing taken into
 
 For this purpose the filenames of the images of the Julia sets in this README are available below the images for convenient copying.
 
+## Loading random Julia sets
+
+In the download preview (opened by pressing "s" or clicking the "Save as png"-button in the upper right corner of the screen) there are three more options to generate Julia sets:
+
+### Random
+
+"Random" generates all parameters for the Julia set at random.
+
+### Selected
+
+"Selected" will send a request to a server and load the parameters of a random Julia set out of a predetermined selection of particularly interesting Julia sets.
+
+### Community
+
+"Community" will also send a request to a server but instead of choosing from a predetermined selection of Julia sets, it will instead take into consideration all Julia sets which have been downloaded by other people.
+
+Note that **in order to use this feature, the option "send and load Julia sets (community)"** in the info-modal (press "i" or click the question mark in the lower right corner of the screen) **has to be checked**.
+
+This will enable you to load Community Julia sets and also send the parameters of the sets you download to the server to share with others. No personal information whatsoever will be stored.
+In case you **don't want to share** the parameters of the Julia set you are about to download you can **deactivate the option at any time in the settings-menu** (press "i" or click on the question mark in the lower right corner).
+
 # Parameters
 
 The following parameters can be adjusted to tweak the resulting image's appearance:
 
--   [Julia Coordinates ($c$ value of the Julia set)](#julia-coordinates--value-of-the-julia-set)
+-   [Julia Coordinates ($c$ value of the Julia set)](#julia-coordinates-c-value-of-the-julia-set)
 -   [Escape Radius](#escape-radius)
 -   [Exponent](#exponent)
 -   [Number of Iterations](#number-of-iterations)
 -   [Color](#color)
 
-### Julia Coordinates ($c$ value of the Julia set)
+### Julia Coordinates (c value of the Julia set)
 
 The Julia Coordinates determine the general shape of the Julia set. They can be adjusted by moving the mouse over the Mandelbrot set (if nothing happens, try pressing "f" to make the indicator follow the mouse; Look [here]() for more information about the controls) or entering the values in the corresponding input-fields.
 
