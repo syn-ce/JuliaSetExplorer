@@ -7,28 +7,28 @@ Try it yourself: [click me](http://yesno.wtf)
 
 # Table of contents
 
-[What am I even looking at? - Mandelbrot and Julia](#mandelbrot-and-julia)
-&nbsp;&nbsp;&nbsp;&nbsp;[The Mandelbrot set](#the-mandelbrot-set)
-&nbsp;&nbsp;&nbsp;&nbsp;[Julia sets](#julia-sets)
-[Usage](#usage)
-&nbsp;&nbsp;&nbsp;&nbsp;[General](#general)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Shortcuts / Settings](#shortcuts--settings)
-&nbsp;&nbsp;&nbsp;&nbsp;[Saving Images](#saving-images)
-&nbsp;&nbsp;&nbsp;&nbsp;[Filenames](#filenames)
-&nbsp;&nbsp;&nbsp;&nbsp;[Pasting Images](#pasting-images)
-&nbsp;&nbsp;&nbsp;&nbsp;[Loading random Julia sets](#loading-random-julia-sets)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Random](#loading-random-julia-sets)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Selected](#loading-random-julia-sets)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Community](#loading-random-julia-sets)
-[Parameters](#parameters)
-&nbsp;&nbsp;&nbsp;&nbsp;[Julia Coordinates ($c$ value of the Julia set)](#julia-coordinates-c-value-of-the-julia-set)
-&nbsp;&nbsp;&nbsp;&nbsp;[Escape Radius](#escape-radius)
-&nbsp;&nbsp;&nbsp;&nbsp;[Exponent](#exponent)
-&nbsp;&nbsp;&nbsp;&nbsp;[Number of Iterations](#number-of-iterations)
-&nbsp;&nbsp;&nbsp;&nbsp;[Color](#color)
-[Double precision using CPU Rendering](#double-precision-using-cpu-rendering)
-&nbsp;&nbsp;&nbsp;&nbsp;[Avoiding pixelation with CPU rendering](#avoiding-pixelation-with-cpu-rendering)
-[Gallery](#gallery)
+[What am I even looking at? - Mandelbrot and Julia](#mandelbrot-and-julia) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[The Mandelbrot set](#the-mandelbrot-set) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Julia sets](#julia-sets) <br>
+[Usage](#usage) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[General](#general) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Shortcuts / Settings](#shortcuts--settings) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Saving Images](#saving-images) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Filenames](#filenames) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Pasting Images](#pasting-images) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Loading random Julia sets](#loading-random-julia-sets) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Random](#loading-random-julia-sets) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Selected](#loading-random-julia-sets) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Community](#loading-random-julia-sets) <br>
+[Parameters](#parameters) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Julia Coordinates ($c$ value of the Julia set)](#julia-coordinates-c-value-of-the-julia-set) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Escape Radius](#escape-radius) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Exponent](#exponent) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Number of Iterations](#number-of-iterations) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Color](#color) <br>
+[Double precision using CPU Rendering](#double-precision-using-cpu-rendering) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Avoiding pixelation with CPU rendering](#avoiding-pixelation-with-cpu-rendering) <br>
+[Gallery](#gallery) <br>
 
 ## Mandelbrot and Julia
 
@@ -75,14 +75,14 @@ In case you ever need a refresher on the shortcuts or want to enable/disable any
 
 All generated Julia sets can be downloaded in PNG-format in arbitrary resolution (in practice, your browser probably won't like allocating a gigabyte of memory for a single tab so maybe don't go beyond the limits).
 
-In order to save an image, click on the corresponding button or press the "s"-key on your keyboard. This will open a preview in which you can adjust the center of the image, the zoom, the resolution, and turn on [CPU rendering](#avoiding-pixelation-with-cpu-rendering).
+In order to save an image, click on the corresponding button or press the "s"-key on your keyboard. This will open a preview in which you can adjust the center of the image, the zoom, the resolution, and turn on [CPU rendering](#avoiding-pixelation-with-cpu-rendering). You can center any point of the Julia set in the preview by double-clicking it.
 
-You can start rendering the final image by pressing the associated button. Once the image has been rendered, it will be downloaded.
+Once you are satisfied with how things are looking, start rendering the final image by pressing the associated button. Once the image has been rendered, it will be downloaded.
+
+When saving an image the corresponding parameters will by default be sent to a server to share with others (see [Community](#community) for more information).
 
 If you are making use of CPU rendering this will take some time. A progress bar and an estimate of the remaining time will act as indicators.
 If you don't use CPU rendering (which is advised if it's not necessary) the render should, under most circumstances, finish after no longer than a couple of seconds at most and usually be perceived as instantaneous.
-
-When saving an image the corresponding parameters will by default be sent to a server to share with others (see [Community](#community) for more information).
 
 By default the resolution should be set to match the resolution of your monitor. If that's not the case or you would like to change the resolution of the downloaded image for some other reason, you can do so by entering the values into the corresponding inputs. The preview will automatically try to adjust to display the correct aspect ratio. If the preview gets too small, it will try to resize itself to take up more space. However, it will only try to do so when the preview can fit on the screen. If the aspect ratio is very out of the ordinary (i.e. something like 50:1) it is very likely that the preview will extend beyond the bounds of the screen and not adjust its size.
 
@@ -142,7 +142,7 @@ In the download preview (opened by pressing "s" or clicking the "Save as png"-bu
 
 Note that **in order to use this feature, the option "send and load Julia sets (community)"** in the info-modal (press "i" or click the question mark in the lower right corner of the screen) **has to be checked**.
 
-This will enable you to load Community Julia sets and also send the parameters of the sets you download to the server to share with others. No personal information whatsoever will be stored.
+This will enable you to load Julia sets downloaded by others and also send the parameters of the sets you download to the server to share with others. No personal information whatsoever will be stored.
 In case you **don't want to share** the parameters of the Julia set you are about to download you can **deactivate the option at any time in the settings-menu** (press "i" or click on the question mark in the lower right corner).
 
 # Parameters
