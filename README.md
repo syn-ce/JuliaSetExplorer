@@ -1,4 +1,4 @@
-# Julia set Explorer
+# Julia Set Explorer
 
 This project allows for the realtime exploration of Julia sets.
 If you are in need of a screensaver look no further, there are plenty to find here.
