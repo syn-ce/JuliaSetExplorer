@@ -53,7 +53,8 @@ const downloadJuliaPNG = (
     juliaDrawingContext: JuliaContext,
     juliaPreviewContext: JuliaContext,
     disableDownloadBtn: () => void,
-    enableDownloadBtn: () => void
+    enableDownloadBtn: () => void,
+    juliaCommunityCheckbox: HTMLInputElement
 ) => {
     disableDownloadBtn();
 
@@ -71,7 +72,7 @@ const downloadJuliaPNG = (
 
     downloadLink.setAttribute('download', filename);
 
-    httpPostNewCommunityJulia(filename);
+    if (juliaCommunityCheckbox.checked) httpPostNewCommunityJulia(filename);
 
     // Update drawing context with values of preview context
     updateJuliaDrawingContext(juliaDrawingContext, juliaPreviewContext);
@@ -146,14 +147,16 @@ export const setupDownloadPreview = (
 export const addDownloadBtnFunctionality = (
     juliaDrawingContext: JuliaContext,
     juliaPreviewContext: JuliaContext,
-    downloadJuliaBtn: HTMLInputElement
+    downloadJuliaBtn: HTMLInputElement,
+    juliaCommunityCheckbox: HTMLInputElement
 ) => {
     downloadJuliaBtn.onclick = (evt) =>
         downloadJuliaPNG(
             juliaDrawingContext,
             juliaPreviewContext,
-            () => ((downloadJuliaBtn.disabled = true), console.log('disabled')),
-            () => (downloadJuliaBtn.disabled = false)
+            () => (downloadJuliaBtn.disabled = true),
+            () => (downloadJuliaBtn.disabled = false),
+            juliaCommunityCheckbox
         );
 };
 
@@ -189,17 +192,20 @@ export const setupPreviewDownload = (
     juliaPreviewContext: JuliaContext,
     downloadJuliaBtnId: string,
     downloadResXInputId: string,
-    downloadResYInputId: string
+    downloadResYInputId: string,
+    juliaCommunityCheckboxId: string
 ) => {
     const downloadJuliaBtn = <HTMLInputElement>document.getElementById(downloadJuliaBtnId);
 
     const downloadResXInput = <HTMLInputElement>document.getElementById(downloadResXInputId);
     const downloadResYInput = <HTMLInputElement>document.getElementById(downloadResYInputId);
 
+    const juliaCommunityCheckbox = <HTMLInputElement>document.getElementById(juliaCommunityCheckboxId);
+
     addDownloadResXInputListener(juliaPreviewContext, downloadResXInput);
     addDownloadResYInputListener(juliaPreviewContext, downloadResYInput);
 
-    addDownloadBtnFunctionality(juliaDrawingContext, juliaPreviewContext, downloadJuliaBtn);
+    addDownloadBtnFunctionality(juliaDrawingContext, juliaPreviewContext, downloadJuliaBtn, juliaCommunityCheckbox);
 
     setupDownloadPreview(juliaPreviewContext, downloadResXInput, downloadResYInput);
 };

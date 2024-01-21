@@ -91,13 +91,16 @@ const juliaPreviewContext = new JuliaContext(
 juliaPreviewContext.zoomFactor = 1.15; // Make zoom for preview less aggressive (easier to "fine-tune")
 juliaPreviewContext.setProgressBarElement('live-cpu-rendering-progress-bar', '');
 
+const juliaCommunityCheckboxId = 'community-julia-checkbox';
+
 // Add event listeners to buttons, inputs
 setupPreviewDownload(
     juliaDrawingContext,
     juliaPreviewContext,
     'download-julia-btn',
     'download-resolution-x',
-    'download-resolution-y'
+    'download-resolution-y',
+    juliaCommunityCheckboxId
 );
 
 juliaPreviewContext.setCenterTo(0, 0);
@@ -153,6 +156,7 @@ setupPreviewCenterOriginBtn(juliaPreviewContext, 'preview-center-origin-btn');
 // Community julia button in preview
 setupRandomCommunityJuliaSetBtn(
     'random-community-julia-btn',
+    juliaCommunityCheckboxId,
     fractalManager,
     juliaPreviewContext,
     juliaDrawingContext,

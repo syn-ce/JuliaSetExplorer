@@ -9,35 +9,44 @@ const randomJuliaBtnOnClick = (
     juliaDrawingContext: JuliaContext,
     juliaPreviewContainerId: string
 ) => {
-    httpGetRandomJulia().then((resp) => {
-        if (resp.status != 200) {
-            console.log('Could not load Julia set. Please try again shortly.');
-            return;
-        }
+    httpGetRandomJulia()
+        .then((resp) => {
+            if (resp.status != 200) {
+                console.log('Could not load Julia set. Please try again shortly.');
+                return;
+            }
 
-        let filename = resp.data.filename;
+            let filename = resp.data.filename;
 
-        if (
-            !fractalManager.tryUpdateRenderFractalsFromString(
-                filename,
-                juliaPreviewContext,
-                juliaDrawingContext,
-                juliaPreviewContainerId
-            )
-        ) {
-            return;
-        }
-    });
+            if (
+                !fractalManager.tryUpdateRenderFractalsFromString(
+                    filename,
+                    juliaPreviewContext,
+                    juliaDrawingContext,
+                    juliaPreviewContainerId
+                )
+            ) {
+                return;
+            }
+        })
+        .catch((e) => {});
 };
 
 export const setupRandomCommunityJuliaSetBtn = (
     randomCommunityJuliaBtnId: string,
+    juliaCommunityCheckboxId: string,
     fractalManager: FractalManager,
     juliaPreviewContext: JuliaContext,
     juliaDrawingContext: JuliaContext,
     juliaPreviewContainerId: string
 ) => {
     const randomCommunityJuliaBtn = <HTMLInputElement>document.getElementById(randomCommunityJuliaBtnId);
+    var juliaCommunityCheckbox = <HTMLInputElement>document.getElementById(juliaCommunityCheckboxId);
+    juliaCommunityCheckbox.checked = true;
+
+    juliaCommunityCheckbox.onclick = (evt) => {
+        randomCommunityJuliaBtn.disabled = !juliaCommunityCheckbox.checked;
+    };
 
     // Get random Julia set and render
     randomCommunityJuliaBtn.onclick = () => {
