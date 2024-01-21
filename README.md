@@ -24,7 +24,7 @@ On the developer's side some things have gotten a bit messy over time so there's
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Selected](#loading-random-julia-sets) <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Community](#loading-random-julia-sets) <br>
 [Parameters](#parameters) <br>
-&nbsp;&nbsp;&nbsp;&nbsp;[Julia Coordinates ($c$ value of the Julia set)](#julia-coordinates-c-value-of-the-julia-set) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Julia Coordinates (c value of the Julia set)](#julia-coordinates-c-value-of-the-julia-set) <br>
 &nbsp;&nbsp;&nbsp;&nbsp;[Escape Radius](#escape-radius) <br>
 &nbsp;&nbsp;&nbsp;&nbsp;[Exponent](#exponent) <br>
 &nbsp;&nbsp;&nbsp;&nbsp;[Number of Iterations](#number-of-iterations) <br>
@@ -152,7 +152,7 @@ In case you **don't want to share** the parameters of the Julia set you are abou
 
 The following parameters can be adjusted to tweak the resulting image's appearance:
 
--   [Julia Coordinates ($c$ value of the Julia set)](#julia-coordinates-c-value-of-the-julia-set)
+-   [Julia Coordinates (c value of the Julia set)](#julia-coordinates-c-value-of-the-julia-set)
 -   [Escape Radius](#escape-radius)
 -   [Exponent](#exponent)
 -   [Number of Iterations](#number-of-iterations)
