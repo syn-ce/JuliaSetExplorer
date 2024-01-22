@@ -1,4 +1,4 @@
-const baseURL = 'http://95.90.37.149:54543';
+const baseURL = 'https://fractals-ddns.ddns.net:54543';
 
 export async function httpGET(url: string) {
     let response = await fetch(url);

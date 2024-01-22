@@ -29,7 +29,9 @@ const randomJuliaBtnOnClick = (
                 return;
             }
         })
-        .catch((e) => {});
+        .catch((e) => {
+            console.log('Unexpected error occurred.');
+        });
 };
 
 export const setupRandomCommunityJuliaSetBtn = (
