@@ -401,50 +401,54 @@ export abstract class FractalContext {
         this.canvas2d.addEventListener('click', (evt) => handleLastClick(evt));
     };
 
-    addColorInputListener = (colorPickerId: string) => {
+    addColorInputListener = (colorPickerId: string, isVisible: () => boolean = () => true) => {
         this.colorInput = <HTMLInputElement>document.getElementById(colorPickerId);
 
         this.colorInput.addEventListener('input', (evt) => {
+            if (!isVisible()) return;
             let rgbColor = normalizeRGB(hexToRGB((<HTMLInputElement>evt.currentTarget).value));
             this.setColorValues(rgbColor);
             this.render();
         });
     };
 
-    addEscapeRadiusInputListener = (escapeRadiusInputId: string) => {
+    addEscapeRadiusInputListener = (escapeRadiusInputId: string, isVisible: () => boolean = () => true) => {
         this.escapeRadiusInput = <HTMLInputElement>document.getElementById(escapeRadiusInputId);
         this.escapeRadiusInput.value = this.escapeRadius.toString();
 
         this.escapeRadiusInput.addEventListener('input', (evt) => {
+            if (!isVisible()) return;
             let val = parseFloat((<HTMLInputElement>evt.currentTarget).value);
             this.setEscapeRadius(val);
             this.render();
         });
     };
 
-    addExponentInputListener = (exponentInputId: string) => {
+    addExponentInputListener = (exponentInputId: string, isVisible: () => boolean = () => true) => {
         this.exponentInput = <HTMLInputElement>document.getElementById(exponentInputId);
         this.exponentInput.value = this.exponent.toString();
 
         this.exponentInput.addEventListener('input', (evt) => {
+            if (!isVisible()) return;
             let val = parseFloat((<HTMLInputElement>evt.currentTarget).value);
             this.setExponent(val);
             this.render();
         });
     };
 
-    addNrIterationsInputListener = (nrIterationsInputId: string) => {
+    addNrIterationsInputListener = (nrIterationsInputId: string, isVisible: () => boolean = () => true) => {
         this.nrIterationsInput = <HTMLInputElement>document.getElementById(nrIterationsInputId);
         this.nrIterationsInput.value = this.nrIterations.toString();
 
         this.nrIterationsInput.addEventListener('input', (evt) => {
+            if (!isVisible()) return;
             let val = parseFloat((<HTMLInputElement>evt.currentTarget).value);
             this.setNrIterations(val);
             this.render();
         });
     };
 
-    addColorSettingsInputs = (colorDropdownId: string) => {
+    addColorSettingsInputs = (colorDropdownId: string, isVisible: () => boolean = () => true) => {
         const parseColorSettings = () => {
             return this.colorSettingsInputs.map((input) => ((<HTMLInputElement>input).checked ? 1.0 : 0.0));
         };
@@ -453,6 +457,7 @@ export abstract class FractalContext {
         this.colorSettingsInputs = Array.from(colorDropdown.getElementsByTagName('input'));
         this.colorSettingsInputs.forEach((input) =>
             input.addEventListener('input', (evt) => {
+                if (!isVisible()) return;
                 const colorSettings = parseColorSettings();
                 this.setColorSettings(colorSettings);
                 this.render();

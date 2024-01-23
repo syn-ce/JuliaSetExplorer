@@ -93,6 +93,7 @@ html {
     height: 4em;
     position: absolute;
     display: flex;
+    z-index: 9999999;
 }
 
 .controls,

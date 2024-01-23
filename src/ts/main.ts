@@ -120,6 +120,15 @@ addSaveJuliaPNGBtnListeners(
     'shortcut-save-checkbox'
 );
 
+const juliaPreviewContainer = document.getElementById(juliaPreviewContainerId);
+const checkJuliaPrevContextVisib = () => juliaPreviewContainer.style.visibility == 'visible';
+
+juliaPreviewContext.addColorInputListener('color-picker', checkJuliaPrevContextVisib);
+juliaPreviewContext.addEscapeRadiusInputListener('escape-radius', checkJuliaPrevContextVisib);
+juliaPreviewContext.addExponentInputListener('exponent', checkJuliaPrevContextVisib);
+juliaPreviewContext.addNrIterationsInputListener('nr-iterations', checkJuliaPrevContextVisib);
+juliaPreviewContext.addColorSettingsInputs('color-dropdown', checkJuliaPrevContextVisib);
+
 // Set initial color
 juliaContext.setColorValues({ r: 0.1, g: 0.46, b: 0.0 });
 mandelContext.setColorValues({ r: 0.1, g: 0.46, b: 0.0 });
