@@ -16,6 +16,7 @@ import { setupHideUIButton } from './ui/hideUIButton.js';
 import { addPasteEventListeners } from './ui/filePaste.js';
 import { setupRandomCommunityJuliaSetBtn, setupRandomSelectedJuliaSetBtn } from './ui/loadRandomJuliaSet.js';
 import { setupTrulyRandomJuliaBtn } from './ui/trulyRandomJuliaSet.js';
+import { addResizeWindow } from './ui/windowResize.js';
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
 const canvasMandel2d = getCanvasElementById('mandel-canvas-2d');
@@ -186,6 +187,9 @@ setupPreviewCPURenderBtn(juliaPreviewContext, 'preview-cpu-render-btn');
 
 // Help modal
 setupHelpModal('shortcut-info-checkbox');
+
+// Resizing of window (to be improved)
+addResizeWindow(fractalManager, juliaPreviewContext);
 
 // Render
 juliaContext.render();
