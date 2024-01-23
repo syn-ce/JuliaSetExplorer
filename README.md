@@ -3,10 +3,11 @@
 This project allows for the realtime exploration of Julia sets.
 If you are in need of a screensaver look no further, there are plenty to find here.
 
-Try it yourself: [click me](http://yesno.wtf)
+Try it yourself: [click me](https://syn-ce.github.io/JuliaSetExplorer/)
 
 This is still very much a work in progress and there's a lot left to do, but most of the initially planned features have already been implemented. There are still a couple of bugs in need of fixing as well as a lot of yet-to-be-made considerations for the overall UX, escpecially considering information about what the individual settings and parameters do. If you find yourself struggling to figure out what something does or what it's used for, I have made an effort to lay out most explanations in this README, so you'll probably find a [section](#table-of-contents) dedicated to it.
 On the developer's side some things have gotten a bit messy over time so there's a lot of room for cleaning. I plan on tidying everything up once I find the time to do so.
+Notice that for the time being there is **no support for mobile devices**.
 
 # Table of contents
 
