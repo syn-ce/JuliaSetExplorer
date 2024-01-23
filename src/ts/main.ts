@@ -82,9 +82,9 @@ const juliaPreviewCanvas2d = <HTMLCanvasElement>document.getElementById('downloa
 const juliaPreviewContext = new JuliaContext(
     juliaPreviewCanvas,
     juliaPreviewCanvas2d,
-    window.innerWidth / 2,
-    window.innerHeight / 2,
-    { x: window.innerWidth / 4, y: window.innerHeight / 4 },
+    window.innerWidth * 0.55,
+    window.innerHeight * 0.55,
+    { x: window.innerWidth * 0.225, y: window.innerHeight * 0.225 },
     fragmentShaderTextJulia,
     nrIterations
 );

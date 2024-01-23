@@ -548,7 +548,12 @@ export abstract class FractalContext {
         let newWidth = Math.round(this.canvas.height * aspectRatio);
         let newHeight = Math.round(newWidth / aspectRatio);
 
-        if (100 < newWidth && newWidth <= window.innerWidth - 10) {
+        if (
+            100 < newWidth &&
+            newWidth <= window.innerWidth * 0.75 &&
+            100 < newHeight &&
+            newHeight <= window.innerHeight * 0.75
+        ) {
             // Resize canvas
             let xLeft = window.innerWidth / 2 - newWidth / 2;
             let xRight = window.innerWidth / 2 + newWidth / 2;
@@ -585,9 +590,9 @@ export abstract class FractalContext {
         let width = canvas.width;
         let height = canvas.height;
         let ratio = width / height;
-        if (width < window.innerWidth * 0.3 && height < window.innerHeight * 0.3) {
+        if (width < window.innerWidth * 0.5 && height < window.innerHeight * 0.5) {
             // Increase width
-            while (width <= window.innerWidth * 0.55 && height <= window.innerHeight * 0.55) {
+            while (width <= window.innerWidth * 0.6 && height <= window.innerHeight * 0.6) {
                 width += 10;
                 height = width / ratio;
             }
