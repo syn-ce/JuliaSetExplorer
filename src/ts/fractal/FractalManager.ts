@@ -17,6 +17,7 @@ export class FractalManager {
 
     juliaPreviewContext: JuliaContext;
     juliaDrawingContext: JuliaContext;
+    isPreviewVisible: () => boolean;
 
     currentJuliaCenter: { x: number; y: number };
     juliaXCoordInput: HTMLInputElement;
@@ -30,10 +31,15 @@ export class FractalManager {
         context1: MandelContext,
         context2: JuliaContext,
         juliaCenterXInputId: string,
-        juliaCenterYInputId: string
+        juliaCenterYInputId: string,
+        juliaPreviewContext: JuliaContext,
+        isPreviewVisible: () => boolean
     ) {
         this.mandelContext = context1;
         this.juliaContext = context2;
+
+        this.juliaPreviewContext = juliaPreviewContext;
+        this.isPreviewVisible = isPreviewVisible;
 
         this.currentJuliaCenter = { x: 0.0, y: 0.0 };
         this.juliaFollowsMouse = true;
@@ -69,6 +75,9 @@ export class FractalManager {
             if (Number.isNaN(x)) return;
             this.setCurrentJuliaCenter(x, this.juliaContext.juliaCCoords.y);
             this.juliaContext.render();
+            if (!this.isPreviewVisible) return;
+            this.juliaPreviewContext.setJuliaCCoords(x, this.juliaContext.juliaCCoords.y);
+            this.juliaPreviewContext.render();
         });
 
         this.juliaYCoordInput.addEventListener('input', (evt) => {
@@ -76,6 +85,9 @@ export class FractalManager {
             if (Number.isNaN(y)) return;
             this.setCurrentJuliaCenter(this.juliaContext.juliaCCoords.x, y);
             this.juliaContext.render();
+            if (!this.isPreviewVisible) return;
+            this.juliaPreviewContext.setJuliaCCoords(this.juliaContext.juliaCCoords.x, y);
+            this.juliaPreviewContext.render();
         });
 
         this.addUpdateJuliaOnMouseMove();

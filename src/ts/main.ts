@@ -141,7 +141,17 @@ juliaContext.setJuliaCCoords(0.0, 0.0);
 mandelContext.updateCenterIndicator({ x: 0.0, y: 0.0 });
 
 // Enables communication between mandel and julia context
-const fractalManager = new FractalManager(mandelContext, juliaContext, 'julia-center-x', 'julia-center-y');
+const juliaCenterXInputId = 'julia-center-x';
+const juliaCenterYInputId = 'julia-center-y';
+
+const fractalManager = new FractalManager(
+    mandelContext,
+    juliaContext,
+    juliaCenterXInputId,
+    juliaCenterYInputId,
+    juliaPreviewContext,
+    checkJuliaPrevContextVisib
+);
 
 fractalManager.addPausingUpdateJulia('shortcut-indfollowmouse-checkbox', 'shortcut-randmove-checkbox');
 
