@@ -325,6 +325,7 @@ export abstract class FractalContext {
         this.panningObject = { panningCanvas: false, startXInCoords: 0, startYInCoords: 0 };
 
         canvas.addEventListener('wheel', (evt) => {
+            evt.preventDefault(); // Prevent zooming of entire window on windows-machines
             let sign = evt.deltaY < 0 ? -1 : 1; // deltaY < 0 -> zoom in
             let vp = this.vp;
             let x = vp.xToCoord(evt.clientX);

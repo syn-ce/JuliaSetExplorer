@@ -37,6 +37,8 @@ const mandelContext = new MandelContext(
     nrIterations
 );
 
+mandelContext.zoomFactor = 1.2;
+
 mandelContext.addColorInputListener('color-picker');
 mandelContext.addEscapeRadiusInputListener('escape-radius');
 mandelContext.addExponentInputListener('exponent');
@@ -56,6 +58,8 @@ const juliaContext = new JuliaContext(
     fragmentShaderTextJulia,
     nrIterations
 );
+
+juliaContext.zoomFactor = 1.2;
 
 juliaContext.addColorInputListener('color-picker');
 juliaContext.addEscapeRadiusInputListener('escape-radius');
