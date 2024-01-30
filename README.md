@@ -1,6 +1,6 @@
 # Julia Set Explorer
 
-This project allows for the realtime exploration of Julia sets.
+This project allows for the exploration of Julia sets in real time.
 If you are in need of a screensaver look no further, there are plenty to find here.
 
 Try it yourself: [click me](https://syn-ce.github.io/JuliaSetExplorer/)
