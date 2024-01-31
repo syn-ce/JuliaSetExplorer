@@ -330,7 +330,7 @@ Here's where things start to become ugly. While even my integrated GPU will happ
 To enhance the precision and therefore avoid possibe pixelation of the image when zooming in far, turn on CPU rendering by pressing the associated button in the download preview.
 Turning CPU rendering on will render the current preview on the CPU **which will take some time**. A small progress bar acts as an indicator. Once you have turned CPU rendering on, simply press the download button to start rendering the final image. This will take **a very long time, not unlikely multiple minutes**.
 
-Enabling CPU rendering will not stop you from interacting with the canvas as usual, but keep in mind that this is **tremendously slow** and if you are not running on NASA-level hardware you should probably refrain from trying to actually use this for realtime interaction.
+Enabling CPU rendering will not stop you from interacting with the canvas as usual, but keep in mind that this is **tremendously slow** and if you are not running on NASA-level hardware you should probably refrain from trying to actually use this for real-time interaction.
 
 Instead, **only activate CPU rendering when you want to download the currently displayed image**. If you have to make any adjustments other than simply centering a certain point (double clicking any point on the canvas will center it and result in only one frame being rendered) you are probably better off just turning the CPU rendering off, making your changes, turning it on again and then downloading your image.
 
