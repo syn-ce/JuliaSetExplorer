@@ -163,7 +163,7 @@ The following parameters can be adjusted to tweak the resulting image's appearan
 
 ### Julia Coordinates (c value of the Julia set)
 
-The Julia Coordinates determine the general shape of the Julia set. They can be adjusted by moving the mouse over the Mandelbrot set (if nothing happens, try pressing "f" to make the indicator follow the mouse; Look [here]() for more information about the controls) or entering the values in the corresponding input-fields.
+The Julia Coordinates determine the general shape of the Julia set. They can be adjusted by moving the mouse over the Mandelbrot set (if nothing happens, try pressing "f" to make the indicator follow the mouse; Look [here](#usage) for more information about the controls) or entering the values in the corresponding input-fields.
 
 |                                           Julia Coordinates of about (0.3159,-0.0421)                                            |                                          Julia Coordinates of about (-1.4808,0.0014)                                           |
 | :------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: |
