@@ -7,9 +7,11 @@ import {
     RGBToHex,
     getColorSettingsFromAbbreviations,
     normalizeRGB,
+    hexToRGB,
 } from '../utils/colorUtils.js';
 import { updateJuliaPreviewContext } from '../ui/juliaDownload.js';
 import { FractalParams } from './FractalParams';
+import { FractalContext } from './FractalContext';
 
 // Enables the communication between two FractalContexts via events
 export class FractalManager {
@@ -196,35 +198,13 @@ export class FractalManager {
 
         // Set the values
         this.setCurrentJuliaCenter(juliaCoords.x, juliaCoords.y);
-        //juliaPreviewContext.zoom(juliaPreviewCenter.x, juliaPreviewCenter.y, zoomLevel);
-        //juliaPreviewContext.setCenterTo(juliaPreviewCenter.x, juliaPreviewCenter.y);
-        this.juliaContext.setColorValues(normalizeRGB(color));
-        this.juliaContext.colorInput.value = RGBToHex(color);
-        this.juliaContext.setExponent(exponent);
-        this.juliaContext.exponentInput.value = exponent.toString();
-        this.juliaContext.setNrIterations(nrIterations);
-        this.juliaContext.nrIterationsInput.value = nrIterations.toString();
-        this.juliaContext.setEscapeRadius(escapeRadius);
-        this.juliaContext.escapeRadiusInput.value = escapeRadius.toString();
-        this.juliaContext.setColorSettings(colorSettings);
-        this.juliaContext.colorSettingsInputs.forEach(
-            (colorSettingInput, index) => (colorSettingInput.checked = colorSettings[index] != 0)
-        );
+
+        this.setFractalParams(this.juliaContext, params);
+
         this.juliaContext.setCenterTo(juliaPreviewCenter.x, juliaPreviewCenter.y); // Set center and zoom as specified in filename
         this.juliaContext.zoom(juliaPreviewCenter.x, juliaPreviewCenter.y, zoomLevel);
 
-        this.mandelContext.setColorValues(normalizeRGB(color));
-        this.mandelContext.colorInput.value = RGBToHex(color);
-        this.mandelContext.setExponent(exponent);
-        this.mandelContext.exponentInput.value = exponent.toString();
-        this.mandelContext.setNrIterations(nrIterations);
-        this.mandelContext.nrIterationsInput.value = nrIterations.toString();
-        this.mandelContext.setEscapeRadius(escapeRadius);
-        this.mandelContext.escapeRadiusInput.value = escapeRadius.toString();
-        this.mandelContext.setColorSettings(colorSettings);
-        this.mandelContext.colorSettingsInputs.forEach(
-            (colorSettingInput, index) => (colorSettingInput.checked = colorSettings[index] != 0)
-        );
+        this.setFractalParams(this.mandelContext, params);
 
         // Update preview context if necessary
         const juliaPreviewContainer = document.getElementById(juliaPreviewContainerId);
@@ -242,9 +222,110 @@ export class FractalManager {
         let params = this.tryParseParamsFromFilename(filename);
         if (!params.parsedSuccessfully) return false;
 
-        this.updateRenderFractals(params, juliaPreviewContext, juliaPreviewContainerId);
+        //this.updateRenderFractals(params, juliaPreviewContext, juliaPreviewContainerId);
+        this.transitionIntoState(params, 3000);
 
         this.mandelContext.indicatorFollowsMouse = false;
+    };
+
+    getCurrentJuliaParams = () => {
+        const currPreviewCenter = this.juliaPreviewContext.getCurrentCenter();
+        const params: FractalParams = {
+            color: hexToRGB(this.juliaContext.colorInput.value),
+            nrIterations: this.juliaContext.nrIterations,
+            exponent: this.juliaContext.exponent,
+            escapeRadius: this.juliaContext.escapeRadius,
+            juliaCoords: this.juliaContext.juliaCCoords,
+            juliaPreviewCenter: { x: currPreviewCenter.cX, y: currPreviewCenter.cY },
+            zoomLevel: this.juliaContext.zoomLevel,
+            colorSettings: this.juliaContext.colorSettings,
+            cpuRendering: this.juliaContext.cpuRendering,
+        };
+        return params;
+    };
+
+    _transition = (params: FractalParams) => {
+        this.setCurrentJuliaCenter(params.juliaCoords.x, params.juliaCoords.y);
+        this.setFractalParams(this.juliaContext, params);
+        // Only the JuliaSet will be zoomed, not the Mandelbrot
+        const currJuliaCenter = this.juliaContext.getCurrentCenter();
+        this.juliaContext.setZoom(currJuliaCenter.cX, currJuliaCenter.cY, params.zoomLevel);
+        this.juliaContext.setCenterTo(params.juliaPreviewCenter.x, params.juliaPreviewCenter.y);
+        this.setFractalParams(this.mandelContext, params);
+    };
+
+    // Duration in ms
+    transitionIntoState = (goalParams: FractalParams, duration: number) => {
+        // Number of frames to render
+        const frameInterval = Math.min(this.mandelContext.frameInterval, this.juliaContext.frameInterval);
+        const nrFrames = duration / frameInterval;
+        console.log(frameInterval);
+
+        // Current state
+        const currentState = this.getCurrentJuliaParams();
+        // Calculate intermediate values
+        // Colors
+
+        const interpolatedFractalParamsList: FractalParams[] = [];
+        for (let i = 0; i < nrFrames; i++) {
+            const step = (i + 1) / nrFrames;
+            const color: RGBColor = {
+                r: currentState.color.r + step * (goalParams.color.r - currentState.color.r),
+                g: currentState.color.g + step * (goalParams.color.g - currentState.color.g),
+                b: currentState.color.b + step * (goalParams.color.b - currentState.color.b),
+            };
+
+            const fractalParams: FractalParams = {
+                color: color,
+                nrIterations: currentState.nrIterations + step * (goalParams.nrIterations - currentState.nrIterations),
+                exponent: currentState.exponent + step * (goalParams.exponent - currentState.exponent),
+                escapeRadius: currentState.escapeRadius + step * (goalParams.escapeRadius - currentState.escapeRadius),
+                juliaCoords: {
+                    x: currentState.juliaCoords.x + step * (goalParams.juliaCoords.x - currentState.juliaCoords.x),
+                    y: currentState.juliaCoords.y + step * (goalParams.juliaCoords.y - currentState.juliaCoords.y),
+                },
+                juliaPreviewCenter: {
+                    x:
+                        currentState.juliaPreviewCenter.x +
+                        step * (goalParams.juliaPreviewCenter.x - currentState.juliaPreviewCenter.x),
+                    y:
+                        currentState.juliaPreviewCenter.y +
+                        step * (goalParams.juliaPreviewCenter.y - currentState.juliaPreviewCenter.y),
+                },
+                zoomLevel: currentState.zoomLevel + step * (goalParams.zoomLevel - currentState.zoomLevel),
+                cpuRendering: false,
+                colorSettings: currentState.colorSettings,
+            };
+
+            interpolatedFractalParamsList.push(fractalParams);
+        }
+
+        // Loop
+        let i = 0;
+        const loop = () => {
+            this._transition(interpolatedFractalParamsList[i]);
+            i++;
+            if (i < nrFrames) {
+                setTimeout(loop, frameInterval);
+            }
+        };
+
+        loop();
+    };
+
+    setFractalParams = (fractalContext: FractalContext, params: FractalParams) => {
+        fractalContext.setColorValues(normalizeRGB(params.color));
+        fractalContext.colorInput.value = RGBToHex(params.color);
+        fractalContext.setExponent(params.exponent);
+        fractalContext.exponentInput.value = params.exponent.toString();
+        fractalContext.setNrIterations(params.nrIterations);
+        fractalContext.nrIterationsInput.value = params.nrIterations.toString();
+        fractalContext.setEscapeRadius(params.escapeRadius);
+        fractalContext.escapeRadiusInput.value = params.escapeRadius.toString();
+        fractalContext.setColorSettings(params.colorSettings);
+        fractalContext.colorSettingsInputs.forEach(
+            (colorSettingInput, index) => (colorSettingInput.checked = params.colorSettings[index] != 0)
+        );
     };
 
     stopRandomMovement() {
