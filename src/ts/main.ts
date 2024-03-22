@@ -215,5 +215,8 @@ setupHelpModal('shortcut-info-checkbox');
 addResizeWindow(fractalManager, juliaPreviewContext);
 
 // Render
-juliaContext.render();
-mandelContext.render();
+//juliaContext.render();
+//mandelContext.render();
+
+juliaContext.startMainRenderLoop();
+mandelContext.startMainRenderLoop();

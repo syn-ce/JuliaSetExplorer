@@ -46,9 +46,9 @@ const resizeWindow = (fractalManager: FractalManager, juliaPreviewContext: Julia
     juliaPreviewContext.setAspectRatio(juliaPreviewContext.canvas.width / juliaPreviewContext.canvas.height);
 
     // Render all
-    fractalManager.juliaContext.render();
-    fractalManager.mandelContext.render();
-    juliaPreviewContext.render();
+    //fractalManager.juliaContext.render();
+    //fractalManager.mandelContext.render();
+    //juliaPreviewContext.render();
 };
 
 export const addResizeWindow = (fractalManager: FractalManager, juliaPreviewContext: JuliaContext) =>

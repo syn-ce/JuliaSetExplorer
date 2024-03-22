@@ -19,6 +19,7 @@ export class JuliaContext extends FractalContext {
     }
 
     setJuliaCCoords = (x: number, y: number) => {
+        this.renderState.wasUpdatedSinceLastRender = true;
         this.juliaCCoords.x = x;
         this.juliaCCoords.y = y;
 
@@ -35,14 +36,14 @@ export class JuliaContext extends FractalContext {
             if (Number.isNaN(x)) return;
             let currCenter = this.getCurrentCenter();
             this.setCenterTo(x, currCenter.cY);
-            this.render();
+            //this.render();
         });
         centerYInput.addEventListener('input', (evt) => {
             let y = parseFloat((<HTMLInputElement>evt.currentTarget).value);
             if (Number.isNaN(y)) return;
             let currCenter = this.getCurrentCenter();
             this.setCenterTo(currCenter.cX, y);
-            this.render();
+            //this.render();
         });
 
         // Update inputs on pan, zoom
@@ -70,8 +71,9 @@ export class JuliaContext extends FractalContext {
             let newZoomLevel = parseFloat(zoomInput.value);
             if (Number.isNaN(newZoomLevel) || newZoomLevel <= 0) return;
             let currCenter = this.getCurrentCenter();
-            this.zoom(currCenter.cX, currCenter.cY, newZoomLevel);
-            this.render();
+            this.setZoom(currCenter.cX, currCenter.cY, newZoomLevel);
+            //            this.zoom(currCenter.cX, currCenter.cY, newZoomLevel);
+            //this.render();
         });
 
         this.canvas.addEventListener('moveCanvas', () => {
