@@ -150,7 +150,6 @@ export abstract class FractalContext {
     };
 
     renderLoop = () => {
-        console.log(this.renderState.wasUpdatedSinceLastRender);
         // Only render if necessary
         if (!this.renderState.wasUpdatedSinceLastRender) {
             setTimeout(this.renderLoop, this.frameInterval);
