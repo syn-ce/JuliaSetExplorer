@@ -9,6 +9,7 @@ import {
     normalizeRGB,
 } from '../utils/colorUtils.js';
 import { updateJuliaPreviewContext } from '../ui/juliaDownload.js';
+import { FractalParams } from './FractalParams';
 
 // Enables the communication between two FractalContexts via events
 export class FractalManager {
@@ -176,7 +177,11 @@ export class FractalManager {
         };
     };
 
-    updateRenderFractals = (params, juliaPreviewContext: JuliaContext, juliaPreviewContainerId: string) => {
+    updateRenderFractals = (
+        params: FractalParams,
+        juliaPreviewContext: JuliaContext,
+        juliaPreviewContainerId: string
+    ) => {
         const {
             color,
             nrIterations,
