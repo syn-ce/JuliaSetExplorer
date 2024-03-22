@@ -1,5 +1,5 @@
 export const createShader = (gl: WebGL2RenderingContext, type: number, source: string) => {
-    var shader = gl.createShader(type);
+    let shader = gl.createShader(type);
     if (shader == null) throw new Error('Error while creating shader');
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
@@ -12,7 +12,7 @@ export const createShader = (gl: WebGL2RenderingContext, type: number, source: s
 };
 
 export const createProgram = (gl: WebGL2RenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader) => {
-    var program = gl.createProgram();
+    const program = gl.createProgram();
     if (program == null) throw new Error('Error while creating program');
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
@@ -31,7 +31,7 @@ export const createProgram = (gl: WebGL2RenderingContext, vertexShader: WebGLSha
     gl.deleteProgram(program);
 };
 
-export var vertexShaderText = `#version 300 es
+export const vertexShaderText = `#version 300 es
     precision highp float;
     in vec2 vertPosition;
     void main()
@@ -40,7 +40,7 @@ export var vertexShaderText = `#version 300 es
     }`;
 
 export const getFragmentShaderText = (z: string, c: string, additionalVariables: string) => {
-    var baseFragmentShaderText = `#version 300 es
+    const baseFragmentShaderText = `#version 300 es
     precision highp float;
     out vec4 myOutputColor;
     uniform vec2 screenResolution;

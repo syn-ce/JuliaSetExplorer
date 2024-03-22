@@ -67,8 +67,8 @@ juliaContext.addExponentInputListener('exponent');
 juliaContext.addNrIterationsInputListener('nr-iterations');
 juliaContext.addColorSettingsInputs('color-dropdown');
 
-const juliaDrawingCanvas = <HTMLCanvasElement>document.createElement('canvas');
-const juliaDrawingCanvas2d = <HTMLCanvasElement>document.createElement('canvas');
+const juliaDrawingCanvas = document.createElement('canvas');
+const juliaDrawingCanvas2d = document.createElement('canvas');
 const juliaDrawingContext = new JuliaContext(
     juliaDrawingCanvas,
     juliaDrawingCanvas2d,
@@ -214,9 +214,6 @@ setupHelpModal('shortcut-info-checkbox');
 // Resizing of window (to be improved)
 addResizeWindow(fractalManager, juliaPreviewContext);
 
-// Render
-//juliaContext.render();
-//mandelContext.render();
-
+// Start render loop
 juliaContext.startMainRenderLoop();
 mandelContext.startMainRenderLoop();

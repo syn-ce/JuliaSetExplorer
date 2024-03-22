@@ -43,7 +43,7 @@ export const setupRandomCommunityJuliaSetBtn = (
     juliaPreviewContainerId: string
 ) => {
     const randomCommunityJuliaBtn = <HTMLInputElement>document.getElementById(randomCommunityJuliaBtnId);
-    var juliaCommunityCheckbox = <HTMLInputElement>document.getElementById(juliaCommunityCheckboxId);
+    const juliaCommunityCheckbox = <HTMLInputElement>document.getElementById(juliaCommunityCheckboxId);
     juliaCommunityCheckbox.checked = true;
 
     juliaCommunityCheckbox.onclick = (evt) => {

@@ -9,7 +9,7 @@ export const setupHideUIButton = (hideUIBtnId: string, hideButtonShortcutCheckbo
     const metaControlDiv = document.getElementById('meta-controls');
     const metaControlButtons = Array.from(metaControlDiv.getElementsByTagName('button'));
 
-    var uiShown = true;
+    let uiShown = true;
 
     // Pressing "h" will hide / show the ui
     document.addEventListener('keydown', (evt) => {

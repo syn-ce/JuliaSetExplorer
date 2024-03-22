@@ -90,7 +90,7 @@ export class MandelContext extends FractalContext {
                     i -
                     Math.log2(Math.log2(z.real * z.real + z.imag * z.imag) / Math.log2(this.escapeRadius)) /
                         Math.log2(this.exponent); // https://iquilezles.org/articles/msetsmooth
-                var gray =
+                let gray =
                     this.colorSettings[0] *
                         (i +
                             1 -

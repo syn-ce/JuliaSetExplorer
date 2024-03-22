@@ -23,7 +23,7 @@ export class JuliaContext extends FractalContext {
         this.juliaCCoords.x = x;
         this.juliaCCoords.y = y;
 
-        var cCoordsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'cCoords');
+        const cCoordsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'cCoords');
         this.gl.uniform2f(cCoordsAttribLocation, this.juliaCCoords.x, this.juliaCCoords.y);
     };
 
@@ -36,14 +36,12 @@ export class JuliaContext extends FractalContext {
             if (Number.isNaN(x)) return;
             let currCenter = this.getCurrentCenter();
             this.setCenterTo(x, currCenter.cY);
-            //this.render();
         });
         centerYInput.addEventListener('input', (evt) => {
             let y = parseFloat((<HTMLInputElement>evt.currentTarget).value);
             if (Number.isNaN(y)) return;
             let currCenter = this.getCurrentCenter();
             this.setCenterTo(currCenter.cX, y);
-            //this.render();
         });
 
         // Update inputs on pan, zoom
@@ -72,8 +70,6 @@ export class JuliaContext extends FractalContext {
             if (Number.isNaN(newZoomLevel) || newZoomLevel <= 0) return;
             let currCenter = this.getCurrentCenter();
             this.setZoom(currCenter.cX, currCenter.cY, newZoomLevel);
-            //            this.zoom(currCenter.cX, currCenter.cY, newZoomLevel);
-            //this.render();
         });
 
         this.canvas.addEventListener('moveCanvas', () => {
@@ -106,7 +102,7 @@ export class JuliaContext extends FractalContext {
                     i -
                     Math.log2(Math.log2(z.real * z.real + z.imag * z.imag) / Math.log2(this.escapeRadius)) /
                         Math.log2(this.exponent); // https://iquilezles.org/articles/msetsmooth
-                var gray =
+                let gray =
                     this.colorSettings[0] *
                         (i +
                             1 -

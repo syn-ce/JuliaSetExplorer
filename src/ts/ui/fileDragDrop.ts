@@ -8,7 +8,7 @@ export const addDragDropEventListeners = (
     juliaDrawingContext: JuliaContext,
     juliaPreviewContainerId: string
 ) => {
-    var dropzone = document.getElementById(dropzoneElementId);
+    const dropzone = document.getElementById(dropzoneElementId);
 
     document.body.ondragenter = (evt) => {
         fractalManager.mandelContext.indicatorFollowsMouse = false;

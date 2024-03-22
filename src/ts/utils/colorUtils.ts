@@ -21,7 +21,7 @@ export const RGBToHex = (rgbColor: RGBColor) => {
 };
 
 export const componentToHex = (c: number) => {
-    var hex = c.toString(16);
+    const hex = c.toString(16);
     return hex.length == 1 ? '0' + hex : hex;
 };
 

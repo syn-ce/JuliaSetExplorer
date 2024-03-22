@@ -76,20 +76,16 @@ export class FractalManager {
             let x = parseFloat((<HTMLInputElement>evt.currentTarget).value);
             if (Number.isNaN(x)) return;
             this.setCurrentJuliaCenter(x, this.juliaContext.juliaCCoords.y);
-            //this.juliaContext.render();
             if (!this.isPreviewVisible) return;
             this.juliaPreviewContext.setJuliaCCoords(x, this.juliaContext.juliaCCoords.y);
-            //this.juliaPreviewContext.render();
         });
 
         this.juliaYCoordInput.addEventListener('input', (evt) => {
             let y = parseFloat((<HTMLInputElement>evt.currentTarget).value);
             if (Number.isNaN(y)) return;
             this.setCurrentJuliaCenter(this.juliaContext.juliaCCoords.x, y);
-            //this.juliaContext.render();
             if (!this.isPreviewVisible) return;
             this.juliaPreviewContext.setJuliaCCoords(this.juliaContext.juliaCCoords.x, y);
-            //this.juliaPreviewContext.render();
         });
 
         this.addUpdateJuliaOnMouseMove();
@@ -104,7 +100,6 @@ export class FractalManager {
             let y = this.mandelContext.vp.yToCoord(evt.clientY);
 
             this.setCurrentJuliaCenter(x, y);
-            //this.juliaContext.render();
         });
     }
 
@@ -154,7 +149,7 @@ export class FractalManager {
 
         let zoomLevel = parseFloat(params[10]);
 
-        let cpuRendering = params[params.length - 1] == '1' ? true : false;
+        let cpuRendering = params[params.length - 1] == '1';
 
         let colorSettings = getColorSettingsFromAbbreviations(params.slice(11, params.length - 1));
 
@@ -170,7 +165,7 @@ export class FractalManager {
             colorSettings,
         };
 
-        for (var param of Object.keys(paramsObj)) {
+        for (let param of Object.keys(paramsObj)) {
             // Assert that no value is null
             if (param === null) return { parsedSuccessfully: false };
         }
@@ -226,16 +221,10 @@ export class FractalManager {
             (colorSettingInput, index) => (colorSettingInput.checked = colorSettings[index] != 0)
         );
 
-        //this.juliaContext.render();
-        //this.mandelContext.render();
-
         // Update preview context if necessary
         const juliaPreviewContainer = document.getElementById(juliaPreviewContainerId);
         if (juliaPreviewContainer.style.visibility != 'visible') return;
         updateJuliaPreviewContext(juliaPreviewContext, this.juliaContext);
-        //        juliaPreviewContext.render();
-
-        return;
     };
 
     // Returns whether the rendering was successful or not
@@ -273,7 +262,7 @@ export class FractalManager {
         const delay = 1000 / 60;
         const maxSpeed = 0.5 / 60;
 
-        var nextDestination: { x: number; y: number };
+        let nextDestination: { x: number; y: number };
 
         let currentCenter = { x: this.juliaContext.juliaCCoords.x, y: this.juliaContext.juliaCCoords.y };
 
@@ -305,7 +294,6 @@ export class FractalManager {
 
                 // renderState updated in here
                 fractalManager.setCurrentJuliaCenter(currentCenter.x, currentCenter.y);
-                //fractalManager.juliaContext.render();
                 if (frameNr < nrFrames && distance(nextDestination, currentCenter) > 0.0001) {
                     setTimeout(() => {
                         if (fractalManager.movingRandom) {

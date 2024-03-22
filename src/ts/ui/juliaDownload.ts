@@ -3,7 +3,7 @@ import { denormalizeRGB, getColorSettingsAbbreviations } from '../utils/colorUti
 import { httpPostNewCommunityJulia } from '../utils/http.js';
 
 // Closing of preview
-const juliaPreviewCloser = <HTMLElement>document.getElementById('close-save-preview');
+const juliaPreviewCloser = document.getElementById('close-save-preview');
 const juliaPreviewContainer = document.getElementById('download-preview-container');
 juliaPreviewCloser.addEventListener('click', (evt) => {
     juliaPreviewContainer.style.opacity = '0';
@@ -30,8 +30,6 @@ const previewDownloadImage = (
     if (borderId) juliaPreviewContext.moveCanvas(borderElement);
 
     updateJuliaPreviewContext(juliaPreviewContext, juliaContext);
-
-    //juliaPreviewContext.render();
 };
 
 // Update the values of the preview context with the values of the (main) julia context
@@ -46,7 +44,6 @@ export const updateJuliaPreviewContext = (juliaPreviewContext: JuliaContext, jul
     juliaPreviewContext.setCenterTo(center.cX, center.cY);
     juliaPreviewContext.setColorSettings(juliaContext.colorSettings);
     juliaPreviewContext.setJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y);
-    //juliaPreviewContext.render();
 };
 
 // Downloads the Julia Image as per the current settings and the center / zoom of the preview image
@@ -244,7 +241,6 @@ export const setupPreviewCenterOriginBtn = (juliaPreviewContext: JuliaContext, c
     const previewCenterOriginBtn = <HTMLInputElement>document.getElementById(centerOriginBtnId);
     previewCenterOriginBtn.onclick = (evt) => {
         juliaPreviewContext.setCenterTo(0, 0);
-        //juliaPreviewContext.render();
     };
 };
 
@@ -252,7 +248,6 @@ export const setupPreviewCPURenderBtn = (juliaPreviewContext: JuliaContext, prev
     const previewCPURenderButton = document.getElementById(previewCPURenderBtnId);
     previewCPURenderButton.onclick = () => {
         juliaPreviewContext.setCPURendering(!juliaPreviewContext.cpuRendering);
-        //juliaPreviewContext.render();
         previewCPURenderButton.innerText = 'Turn CPU Rendering ' + (juliaPreviewContext.cpuRendering ? 'OFF' : 'ON');
     };
 };

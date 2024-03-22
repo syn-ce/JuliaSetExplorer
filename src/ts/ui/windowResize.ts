@@ -1,8 +1,8 @@
 import { FractalManager } from '../fractal/FractalManager';
 import { JuliaContext } from '../fractal/JuliaContext';
 
-var oldWidth = window.innerWidth;
-var oldHeight = window.innerHeight;
+let oldWidth = window.innerWidth;
+let oldHeight = window.innerHeight;
 
 const resizeWindow = (fractalManager: FractalManager, juliaPreviewContext: JuliaContext) => {
     const width = window.innerWidth;
