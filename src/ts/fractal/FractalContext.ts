@@ -41,6 +41,7 @@ export abstract class FractalContext {
     };
     renderState: {
         wasUpdatedSinceLastRender: boolean;
+        shouldRender: boolean;
     };
 
     constructor(
@@ -52,7 +53,7 @@ export abstract class FractalContext {
         fragmentShaderText: string,
         nrIterations: number
     ) {
-        this.renderState = { wasUpdatedSinceLastRender: true };
+        this.renderState = { wasUpdatedSinceLastRender: true, shouldRender: false };
         this.canvas = canvas;
         this.canvas.width = width;
         this.canvas.height = height;
@@ -150,6 +151,7 @@ export abstract class FractalContext {
     };
 
     renderLoop = () => {
+        if (!this.renderState.shouldRender) return;
         // Only render if necessary
         if (!this.renderState.wasUpdatedSinceLastRender) {
             setTimeout(this.renderLoop, this.frameInterval);
@@ -340,8 +342,12 @@ export abstract class FractalContext {
 
     startMainRenderLoop() {
         // Start renderLoop
+        this.renderState.shouldRender = true;
         this.renderLoop();
     }
+
+    stopRenderLoop = () => this.renderState.shouldRender = false;
+
 
     setZoom(cX: number, cY: number, zoomLevel: number) {
         // Set zoom-level of canvas, towards current center
