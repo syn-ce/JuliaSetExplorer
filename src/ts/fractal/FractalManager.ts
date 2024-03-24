@@ -12,6 +12,7 @@ import {
 import { updateJuliaPreviewContext } from '../ui/juliaDownload.js';
 import { FractalParams } from './FractalParams';
 import { FractalContext } from './FractalContext';
+import { interpolateFractalParams } from '../utils/fractalUtils.js';
 
 // Enables the communication between two FractalContexts via events
 export class FractalManager {
@@ -199,12 +200,12 @@ export class FractalManager {
         // Set the values
         this.setCurrentJuliaCenter(juliaCoords.x, juliaCoords.y);
 
-        this.setFractalParams(this.juliaContext, params);
+        this.setFractalParamsUpdateInputs(this.juliaContext, params);
 
         this.juliaContext.setCenterTo(juliaPreviewCenter.x, juliaPreviewCenter.y); // Set center and zoom as specified in filename
         this.juliaContext.zoom(juliaPreviewCenter.x, juliaPreviewCenter.y, zoomLevel);
 
-        this.setFractalParams(this.mandelContext, params);
+        this.setFractalParamsUpdateInputs(this.mandelContext, params);
 
         // Update preview context if necessary
         const juliaPreviewContainer = document.getElementById(juliaPreviewContainerId);
@@ -246,16 +247,16 @@ export class FractalManager {
 
     _transition = (params: FractalParams) => {
         this.setCurrentJuliaCenter(params.juliaCoords.x, params.juliaCoords.y);
-        this.setFractalParams(this.juliaContext, params);
+        this.setFractalParamsUpdateInputs(this.juliaContext, params);
         // Only the JuliaSet will be zoomed, not the Mandelbrot
         const currJuliaCenter = this.juliaContext.getCurrentCenter();
         this.juliaContext.setZoom(currJuliaCenter.cX, currJuliaCenter.cY, params.zoomLevel);
         this.juliaContext.setCenterTo(params.juliaPreviewCenter.x, params.juliaPreviewCenter.y);
-        this.setFractalParams(this.mandelContext, params);
+        this.setFractalParamsUpdateInputs(this.mandelContext, params);
     };
 
     // Duration in ms
-    transitionIntoState = (goalParams: FractalParams, duration: number) => {
+    transitionIntoState = (goalState: FractalParams, duration: number) => {
         // Number of frames to render
         const frameInterval = Math.min(this.mandelContext.frameInterval, this.juliaContext.frameInterval);
         const nrFrames = duration / frameInterval;
@@ -266,39 +267,11 @@ export class FractalManager {
         // Calculate intermediate values
         // Colors
 
-        const interpolatedFractalParamsList: FractalParams[] = [];
-        for (let i = 0; i < nrFrames; i++) {
-            const step = (i + 1) / nrFrames;
-            const color: RGBColor = {
-                r: currentState.color.r + step * (goalParams.color.r - currentState.color.r),
-                g: currentState.color.g + step * (goalParams.color.g - currentState.color.g),
-                b: currentState.color.b + step * (goalParams.color.b - currentState.color.b),
-            };
-
-            const fractalParams: FractalParams = {
-                color: color,
-                nrIterations: currentState.nrIterations + step * (goalParams.nrIterations - currentState.nrIterations),
-                exponent: currentState.exponent + step * (goalParams.exponent - currentState.exponent),
-                escapeRadius: currentState.escapeRadius + step * (goalParams.escapeRadius - currentState.escapeRadius),
-                juliaCoords: {
-                    x: currentState.juliaCoords.x + step * (goalParams.juliaCoords.x - currentState.juliaCoords.x),
-                    y: currentState.juliaCoords.y + step * (goalParams.juliaCoords.y - currentState.juliaCoords.y),
-                },
-                juliaPreviewCenter: {
-                    x:
-                        currentState.juliaPreviewCenter.x +
-                        step * (goalParams.juliaPreviewCenter.x - currentState.juliaPreviewCenter.x),
-                    y:
-                        currentState.juliaPreviewCenter.y +
-                        step * (goalParams.juliaPreviewCenter.y - currentState.juliaPreviewCenter.y),
-                },
-                zoomLevel: currentState.zoomLevel + step * (goalParams.zoomLevel - currentState.zoomLevel),
-                cpuRendering: false,
-                colorSettings: currentState.colorSettings,
-            };
-
-            interpolatedFractalParamsList.push(fractalParams);
-        }
+        const interpolatedFractalParamsList: FractalParams[] = interpolateFractalParams(
+            nrFrames,
+            currentState,
+            goalState
+        );
 
         // Loop
         let i = 0;
@@ -313,7 +286,7 @@ export class FractalManager {
         loop();
     };
 
-    setFractalParams = (fractalContext: FractalContext, params: FractalParams) => {
+    setFractalParamsUpdateInputs = (fractalContext: FractalContext, params: FractalParams) => {
         fractalContext.setColorValues(normalizeRGB(params.color));
         fractalContext.colorInput.value = RGBToHex(params.color);
         fractalContext.setExponent(params.exponent);
