@@ -17,6 +17,7 @@ import { addPasteEventListeners } from './ui/filePaste.js';
 import { setupRandomCommunityJuliaSetBtn, setupRandomSelectedJuliaSetBtn } from './ui/loadRandomJuliaSet.js';
 import { setupTrulyRandomJuliaBtn } from './ui/trulyRandomJuliaSet.js';
 import { addResizeWindow } from './ui/windowResize.js';
+import { setupPreviewRenderVideo } from './ui/videoRendering.js';
 
 const canvasMandel = getCanvasElementById('mandel-canvas');
 const canvasMandel2d = getCanvasElementById('mandel-canvas-2d');
@@ -179,6 +180,15 @@ setupHideUIButton('hide-ui-btn', 'shortcut-hide-checkbox');
 
 // Center origin in preview button
 setupPreviewCenterOriginBtn(juliaPreviewContext, 'preview-center-origin-btn');
+
+// Render video button
+setupPreviewRenderVideo(
+    fractalManager,
+    juliaDrawingContext,
+    juliaPreviewContext,
+    renderVideoModalId,
+    'render-video-btn'
+);
 
 // Community julia button in preview
 setupRandomCommunityJuliaSetBtn(
