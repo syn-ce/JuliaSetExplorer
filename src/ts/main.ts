@@ -159,13 +159,16 @@ const fractalManager = new FractalManager(
 
 fractalManager.addPausingUpdateJulia('shortcut-indfollowmouse-checkbox', 'shortcut-randmove-checkbox');
 
+const renderVideoModalId = 'video-state-capture-modal';
+
 // Enable dropping of files
 addDragDropEventListeners(
     fractalManager,
     'dropzone',
     juliaPreviewContext,
     juliaDrawingContext,
-    juliaPreviewContainerId
+    juliaPreviewContainerId,
+    renderVideoModalId
 );
 
 // Enable pasting of filenames

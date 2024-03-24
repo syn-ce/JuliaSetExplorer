@@ -6,12 +6,15 @@ export const addDragDropEventListeners = (
     dropzoneElementId: string,
     juliaPreviewContext: JuliaContext,
     juliaDrawingContext: JuliaContext,
-    juliaPreviewContainerId: string
+    juliaPreviewContainerId: string,
+    renderVideoModalId: string
 ) => {
     const dropzone = document.getElementById(dropzoneElementId);
+    const renderVideoModal = document.getElementById(renderVideoModalId);
 
     document.body.ondragenter = (evt) => {
         fractalManager.mandelContext.indicatorFollowsMouse = false;
+        if (renderVideoModal.style.visibility === 'visible') return; // drag and drop of video-modal overwrites generic dropzone
         dropzone.style.visibility = 'visible';
         dropzone.style.opacity = '1';
     };
@@ -21,6 +24,7 @@ export const addDragDropEventListeners = (
     };
 
     document.body.ondrop = (evt) => {
+        if (renderVideoModal.style.visibility === 'visible') return;
         dropzone.style.visibility = 'hidden';
         dropzone.style.opacity = '0';
         evt.stopPropagation();
