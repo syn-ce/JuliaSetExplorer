@@ -132,7 +132,7 @@
                     <button id="download-julia-btn">Download</button>
                 </div>
                 <div class="outer-box">
-                    <button id="render-video-btn">Render video</button>
+                    <button id="render-video-btn">Video</button>
                     <button id="random-community-julia-btn">Community</button>
                     <button id="random-selected-julia-btn">Selected</button>
                     <button id="truly-random-julia-btn">Random</button>
@@ -154,6 +154,7 @@
             <canvas id="julia-canvas-2d"></canvas>
         </div>
         <div id="video-state-capture-modal">
+            <div id="video-modal-closer" class="close"></div>
             <div id="video-state-capture-modal-content-wrapper">
                 <div id="video-state-capture-modal-content">
                     <div id="video-state-capture-dropzone-wrapper">
@@ -202,6 +203,11 @@
                             <td>t</td>
                             <td>generate random Julia set</td>
                             <td><input type="checkbox" id="shortcut-randjulia-checkbox" /></td>
+                        </tr>
+                        <tr>
+                            <td>v</td>
+                            <td>open/close video-modal</td>
+                            <td><input type="checkbox" id="shortcut-video-checkbox" /></td>
                         </tr>
                         <tr>
                             <td></td>

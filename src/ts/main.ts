@@ -187,6 +187,8 @@ setupPreviewRenderVideo(
     juliaDrawingContext,
     juliaPreviewContext,
     renderVideoModalId,
+    'video-modal-closer',
+    'shortcut-video-checkbox',
     'render-video-btn'
 );
 

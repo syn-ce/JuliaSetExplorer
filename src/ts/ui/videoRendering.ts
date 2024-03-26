@@ -83,11 +83,26 @@ const changeVideoStateCaptureModalVisib = (modalElement: HTMLElement) => {
 };
 
 const setupVideoStateCaptureModal = (
+    modalElementId: string,
+    modalCloserId: string,
+    videoShortcutCheckboxId: string,
     fractalManager: FractalManager,
     juliaDrawingContext: JuliaContext,
     juliaPreviewContext: JuliaContext
 ) => {
-    const modalElement = document.getElementById('video-state-capture-modal');
+    const modalElement = document.getElementById(modalElementId);
+    const modalCloser = document.getElementById(modalCloserId);
+    const videoShortcutCheckbox = <HTMLInputElement>document.getElementById(videoShortcutCheckboxId);
+
+    // Setup modal-closer
+    setupVideoModalCloser(modalElementId, modalCloserId);
+
+    window.addEventListener('keydown', (evt) => {
+        // Pressing "v" will open the video-modal
+        if (evt.code == 'KeyV' && videoShortcutCheckbox.checked) {
+            modalCloser.click();
+        }
+    });
 
     modalElement.style.opacity = '0';
     modalElement.style.visibility = 'hidden';
@@ -139,9 +154,18 @@ export const setupPreviewRenderVideo = (
     juliaDrawingContext: JuliaContext,
     juliaPreviewContext: JuliaContext,
     modalId: string,
+    modalCloserId: string,
+    videoShortcutCheckboxId: string,
     buttonId: string
 ) => {
-    setupVideoStateCaptureModal(fractalManager, juliaDrawingContext, juliaPreviewContext);
+    setupVideoStateCaptureModal(
+        modalId,
+        modalCloserId,
+        videoShortcutCheckboxId,
+        fractalManager,
+        juliaDrawingContext,
+        juliaPreviewContext
+    );
     console.log(juliaPreviewContext.canvas.width);
     const button = <HTMLButtonElement>document.getElementById(buttonId);
 
@@ -152,4 +176,11 @@ export const setupPreviewRenderVideo = (
     button.onclick = () => {
         changeVideoStateCaptureModalVisib(modalElement);
     };
+};
+
+export const setupVideoModalCloser = (videoModalId: string, videoModalCloserId: string) => {
+    const closerElement = document.getElementById(videoModalCloserId);
+    const modalElement = document.getElementById(videoModalId);
+
+    closerElement.onclick = () => changeVideoStateCaptureModalVisib(modalElement);
 };
