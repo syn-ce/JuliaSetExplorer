@@ -189,6 +189,8 @@ setupPreviewRenderVideo(
     renderVideoModalId,
     'video-modal-closer',
     'shortcut-video-checkbox',
+    'video-start-state-dropzone',
+    'video-goal-state-dropzone',
     'render-video-btn'
 );
 

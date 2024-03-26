@@ -86,12 +86,14 @@ const setupVideoStateCaptureModal = (
     modalElementId: string,
     modalCloserId: string,
     videoShortcutCheckboxId: string,
+    startStateDropzoneId: string,
+    goalStateDropzoneId: string,
+    videoState: { startState: FractalParams; goalState: FractalParams },
     fractalManager: FractalManager,
     juliaDrawingContext: JuliaContext,
     juliaPreviewContext: JuliaContext
 ) => {
     const modalElement = document.getElementById(modalElementId);
-    const modalCloser = document.getElementById(modalCloserId);
     const videoShortcutCheckbox = <HTMLInputElement>document.getElementById(videoShortcutCheckboxId);
 
     // Setup modal-closer
@@ -100,18 +102,20 @@ const setupVideoStateCaptureModal = (
     window.addEventListener('keydown', (evt) => {
         // Pressing "v" will open the video-modal
         if (evt.code == 'KeyV' && videoShortcutCheckbox.checked) {
-            modalCloser.click();
+            changeVideoStateCaptureModalVisib(modalElement);
+            if (modalElement.style.visibility == 'visible') {
+                // Make the current configuration state 1 by default
+                videoState.startState = fractalManager.getCurrentJuliaParams();
+                startStateDropzone.innerText = JSON.stringify(videoState.startState);
+            }
         }
     });
 
     modalElement.style.opacity = '0';
     modalElement.style.visibility = 'hidden';
 
-    let startState: FractalParams;
-    let goalState: FractalParams;
-
-    const startStateDropzone = document.getElementById('video-start-state-dropzone');
-    const goalStateDropzone = document.getElementById('video-goal-state-dropzone');
+    const startStateDropzone = document.getElementById(startStateDropzoneId);
+    const goalStateDropzone = document.getElementById(goalStateDropzoneId);
 
     const renderBtn = document.getElementById('video-state-capture-render-btn');
 
@@ -123,8 +127,8 @@ const setupVideoStateCaptureModal = (
             console.error('Could not parse filename');
             return;
         }
-        startState = params;
-        startStateDropzone.innerText = JSON.stringify(startState);
+        videoState.startState = params;
+        startStateDropzone.innerText = JSON.stringify(videoState.startState);
     };
 
     goalStateDropzone.ondrop = (evt) => {
@@ -135,8 +139,8 @@ const setupVideoStateCaptureModal = (
             console.error('Could not parse filename');
             return;
         }
-        goalState = params;
-        goalStateDropzone.innerText = JSON.stringify(goalState);
+        videoState.goalState = params;
+        goalStateDropzone.innerText = JSON.stringify(videoState.goalState);
     };
 
     renderBtn.onclick = (evt) =>
@@ -144,8 +148,8 @@ const setupVideoStateCaptureModal = (
             juliaDrawingContext,
             juliaPreviewContext,
             juliaDrawingContext.canvas,
-            startState,
-            goalState
+            videoState.startState,
+            videoState.goalState
         );
 };
 
@@ -156,12 +160,18 @@ export const setupPreviewRenderVideo = (
     modalId: string,
     modalCloserId: string,
     videoShortcutCheckboxId: string,
+    startStateDropzoneId: string,
+    goalStateDropzoneId: string,
     buttonId: string
 ) => {
+    const videoState = { startState: null, goalState: null };
     setupVideoStateCaptureModal(
         modalId,
         modalCloserId,
         videoShortcutCheckboxId,
+        startStateDropzoneId,
+        goalStateDropzoneId,
+        videoState,
         fractalManager,
         juliaDrawingContext,
         juliaPreviewContext
@@ -174,7 +184,13 @@ export const setupPreviewRenderVideo = (
 
     const modalElement = document.getElementById(modalId);
     button.onclick = () => {
+        const startStateDropzone = document.getElementById(startStateDropzoneId);
         changeVideoStateCaptureModalVisib(modalElement);
+        if (modalElement.style.visibility == 'visible') {
+            // Make the current configuration state 1 by default
+            videoState.startState = fractalManager.getCurrentJuliaParams();
+            startStateDropzone.innerText = JSON.stringify(videoState.startState);
+        }
     };
 };
 
