@@ -162,16 +162,18 @@ export abstract class FractalContext {
 
         // Render
         if (this.cpuRendering) {
-            this.drawSetCPU().then(() => {
-                this.canvas2d.style.display = '';
-                this.canvas.style.display = 'none';
-                this.renderInProgress = false;
+            requestAnimationFrame(() => {
+                this.drawSetCPU().then(() => {
+                    this.canvas2d.style.display = '';
+                    this.canvas.style.display = 'none';
+                });
             });
         } else {
-            this.gl.drawArrays(this.primitiveType, this.offset, this.count);
-            this.canvas.style.display = '';
-            this.canvas2d.style.display = 'none';
-            this.renderInProgress = false;
+            requestAnimationFrame(() => {
+                this.gl.drawArrays(this.primitiveType, this.offset, this.count);
+                this.canvas.style.display = '';
+                this.canvas2d.style.display = 'none';
+            });
         }
 
         // Keep renderLoop running
@@ -346,8 +348,7 @@ export abstract class FractalContext {
         this.renderLoop();
     }
 
-    stopRenderLoop = () => this.renderState.shouldRender = false;
-
+    stopRenderLoop = () => (this.renderState.shouldRender = false);
 
     setZoom(cX: number, cY: number, zoomLevel: number) {
         // Set zoom-level of canvas, towards current center
