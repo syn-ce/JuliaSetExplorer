@@ -2,6 +2,15 @@ import { FractalParams } from '../fractal/FractalParams.js';
 import { JuliaContext } from '../fractal/JuliaContext.js';
 import { RGBColor, normalizeRGB } from './colorUtils.js';
 
+// Round color-values, nrIterations to integer values
+export const roundInterpolatedFractalParams = (paramsList: FractalParams[]) => {
+    for (const params of paramsList) {
+        params.color = { r: Math.round(params.color.r), g: Math.round(params.color.g), b: Math.round(params.color.b) };
+        params.nrIterations = Math.round(params.nrIterations);
+    }
+    return paramsList;
+};
+
 export const interpolateFractalParams = (nrFrames: number, currentState: FractalParams, goalState: FractalParams) => {
     const interpolatedFractalParamsList: FractalParams[] = [];
     for (let i = 0; i < nrFrames; i++) {

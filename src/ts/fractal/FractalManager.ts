@@ -12,7 +12,7 @@ import {
 import { updateJuliaPreviewContext } from '../ui/juliaDownload.js';
 import { FractalParams } from './FractalParams';
 import { FractalContext } from './FractalContext';
-import { interpolateFractalParams } from '../utils/fractalUtils.js';
+import { interpolateFractalParams, roundInterpolatedFractalParams } from '../utils/fractalUtils.js';
 
 // Enables the communication between two FractalContexts via events
 export class FractalManager {
@@ -267,10 +267,8 @@ export class FractalManager {
         // Calculate intermediate values
         // Colors
 
-        const interpolatedFractalParamsList: FractalParams[] = interpolateFractalParams(
-            nrFrames,
-            currentState,
-            goalState
+        const interpolatedFractalParamsList: FractalParams[] = roundInterpolatedFractalParams(
+            interpolateFractalParams(nrFrames, currentState, goalState)
         );
 
         // Loop
