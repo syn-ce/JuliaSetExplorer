@@ -18,7 +18,6 @@ function createFileFormCurrentRecordedData(recordedData: Blob[]) {
 export const capturePreviewCanvasVideo = (
     juliaDrawingContext: JuliaContext,
     juliaPreviewContext: JuliaContext,
-    canvas: HTMLCanvasElement,
     startState: FractalParams,
     goalState: FractalParams
 ) => {
@@ -37,7 +36,7 @@ export const capturePreviewCanvasVideo = (
     const interpolatedFractalParamsList = interpolateFractalParams(nrFrames - 1, startState, goalState);
 
     const data: Blob[] = [];
-    const mediaStream = canvas.captureStream();
+    const mediaStream = juliaDrawingContext.canvas.captureStream();
     mediaStream.getTracks().forEach((element) => {
         console.log(element);
     });
@@ -51,7 +50,7 @@ export const capturePreviewCanvasVideo = (
         console.log('Recording stopped. Data length:', data.length);
         createFileFormCurrentRecordedData(data);
     };
-    juliaDrawingContext.startMainRenderLoop();
+    //juliaDrawingContext.startMainRenderLoop();
     mediaRecorder.start();
 
     // Loop
@@ -67,7 +66,7 @@ export const capturePreviewCanvasVideo = (
             setTimeout(() => {
                 mediaRecorder.stop();
                 console.log('Recording stopped by timeout.');
-                juliaDrawingContext.stopRenderLoop();
+                //juliaDrawingContext.stopRenderLoop();
                 console.log('Stopped renderLoop for juliaDrawingContext');
             }, frameInterval);
         }
@@ -152,7 +151,6 @@ const setupVideoStateCaptureModal = (
         capturePreviewCanvasVideo(
             juliaDrawingContext,
             juliaPreviewContext,
-            juliaDrawingContext.canvas,
             videoState.startState,
             videoState.goalState
         );
