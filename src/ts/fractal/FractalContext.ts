@@ -3,6 +3,8 @@ import { PanningObj, getCanvasRenderingContext2D, getWebGL2RenderingContext, can
 import { ColorSettings, RGBColor, hexToRGB, normalizeRGB } from '../utils/colorUtils.js';
 import { Vec3D, zoomPoint } from '../utils/vectorUtils.js';
 import { Viewport } from './viewport.js';
+import { interpolateFractalParamsAtTime } from '../utils/fractalUtils.js';
+import { FractalParams } from './FractalParams.js';
 
 export abstract class FractalContext {
     gl: WebGL2RenderingContext;
@@ -42,6 +44,7 @@ export abstract class FractalContext {
     renderState: {
         wasUpdatedSinceLastRender: boolean;
         shouldRender: boolean;
+        animationDuration: number;
     };
 
     constructor(
@@ -53,7 +56,11 @@ export abstract class FractalContext {
         fragmentShaderText: string,
         nrIterations: number
     ) {
-        this.renderState = { wasUpdatedSinceLastRender: true, shouldRender: false };
+        this.renderState = {
+            wasUpdatedSinceLastRender: true,
+            shouldRender: false,
+            animationDuration: 1000,
+        };
         this.canvas = canvas;
         this.canvas.width = width;
         this.canvas.height = height;
@@ -167,14 +174,46 @@ export abstract class FractalContext {
         this.progressBar.HTMLBar.parentElement.style.display = 'none';
     };
 
-    renderLoop = () => {
-    renderLoop = (timeStamp: number) => {
-        if (!this.renderState.shouldRender) return;
-        // Only render if necessary
-        if (!this.renderState.wasUpdatedSinceLastRender) {
-            requestAnimationFrame(this.renderLoop);
-            return;
+    animation = (
+        timeStamp: number,
+        startState: FractalParams,
+        goalState: FractalParams,
+        start: number,
+        prevTimeStamp: number
+    ) => {
+        if (start === undefined) {
+            start = timeStamp;
         }
+        const elapsed = timeStamp - start;
+
+        if (prevTimeStamp != timeStamp) {
+            let t = elapsed / this.renderState.animationDuration;
+            t = Math.max(Math.min(t, 1), 0);
+            const newState = interpolateFractalParamsAtTime(startState, goalState, t);
+            // Render
+            if (this.cpuRendering) {
+                requestAnimationFrame(() => {
+                    this.drawSetCPU().then(() => {
+                        this.canvas2d.style.display = '';
+                        this.canvas.style.display = 'none';
+                    });
+                });
+            } else {
+                requestAnimationFrame(() => {
+                    this.gl.drawArrays(this.primitiveType, this.offset, this.count);
+                    this.canvas.style.display = '';
+                    this.canvas2d.style.display = 'none';
+                });
+            }
+        }
+
+        if (elapsed < this.renderState.animationDuration) {
+            prevTimeStamp = timeStamp;
+            requestAnimationFrame((timeStamp) =>
+                this.animation(timeStamp, startState, goalState, start, prevTimeStamp)
+            );
+        }
+    };
 
     // Used for updating additional attributes such as Julia Center Coords in JuliaContext
     abstract __updateClassSpecificCanvasAndGL: () => void;

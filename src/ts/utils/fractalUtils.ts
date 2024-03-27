@@ -55,6 +55,33 @@ export const interpolateFractalParams = (nrFrames: number, currentState: Fractal
     return interpolatedFractalParamsList;
 };
 
+// Interpolates the correct FractalParams between startState and goalState at time t (t between 0 and 1 inclusive)
+export const interpolateFractalParamsAtTime = (startState: FractalParams, goalState: FractalParams, t: number) => {
+    const color: RGBColor = {
+        r: startState.color.r + t * (goalState.color.r - startState.color.r),
+        g: startState.color.g + t * (goalState.color.g - startState.color.g),
+        b: startState.color.b + t * (goalState.color.b - startState.color.b),
+    };
+
+    const fractalParams: FractalParams = {
+        color: color,
+        nrIterations: startState.nrIterations + t * (goalState.nrIterations - startState.nrIterations),
+        exponent: startState.exponent + t * (goalState.exponent - startState.exponent),
+        escapeRadius: startState.escapeRadius + t * (goalState.escapeRadius - startState.escapeRadius),
+        juliaCoords: {
+            x: startState.juliaCoords.x + t * (goalState.juliaCoords.x - startState.juliaCoords.x),
+            y: startState.juliaCoords.y + t * (goalState.juliaCoords.y - startState.juliaCoords.y),
+        },
+        juliaPreviewCenter: {
+            x: startState.juliaPreviewCenter.x + t * (goalState.juliaPreviewCenter.x - startState.juliaPreviewCenter.x),
+            y: startState.juliaPreviewCenter.y + t * (goalState.juliaPreviewCenter.y - startState.juliaPreviewCenter.y),
+        },
+        zoomLevel: startState.zoomLevel + t * (goalState.zoomLevel - startState.zoomLevel),
+        cpuRendering: false,
+        colorSettings: startState.colorSettings,
+    };
+};
+
 export const setJuliaState = (juliaContext: JuliaContext, params: FractalParams) => {
     juliaContext.setColorValues(normalizeRGB(params.color));
     juliaContext.setNrIterations(params.nrIterations);
