@@ -119,7 +119,7 @@ For more information refer to the [Parameters](#parameters)-section below.
 
 ## Pasting Images
 
-All downloaded Julia sets can be pasted into the browser to immediately restore the state from when the image was downloaded. This is especially useful when the Julia set needs to be rendered in a different resolution, color or when other other arbitrary adjustments have to be made.
+All downloaded Julia sets can be pasted into the browser to immediately restore the state from when the image was downloaded. This is especially useful when the Julia set needs to be rendered in a different resolution, color or when other arbitrary adjustments have to be made.
 
 Any Julia set can be pasted by either
 
