@@ -231,9 +231,24 @@ export abstract class FractalContext {
         this.__updateClassSpecificCanvasAndGL();
     };
 
+    __renderCanvas = () => {
+        // Render
+        if (this.cpuRendering) {
+            this.drawSetCPU().then(() => {
+                this.canvas2d.style.display = '';
+                this.canvas.style.display = 'none';
+            });
+        } else {
+            this.gl.drawArrays(this.primitiveType, this.offset, this.count);
+            this.canvas.style.display = '';
+            this.canvas2d.style.display = 'none';
+        }
+    };
+
     // Used for rendering once when the renderLoop is not running, e.g. when downloading from the invisible canvas
     manualImmediateRender = () => {
         this.__updateCanvasAndGLAttributes();
+        this.__renderCanvas();
     };
 
     renderLoop = (timeStamp: number) => {
@@ -248,17 +263,7 @@ export abstract class FractalContext {
         // Update canvas, webgl
         this.__updateCanvasAndGLAttributes();
 
-        // Render
-        if (this.cpuRendering) {
-            this.drawSetCPU().then(() => {
-                this.canvas2d.style.display = '';
-                this.canvas.style.display = 'none';
-            });
-        } else {
-            this.gl.drawArrays(this.primitiveType, this.offset, this.count);
-            this.canvas.style.display = '';
-            this.canvas2d.style.display = 'none';
-        }
+        this.__renderCanvas();
 
         // Keep renderLoop running
         requestAnimationFrame(this.renderLoop);
