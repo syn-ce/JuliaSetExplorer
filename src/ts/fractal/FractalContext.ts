@@ -570,13 +570,11 @@ export abstract class FractalContext {
     };
 
     __setScreenResolution = () => {
-        this.renderState.wasUpdatedSinceLastRender = true;
         let screenResAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenResolution');
         this.gl.uniform2f(screenResAttribLocation, this.vp.vWidth, this.vp.vHeight);
     };
 
     setScreenStart = (screenStartX: number, screenStartY: number) => {
-        this.renderState.wasUpdatedSinceLastRender = true;
         this.vp.updateVP(screenStartX, screenStartY, this.vp.vWidth, this.vp.vHeight);
     };
 
