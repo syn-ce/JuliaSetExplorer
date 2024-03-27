@@ -12,7 +12,7 @@ export const roundInterpolatedFractalParams = (paramsList: FractalParams[]) => {
 };
 
 export const interpolateFractalParams = (nrFrames: number, currentState: FractalParams, goalState: FractalParams) => {
-    const interpolatedFractalParamsList: FractalParams[] = [];
+    const interpolatedFractalParamsList: FractalParams[] = [currentState];
     for (let i = 0; i < nrFrames; i++) {
         const step = (i + 1) / nrFrames;
         const color: RGBColor = {

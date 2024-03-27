@@ -25,25 +25,29 @@ export const capturePreviewCanvasVideo = (
     // Initially setup juliaDrawingContext (mainly for adjusting size, the rest is probably not needed; TODO: refactor / have a look at this again)
     updateJuliaDrawingContext(juliaDrawingContext, juliaPreviewContext);
     setJuliaState(juliaDrawingContext, startState);
+    setJuliaState(juliaPreviewContext, startState);
+
+    const imageBlobs: Blob[] = [];
 
     const duration = 2000;
     const frameInterval = 1000 / 60;
-    const nrFrames = 120;
+    const nrFrames = duration / frameInterval;
 
-    const interpolatedFractalParamsList = interpolateFractalParams(nrFrames, startState, goalState);
+    // -1 Because the resulting list will have the startState as the first frame
+    const interpolatedFractalParamsList = interpolateFractalParams(nrFrames - 1, startState, goalState);
 
     const data: Blob[] = [];
-    const mediaStream = canvas.captureStream(60);
+    const mediaStream = canvas.captureStream();
     mediaStream.getTracks().forEach((element) => {
         console.log(element);
     });
-    const mediaRecorder = new MediaRecorder(mediaStream);
+    const mediaRecorder = new MediaRecorder(mediaStream, { videoBitsPerSecond: 40000000 });
     mediaRecorder.ondataavailable = (evt) => {
         data.push(evt.data);
         console.log('Data available:', evt.data.size);
     };
     mediaRecorder.onstop = () => {
-        mediaStream.getTracks().forEach((track) => track.stop());
+        //mediaStream.getTracks().forEach((track) => track.stop());
         console.log('Recording stopped. Data length:', data.length);
         createFileFormCurrentRecordedData(data);
     };
@@ -53,6 +57,7 @@ export const capturePreviewCanvasVideo = (
     // Loop
     let i = 0;
     const loop = () => {
+        setJuliaState(juliaPreviewContext, interpolatedFractalParamsList[i]);
         setJuliaState(juliaDrawingContext, interpolatedFractalParamsList[i]);
         i++;
         if (i < nrFrames) {
@@ -64,7 +69,7 @@ export const capturePreviewCanvasVideo = (
                 console.log('Recording stopped by timeout.');
                 juliaDrawingContext.stopRenderLoop();
                 console.log('Stopped renderLoop for juliaDrawingContext');
-            }, 100);
+            }, frameInterval);
         }
     };
 
