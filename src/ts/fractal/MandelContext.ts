@@ -23,6 +23,8 @@ export class MandelContext extends FractalContext {
         this.setXYRenderingBounds(-1.5, 1.5, -2.1);
     }
 
+    __updateClassSpecificCanvasAndGL = () => {};
+
     addCenterIndicator() {
         // Center indicator
         this.juliaCenterIndicatorWrapper = document.getElementById('julia-center-coords-indicator-wrapper');

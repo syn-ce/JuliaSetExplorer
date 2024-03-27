@@ -176,7 +176,10 @@ export abstract class FractalContext {
             return;
         }
 
-        // Update canvas, webgl
+    // Used for updating additional attributes such as Julia Center Coords in JuliaContext
+    abstract __updateClassSpecificCanvasAndGL: () => void;
+
+    __updateCanvasAndGLAttributes = () => {
         this.__resizeCanvas();
         this.__setScreenResolution();
         this.__setScreenStart();
@@ -186,8 +189,25 @@ export abstract class FractalContext {
         this.__setNrIterations();
         this.__setColorValues();
         this.__setColorSettings();
+        this.__updateClassSpecificCanvasAndGL();
+    };
+
+    // Used for rendering once when the renderLoop is not running, e.g. when downloading from the invisible canvas
+    manualImmediateRender = () => {
+        this.__updateCanvasAndGLAttributes();
+    };
+
+    renderLoop = (timeStamp: number) => {
+        if (!this.renderState.shouldRender) return;
+        // Only render if necessary
+        if (!this.renderState.wasUpdatedSinceLastRender) {
+            requestAnimationFrame(this.renderLoop);
+            return;
+        }
 
         this.renderState.wasUpdatedSinceLastRender = false;
+        // Update canvas, webgl
+        this.__updateCanvasAndGLAttributes();
 
         // Render
         if (this.cpuRendering) {

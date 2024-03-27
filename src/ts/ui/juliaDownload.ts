@@ -74,6 +74,7 @@ const downloadJuliaPNG = (
 
     // Update drawing context with values of preview context
     updateJuliaDrawingContext(juliaDrawingContext, juliaPreviewContext);
+    juliaDrawingContext.manualImmediateRender();
 
     const cpuRendering = juliaPreviewContext.cpuRendering; // Save the current state so changes (i.e. cpu rendering gets
     // deactivated) during the render won't affect download

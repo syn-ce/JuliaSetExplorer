@@ -22,9 +22,15 @@ export class JuliaContext extends FractalContext {
         this.renderState.wasUpdatedSinceLastRender = true;
         this.juliaCCoords.x = x;
         this.juliaCCoords.y = y;
+    };
 
+    __setJuliaCCoords = () => {
         const cCoordsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'cCoords');
         this.gl.uniform2f(cCoordsAttribLocation, this.juliaCCoords.x, this.juliaCCoords.y);
+    };
+
+    __updateClassSpecificCanvasAndGL = () => {
+        this.__setJuliaCCoords();
     };
 
     addCenterInputs = (centerXInputId: string, centerYInputId: string) => {
