@@ -98,6 +98,9 @@ export abstract class FractalContext {
     setColorSettings = (colorSettings: ColorSettings) => {
         this.renderState.wasUpdatedSinceLastRender = true;
         this.colorSettings = colorSettings;
+    };
+
+    __setColorSettings = () => {
         let colorSettingsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'colorSettings');
         this.gl.uniform1fv(colorSettingsAttribLocation, this.colorSettings);
     };
@@ -105,6 +108,9 @@ export abstract class FractalContext {
     setColorValues = (rgbColor: RGBColor) => {
         this.renderState.wasUpdatedSinceLastRender = true;
         this.rgbColor = rgbColor;
+    };
+
+    __setColorValues = () => {
         let rgbColorAttribLocation = this.gl.getUniformLocation(this.glProgram, 'rgbColor');
         this.gl.uniform3f(rgbColorAttribLocation, this.rgbColor.r, this.rgbColor.g, this.rgbColor.b);
     };
@@ -112,6 +118,9 @@ export abstract class FractalContext {
     setEscapeRadius = (escapeRadius: number) => {
         this.renderState.wasUpdatedSinceLastRender = true;
         this.escapeRadius = escapeRadius;
+    };
+
+    __setEscapeRadius = () => {
         let escapeRadiusAttribLocation = this.gl.getUniformLocation(this.glProgram, 'escapeRadius');
         this.gl.uniform1f(escapeRadiusAttribLocation, this.escapeRadius);
     };
@@ -119,7 +128,9 @@ export abstract class FractalContext {
     setXYRenderingBounds = (yMin: number, yMax: number, xMin: number) => {
         this.renderState.wasUpdatedSinceLastRender = true;
         this.vp.updateXYBounds(yMin, yMax, xMin);
+    };
 
+    __setXYRenderingBounds = () => {
         let xBoundsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'xBounds');
         this.gl.uniform2f(xBoundsAttribLocation, this.vp.xMin, this.vp.xMax);
         let yBoundsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'yBounds');
@@ -131,6 +142,9 @@ export abstract class FractalContext {
     setExponent = (exponent: number) => {
         this.renderState.wasUpdatedSinceLastRender = true;
         this.exponent = exponent;
+    };
+
+    __setExponent = () => {
         let exponentAttribLocation = this.gl.getUniformLocation(this.glProgram, 'exponent');
         this.gl.uniform1f(exponentAttribLocation, this.exponent);
     };
@@ -138,6 +152,9 @@ export abstract class FractalContext {
     setNrIterations = (nrIterations: number) => {
         this.renderState.wasUpdatedSinceLastRender = true;
         this.nrIterations = nrIterations;
+    };
+
+    __setNrIterations = () => {
         let nrIterationsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'nrIterations');
         this.gl.uniform1f(nrIterationsAttribLocation, this.nrIterations);
     };
@@ -151,33 +168,41 @@ export abstract class FractalContext {
     };
 
     renderLoop = () => {
+    renderLoop = (timeStamp: number) => {
         if (!this.renderState.shouldRender) return;
         // Only render if necessary
         if (!this.renderState.wasUpdatedSinceLastRender) {
-            setTimeout(this.renderLoop, this.frameInterval);
+            requestAnimationFrame(this.renderLoop);
             return;
         }
+
+        // Update canvas, webgl
+        this.__resizeCanvas();
+        this.__setScreenResolution();
+        this.__setScreenStart();
+        this.__setXYRenderingBounds();
+        this.__setEscapeRadius();
+        this.__setExponent();
+        this.__setNrIterations();
+        this.__setColorValues();
+        this.__setColorSettings();
 
         this.renderState.wasUpdatedSinceLastRender = false;
 
         // Render
         if (this.cpuRendering) {
-            requestAnimationFrame(() => {
-                this.drawSetCPU().then(() => {
-                    this.canvas2d.style.display = '';
-                    this.canvas.style.display = 'none';
-                });
+            this.drawSetCPU().then(() => {
+                this.canvas2d.style.display = '';
+                this.canvas.style.display = 'none';
             });
         } else {
-            requestAnimationFrame(() => {
-                this.gl.drawArrays(this.primitiveType, this.offset, this.count);
-                this.canvas.style.display = '';
-                this.canvas2d.style.display = 'none';
-            });
+            this.gl.drawArrays(this.primitiveType, this.offset, this.count);
+            this.canvas.style.display = '';
+            this.canvas2d.style.display = 'none';
         }
 
         // Keep renderLoop running
-        setTimeout(this.renderLoop, this.frameInterval);
+        requestAnimationFrame(this.renderLoop);
     };
 
     canImmediatelyRender = () => {
@@ -345,7 +370,7 @@ export abstract class FractalContext {
     startMainRenderLoop() {
         // Start renderLoop
         this.renderState.shouldRender = true;
-        this.renderLoop();
+        requestAnimationFrame(this.renderLoop);
     }
 
     stopRenderLoop = () => (this.renderState.shouldRender = false);
@@ -541,33 +566,33 @@ export abstract class FractalContext {
 
     setScreenResolution = (width: number, height: number) => {
         this.renderState.wasUpdatedSinceLastRender = true;
+        this.vp.updateVP(this.vp.screenStart.x, this.vp.screenStart.y, width, height);
+    };
+
+    __setScreenResolution = () => {
+        this.renderState.wasUpdatedSinceLastRender = true;
         let screenResAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenResolution');
-        this.gl.uniform2f(screenResAttribLocation, width, height);
+        this.gl.uniform2f(screenResAttribLocation, this.vp.vWidth, this.vp.vHeight);
     };
 
     setScreenStart = (screenStartX: number, screenStartY: number) => {
+        this.renderState.wasUpdatedSinceLastRender = true;
+        this.vp.updateVP(screenStartX, screenStartY, this.vp.vWidth, this.vp.vHeight);
+    };
+
+    __setScreenStart = () => {
         let screenStartAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenStart');
-        this.gl.uniform2f(screenStartAttribLocation, screenStartX, screenStartY);
+        this.gl.uniform2f(screenStartAttribLocation, this.vp.screenStart.x, this.vp.screenStart.y);
     };
 
     setCPURendering = (bool: boolean) => {
-        this.renderState.wasUpdatedSinceLastRender = true;
+        this.renderState.wasUpdatedSinceLastRender = this.cpuRendering != bool;
         this.cpuRendering = bool;
     };
 
     resizeCanvas = (xScreenLeft: number, xScreenRight: number, yScreenBot: number, yScreenTop: number) => {
         let newWidth = xScreenRight - xScreenLeft;
         let newHeight = yScreenTop - yScreenBot;
-
-        // Update webgl canvas
-        let canvas = this.canvas;
-        canvas.width = newWidth;
-        canvas.height = newHeight;
-
-        // Update 2d canvas
-        let canvas2d = this.canvas2d;
-        canvas2d.width = newWidth;
-        canvas2d.height = newHeight;
 
         // Extrapolate new boundaries
         let newXMin = this.vp.xToCoord(xScreenLeft);
@@ -577,11 +602,24 @@ export abstract class FractalContext {
         // Update vp
         this.vp.updateVP(xScreenLeft, yScreenBot, newWidth, newHeight);
 
-        // Update gl
-        this.gl.viewport(0, 0, newWidth, newHeight);
         this.setScreenResolution(newWidth, newHeight);
 
         this.setXYRenderingBounds(newYMin, newYMax, newXMin);
+    };
+
+    __resizeCanvas = () => {
+        // Update webgl canvas
+        let canvas = this.canvas;
+        canvas.width = this.vp.vWidth;
+        canvas.height = this.vp.vHeight;
+
+        // Update 2d canvas
+        let canvas2d = this.canvas2d;
+        canvas2d.width = this.vp.vWidth;
+        canvas2d.height = this.vp.vHeight;
+
+        // Update gl
+        this.gl.viewport(0, 0, this.vp.vWidth, this.vp.vHeight);
     };
 
     // Used to move the border around the canvas
