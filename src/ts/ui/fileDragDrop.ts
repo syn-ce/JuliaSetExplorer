@@ -4,9 +4,6 @@ import { JuliaContext } from '../fractal/JuliaContext.js';
 export const addDragDropEventListeners = (
     fractalManager: FractalManager,
     dropzoneElementId: string,
-    juliaPreviewContext: JuliaContext,
-    juliaDrawingContext: JuliaContext,
-    juliaPreviewContainerId: string,
     renderVideoModalId: string
 ) => {
     const dropzone = document.getElementById(dropzoneElementId);
@@ -35,12 +32,7 @@ export const addDragDropEventListeners = (
 
         let name = file.name;
 
-        fractalManager.tryUpdateRenderFractalsFromString(
-            name,
-            juliaPreviewContext,
-            juliaDrawingContext,
-            juliaPreviewContainerId
-        );
+        fractalManager.tryUpdateRenderFractalsFromString(name);
     };
 
     document.body.ondragleave = (evt) => {

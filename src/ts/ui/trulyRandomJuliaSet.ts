@@ -7,8 +7,6 @@ import { randInRange } from '../utils/utils.js';
 export const setupTrulyRandomJuliaBtn = (
     juliaBtnId: string,
     fractalManager: FractalManager,
-    juliaPreviewContext: JuliaContext,
-    juliaPreviewContainerId: string,
     randjuliaShortcutCheckboxId: string
 ) => {
     const trulyRandomJuliaBtn = <HTMLInputElement>document.getElementById(juliaBtnId);
@@ -47,6 +45,6 @@ export const setupTrulyRandomJuliaBtn = (
             colorSettings,
         };
 
-        fractalManager.updateRenderFractals(params, juliaPreviewContext, juliaPreviewContainerId);
+        fractalManager.transitionIntoState(params, 100);
     };
 };

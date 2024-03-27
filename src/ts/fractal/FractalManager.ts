@@ -214,12 +214,7 @@ export class FractalManager {
     };
 
     // Returns whether the rendering was successful or not
-    tryUpdateRenderFractalsFromString = (
-        filename: string,
-        juliaPreviewContext: JuliaContext,
-        juliaDrawingContext: JuliaContext,
-        juliaPreviewContainerId: string
-    ) => {
+    tryUpdateRenderFractalsFromString = (filename: string) => {
         let params = this.tryParseParamsFromFilename(filename);
         if (!params.parsedSuccessfully) return false;
 

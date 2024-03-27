@@ -4,10 +4,7 @@ import { httpGetRandomCommunityJulia, httpGetRandomSelectedJulia } from '../util
 
 const randomJuliaBtnOnClick = (
     httpGetRandomJulia: () => Promise<{ data: any; status: number }>,
-    fractalManager: FractalManager,
-    juliaPreviewContext: JuliaContext,
-    juliaDrawingContext: JuliaContext,
-    juliaPreviewContainerId: string
+    fractalManager: FractalManager
 ) => {
     httpGetRandomJulia()
         .then((resp) => {
@@ -18,14 +15,7 @@ const randomJuliaBtnOnClick = (
 
             let filename = resp.data.filename;
 
-            if (
-                !fractalManager.tryUpdateRenderFractalsFromString(
-                    filename,
-                    juliaPreviewContext,
-                    juliaDrawingContext,
-                    juliaPreviewContainerId
-                )
-            ) {
+            if (!fractalManager.tryUpdateRenderFractalsFromString(filename)) {
                 return;
             }
         })
@@ -37,10 +27,7 @@ const randomJuliaBtnOnClick = (
 export const setupRandomCommunityJuliaSetBtn = (
     randomCommunityJuliaBtnId: string,
     juliaCommunityCheckboxId: string,
-    fractalManager: FractalManager,
-    juliaPreviewContext: JuliaContext,
-    juliaDrawingContext: JuliaContext,
-    juliaPreviewContainerId: string
+    fractalManager: FractalManager
 ) => {
     const randomCommunityJuliaBtn = <HTMLInputElement>document.getElementById(randomCommunityJuliaBtnId);
     const juliaCommunityCheckbox = <HTMLInputElement>document.getElementById(juliaCommunityCheckboxId);
@@ -52,33 +39,15 @@ export const setupRandomCommunityJuliaSetBtn = (
 
     // Get random Julia set and render
     randomCommunityJuliaBtn.onclick = () => {
-        randomJuliaBtnOnClick(
-            httpGetRandomCommunityJulia,
-            fractalManager,
-            juliaPreviewContext,
-            juliaDrawingContext,
-            juliaPreviewContainerId
-        );
+        randomJuliaBtnOnClick(httpGetRandomCommunityJulia, fractalManager);
     };
 };
 
-export const setupRandomSelectedJuliaSetBtn = (
-    randomSelectedJuliaBtnId: string,
-    fractalManager: FractalManager,
-    juliaPreviewContext: JuliaContext,
-    juliaDrawingContext: JuliaContext,
-    juliaPreviewContainerId: string
-) => {
+export const setupRandomSelectedJuliaSetBtn = (randomSelectedJuliaBtnId: string, fractalManager: FractalManager) => {
     const randomSelectedJuliaBtn = <HTMLInputElement>document.getElementById(randomSelectedJuliaBtnId);
 
     // Get random Julia set and render
     randomSelectedJuliaBtn.onclick = () => {
-        randomJuliaBtnOnClick(
-            httpGetRandomSelectedJulia,
-            fractalManager,
-            juliaPreviewContext,
-            juliaDrawingContext,
-            juliaPreviewContainerId
-        );
+        randomJuliaBtnOnClick(httpGetRandomSelectedJulia, fractalManager);
     };
 };
