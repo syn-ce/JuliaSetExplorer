@@ -40,7 +40,11 @@ export const interpolateFractalParams = (nrFrames: number, currentState: Fractal
             },
             zoomLevel: currentState.zoomLevel + step * (goalState.zoomLevel - currentState.zoomLevel),
             cpuRendering: false,
-            colorSettings: currentState.colorSettings,
+            // The way in which the shader is written (using multiplication instead of if/else) allows for
+            // colorSetting-values other than 0 and 1
+            colorSettings: currentState.colorSettings.map(
+                (colorSetting, ind) => colorSetting + step * (goalState.colorSettings[ind] - colorSetting)
+            ),
         };
 
         console.log(fractalParams.juliaPreviewCenter);
