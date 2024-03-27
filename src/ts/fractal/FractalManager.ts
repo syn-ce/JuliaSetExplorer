@@ -253,6 +253,9 @@ export class FractalManager {
         this.juliaContext.setZoom(currJuliaCenter.cX, currJuliaCenter.cY, params.zoomLevel);
         this.juliaContext.setCenterTo(params.juliaPreviewCenter.x, params.juliaPreviewCenter.y);
         this.setFractalParamsUpdateInputs(this.mandelContext, params);
+
+        // Update preview context if necessary
+        if (this.isPreviewVisible()) updateJuliaPreviewContext(this.juliaPreviewContext, this.juliaContext);
     };
 
     // Duration in ms
@@ -260,7 +263,6 @@ export class FractalManager {
         // Number of frames to render
         const frameInterval = Math.min(this.mandelContext.frameInterval, this.juliaContext.frameInterval);
         const nrFrames = duration / frameInterval;
-        console.log(frameInterval);
 
         // Current state
         const currentState = this.getCurrentJuliaParams();
