@@ -265,7 +265,7 @@ export class FractalManager {
         // Colors
 
         const interpolatedFractalParamsList: FractalParams[] = roundInterpolatedFractalParams(
-            interpolateFractalParams(nrFrames, currentState, goalState)
+            interpolateFractalParams(nrFrames - 1, currentState, goalState)
         );
 
         // Loop
