@@ -133,8 +133,8 @@
                 </div>
                 <div class="outer-box">
                     <button id="render-video-btn">Video</button>
-                    <button id="random-community-julia-btn">Community</button>
-                    <button id="random-selected-julia-btn">Selected</button>
+                    <button disabled="true" id="random-community-julia-btn">Community</button>
+                    <button disabled="true" id="random-selected-julia-btn">Selected</button>
                     <button id="truly-random-julia-btn">Random</button>
                     <button id="preview-cpu-render-btn">Turn CPU Rendering ON</button>
                 </div>
@@ -177,7 +177,9 @@
                         <tr>
                             <td>f</td>
                             <td>start/stop the indicator following the mouse</td>
-                            <td><input type="checkbox" id="shortcut-indfollowmouse-checkbox" checked="checked" /></td>
+                            <td>
+                                <input type="checkbox" id="shortcut-indfollowmouse-checkbox" checked="checked" />
+                            </td>
                         </tr>
                         <tr>
                             <td>s</td>
@@ -212,7 +214,9 @@
                         <tr>
                             <td></td>
                             <td>send and load Julia sets (community)</td>
-                            <td><input type="checkbox" id="community-julia-checkbox" value="checked" /></td>
+                            <td>
+                                <input disabled="true" type="checkbox" id="community-julia-checkbox" />
+                            </td>
                         </tr>
                     </table>
                 </div>

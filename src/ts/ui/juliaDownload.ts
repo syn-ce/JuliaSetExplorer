@@ -70,7 +70,7 @@ const downloadJuliaPNG = (
 
     downloadLink.setAttribute('download', filename);
 
-    if (juliaCommunityCheckbox.checked) httpPostNewCommunityJulia(filename.slice(0, filename.length - 4));
+    // if (juliaCommunityCheckbox.checked) httpPostNewCommunityJulia(filename.slice(0, filename.length - 4));
 
     // Update drawing context with values of preview context
     updateJuliaDrawingContext(juliaDrawingContext, juliaPreviewContext);
@@ -120,6 +120,7 @@ export const updateJuliaDrawingContext = (juliaDrawingContext: JuliaContext, jul
     juliaDrawingContext.setCenterTo(xCenterJuliaPreviewContext, yCenterJuliaPreviewContext);
     juliaDrawingContext.setColorSettings(juliaPreviewContext.colorSettings);
     juliaDrawingContext.setJuliaCCoords(juliaPreviewContext.juliaCCoords.x, juliaPreviewContext.juliaCCoords.y);
+    juliaDrawingContext.setZoom(xCenterJuliaPreviewContext, yCenterJuliaPreviewContext, juliaPreviewContext.zoomLevel);
 };
 
 // Open preview / editor for download of Julia-Image
