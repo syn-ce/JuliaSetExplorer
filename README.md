@@ -85,8 +85,6 @@ In order to save an image, click on the corresponding button or press the "s"-ke
 
 Once you are satisfied with how things are looking, start rendering the final image by pressing the associated button. Once the image has been rendered, it will be downloaded.
 
-When saving an image the corresponding parameters will by default be sent to a server to share with others (see [Community](#community) for more information).
-
 If you are making use of CPU rendering this will take some time. A progress bar and an estimate of the remaining time will act as indicators.
 If you don't use CPU rendering (which is advised if it's not necessary) the render should, under most circumstances, finish after no longer than a couple of seconds at most and usually be perceived as instantaneous.
 
@@ -140,11 +138,13 @@ In the download preview (opened by pressing "s" or clicking the "Save as png"-bu
 
 ### Selected
 
+_Please note that this feature is currently unavailable._
 "Selected" will send a request to a server and load the parameters of a random Julia set out of a predetermined selection of particularly interesting Julia sets.
 
 ### Community
 
-"Community" will also send a request to a server but instead of choosing from a predetermined selection of Julia sets, it will instead take into consideration all Julia sets which have been downloaded by other people.
+_Please note that this feature is currently unavailable._
+Community" will also send a request to a server but instead of choosing from a predetermined selection of Julia sets, it will instead take into consideration all Julia sets which have been downloaded by other people.
 
 Note that **in order to use this feature, the option "send and load Julia sets (community)"** in the info-modal (press "i" or click the question mark in the lower right corner of the screen) **has to be checked**.
 
