@@ -1,7 +1,10 @@
-export const addDragDropEventListeners = (fractalManager, dropzoneElementId, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId) => {
-    var dropzone = document.getElementById(dropzoneElementId);
+export const addDragDropEventListeners = (fractalManager, dropzoneElementId, renderVideoModalId) => {
+    const dropzone = document.getElementById(dropzoneElementId);
+    const renderVideoModal = document.getElementById(renderVideoModalId);
     document.body.ondragenter = (evt) => {
         fractalManager.mandelContext.indicatorFollowsMouse = false;
+        if (renderVideoModal.style.visibility === 'visible')
+            return; // drag and drop of video-modal overwrites generic dropzone
         dropzone.style.visibility = 'visible';
         dropzone.style.opacity = '1';
     };
@@ -9,6 +12,8 @@ export const addDragDropEventListeners = (fractalManager, dropzoneElementId, jul
         evt.preventDefault();
     };
     document.body.ondrop = (evt) => {
+        if (renderVideoModal.style.visibility === 'visible')
+            return;
         dropzone.style.visibility = 'hidden';
         dropzone.style.opacity = '0';
         evt.stopPropagation();
@@ -17,7 +22,7 @@ export const addDragDropEventListeners = (fractalManager, dropzoneElementId, jul
         if (!file)
             return;
         let name = file.name;
-        fractalManager.tryUpdateRenderFractalsFromString(name, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId);
+        fractalManager.tryUpdateRenderFractalsFromString(name);
     };
     document.body.ondragleave = (evt) => {
         if (evt.target != dropzone)

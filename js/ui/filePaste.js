@@ -1,8 +1,8 @@
-export const addPasteEventListeners = (fractalManager, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId) => {
+export const addPasteEventListeners = (fractalManager) => {
     document.body.addEventListener('paste', (evt) => {
         // try filename pasted directly
         let potFilename = evt.clipboardData.getData('text');
-        if (fractalManager.tryUpdateRenderFractalsFromString(potFilename, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId))
+        if (fractalManager.tryUpdateRenderFractalsFromString(potFilename))
             return;
         // try get filename from pasted image
         let items = evt.clipboardData?.items;
@@ -10,6 +10,6 @@ export const addPasteEventListeners = (fractalManager, juliaPreviewContext, juli
             return;
         potFilename = items[0]?.getAsFile()?.name;
         if (potFilename)
-            fractalManager.tryUpdateRenderFractalsFromString(potFilename, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId);
+            fractalManager.tryUpdateRenderFractalsFromString(potFilename);
     });
 };

@@ -1,5 +1,5 @@
 export const createShader = (gl, type, source) => {
-    var shader = gl.createShader(type);
+    let shader = gl.createShader(type);
     if (shader == null)
         throw new Error('Error while creating shader');
     gl.shaderSource(shader, source);
@@ -13,7 +13,7 @@ export const createShader = (gl, type, source) => {
     }
 };
 export const createProgram = (gl, vertexShader, fragmentShader) => {
-    var program = gl.createProgram();
+    const program = gl.createProgram();
     if (program == null)
         throw new Error('Error while creating program');
     gl.attachShader(program, vertexShader);
@@ -33,7 +33,7 @@ export const createProgram = (gl, vertexShader, fragmentShader) => {
     console.log(gl.getProgramInfoLog(program));
     gl.deleteProgram(program);
 };
-export var vertexShaderText = `#version 300 es
+export const vertexShaderText = `#version 300 es
     precision highp float;
     in vec2 vertPosition;
     void main()
@@ -41,7 +41,7 @@ export var vertexShaderText = `#version 300 es
         gl_Position = vec4(vertPosition, 0.0, 1.0);
     }`;
 export const getFragmentShaderText = (z, c, additionalVariables) => {
-    var baseFragmentShaderText = `#version 300 es
+    const baseFragmentShaderText = `#version 300 es
     precision highp float;
     out vec4 myOutputColor;
     uniform vec2 screenResolution;

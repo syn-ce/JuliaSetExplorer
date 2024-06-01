@@ -1,0 +1,139 @@
+import { updateJuliaDrawingContext } from './juliaDownload.js';
+import { interpolateFractalParams, setJuliaState } from '../utils/fractalUtils.js';
+function createFileFormCurrentRecordedData(recordedData) {
+    let recordedBlob = new Blob(recordedData, { type: 'video/webm' });
+    let url = URL.createObjectURL(recordedBlob);
+    let downloadLink = document.createElement('a');
+    const filename = 'testfilename.webm';
+    downloadLink.setAttribute('download', filename);
+    downloadLink.setAttribute('href', url);
+    downloadLink.click();
+}
+export const capturePreviewCanvasVideo = (juliaDrawingContext, juliaPreviewContext, startState, goalState) => {
+    // Initially setup juliaDrawingContext (mainly for adjusting size, the rest is probably not needed; TODO: refactor / have a look at this again)
+    updateJuliaDrawingContext(juliaDrawingContext, juliaPreviewContext);
+    setJuliaState(juliaDrawingContext, startState);
+    setJuliaState(juliaPreviewContext, startState);
+    const imageBlobs = [];
+    const duration = 2000;
+    const frameInterval = 1000 / 60;
+    const nrFrames = duration / frameInterval;
+    // -1 Because the resulting list will have the startState as the first frame
+    const interpolatedFractalParamsList = interpolateFractalParams(nrFrames - 1, startState, goalState);
+    const data = [];
+    const mediaStream = juliaDrawingContext.canvas.captureStream();
+    mediaStream.getTracks().forEach((element) => {
+        console.log(element);
+    });
+    const mediaRecorder = new MediaRecorder(mediaStream, { videoBitsPerSecond: 40000000 });
+    mediaRecorder.ondataavailable = (evt) => {
+        data.push(evt.data);
+        console.log('Data available:', evt.data.size);
+    };
+    mediaRecorder.onstop = () => {
+        //mediaStream.getTracks().forEach((track) => track.stop());
+        console.log('Recording stopped. Data length:', data.length);
+        createFileFormCurrentRecordedData(data);
+    };
+    //juliaDrawingContext.startMainRenderLoop();
+    mediaRecorder.start();
+    // Loop
+    let i = 0;
+    const loop = () => {
+        setJuliaState(juliaPreviewContext, interpolatedFractalParamsList[i]);
+        setJuliaState(juliaDrawingContext, interpolatedFractalParamsList[i]);
+        i++;
+        if (i < nrFrames) {
+            setTimeout(loop, frameInterval);
+        }
+        else {
+            // Stop after all frames have been rendered; TODO: check whether 100ms "buffer" is necessary
+            setTimeout(() => {
+                mediaRecorder.stop();
+                console.log('Recording stopped by timeout.');
+                //juliaDrawingContext.stopRenderLoop();
+                console.log('Stopped renderLoop for juliaDrawingContext');
+            }, frameInterval);
+        }
+    };
+    loop();
+};
+const changeVideoStateCaptureModalVisib = (modalElement) => {
+    const currVisib = modalElement.style.visibility;
+    if (currVisib != 'visible') {
+        modalElement.style.visibility = 'visible';
+        modalElement.style.opacity = '1';
+    }
+    else {
+        modalElement.style.opacity = '0';
+        modalElement.style.visibility = 'hidden';
+    }
+};
+const setupVideoStateCaptureModal = (modalElementId, modalCloserId, videoShortcutCheckboxId, startStateDropzoneId, goalStateDropzoneId, videoState, fractalManager, juliaDrawingContext, juliaPreviewContext) => {
+    const modalElement = document.getElementById(modalElementId);
+    const videoShortcutCheckbox = document.getElementById(videoShortcutCheckboxId);
+    // Setup modal-closer
+    setupVideoModalCloser(modalElementId, modalCloserId);
+    window.addEventListener('keydown', (evt) => {
+        // Pressing "v" will open the video-modal
+        if (evt.code == 'KeyV' && videoShortcutCheckbox.checked) {
+            changeVideoStateCaptureModalVisib(modalElement);
+            if (modalElement.style.visibility == 'visible') {
+                // Make the current configuration state 1 by default
+                videoState.startState = fractalManager.getCurrentJuliaParams();
+                startStateDropzone.innerText = JSON.stringify(videoState.startState);
+            }
+        }
+    });
+    modalElement.style.opacity = '0';
+    modalElement.style.visibility = 'hidden';
+    const startStateDropzone = document.getElementById(startStateDropzoneId);
+    const goalStateDropzone = document.getElementById(goalStateDropzoneId);
+    const renderBtn = document.getElementById('video-state-capture-render-btn');
+    startStateDropzone.ondrop = (evt) => {
+        evt.preventDefault();
+        let file = evt.dataTransfer.files[0];
+        let params = fractalManager.tryParseParamsFromFilename(file.name);
+        if (!params.parsedSuccessfully) {
+            console.error('Could not parse filename');
+            return;
+        }
+        videoState.startState = params;
+        startStateDropzone.innerText = JSON.stringify(videoState.startState);
+    };
+    goalStateDropzone.ondrop = (evt) => {
+        evt.preventDefault();
+        let file = evt.dataTransfer.files[0];
+        let params = fractalManager.tryParseParamsFromFilename(file.name);
+        if (!params.parsedSuccessfully) {
+            console.error('Could not parse filename');
+            return;
+        }
+        videoState.goalState = params;
+        goalStateDropzone.innerText = JSON.stringify(videoState.goalState);
+    };
+    renderBtn.onclick = (evt) => capturePreviewCanvasVideo(juliaDrawingContext, juliaPreviewContext, videoState.startState, videoState.goalState);
+};
+export const setupPreviewRenderVideo = (fractalManager, juliaDrawingContext, juliaPreviewContext, modalId, modalCloserId, videoShortcutCheckboxId, startStateDropzoneId, goalStateDropzoneId, buttonId) => {
+    const videoState = { startState: null, goalState: null };
+    setupVideoStateCaptureModal(modalId, modalCloserId, videoShortcutCheckboxId, startStateDropzoneId, goalStateDropzoneId, videoState, fractalManager, juliaDrawingContext, juliaPreviewContext);
+    console.log(juliaPreviewContext.canvas.width);
+    const button = document.getElementById(buttonId);
+    console.log(juliaDrawingContext);
+    console.log(juliaDrawingContext.canvas);
+    const modalElement = document.getElementById(modalId);
+    button.onclick = () => {
+        const startStateDropzone = document.getElementById(startStateDropzoneId);
+        changeVideoStateCaptureModalVisib(modalElement);
+        if (modalElement.style.visibility == 'visible') {
+            // Make the current configuration state 1 by default
+            videoState.startState = fractalManager.getCurrentJuliaParams();
+            startStateDropzone.innerText = JSON.stringify(videoState.startState);
+        }
+    };
+};
+export const setupVideoModalCloser = (videoModalId, videoModalCloserId) => {
+    const closerElement = document.getElementById(videoModalCloserId);
+    const modalElement = document.getElementById(videoModalId);
+    closerElement.onclick = () => changeVideoStateCaptureModalVisib(modalElement);
+};

@@ -1,5 +1,5 @@
 import { httpGetRandomCommunityJulia, httpGetRandomSelectedJulia } from '../utils/http.js';
-const randomJuliaBtnOnClick = (httpGetRandomJulia, fractalManager, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId) => {
+const randomJuliaBtnOnClick = (httpGetRandomJulia, fractalManager) => {
     httpGetRandomJulia()
         .then((resp) => {
         if (resp.status != 200) {
@@ -7,7 +7,7 @@ const randomJuliaBtnOnClick = (httpGetRandomJulia, fractalManager, juliaPreviewC
             return;
         }
         let filename = resp.data.filename;
-        if (!fractalManager.tryUpdateRenderFractalsFromString(filename, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId)) {
+        if (!fractalManager.tryUpdateRenderFractalsFromString(filename)) {
             return;
         }
     })
@@ -15,22 +15,22 @@ const randomJuliaBtnOnClick = (httpGetRandomJulia, fractalManager, juliaPreviewC
         console.log('Unexpected error occurred.');
     });
 };
-export const setupRandomCommunityJuliaSetBtn = (randomCommunityJuliaBtnId, juliaCommunityCheckboxId, fractalManager, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId) => {
+export const setupRandomCommunityJuliaSetBtn = (randomCommunityJuliaBtnId, juliaCommunityCheckboxId, fractalManager) => {
     const randomCommunityJuliaBtn = document.getElementById(randomCommunityJuliaBtnId);
-    var juliaCommunityCheckbox = document.getElementById(juliaCommunityCheckboxId);
-    juliaCommunityCheckbox.checked = true;
+    const juliaCommunityCheckbox = document.getElementById(juliaCommunityCheckboxId);
+    juliaCommunityCheckbox.checked = false;
     juliaCommunityCheckbox.onclick = (evt) => {
         randomCommunityJuliaBtn.disabled = !juliaCommunityCheckbox.checked;
     };
     // Get random Julia set and render
     randomCommunityJuliaBtn.onclick = () => {
-        randomJuliaBtnOnClick(httpGetRandomCommunityJulia, fractalManager, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId);
+        randomJuliaBtnOnClick(httpGetRandomCommunityJulia, fractalManager);
     };
 };
-export const setupRandomSelectedJuliaSetBtn = (randomSelectedJuliaBtnId, fractalManager, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId) => {
+export const setupRandomSelectedJuliaSetBtn = (randomSelectedJuliaBtnId, fractalManager) => {
     const randomSelectedJuliaBtn = document.getElementById(randomSelectedJuliaBtnId);
     // Get random Julia set and render
     randomSelectedJuliaBtn.onclick = () => {
-        randomJuliaBtnOnClick(httpGetRandomSelectedJulia, fractalManager, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId);
+        randomJuliaBtnOnClick(httpGetRandomSelectedJulia, fractalManager);
     };
 };

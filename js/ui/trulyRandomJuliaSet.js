@@ -1,7 +1,7 @@
 import { randomRGB } from '../utils/colorUtils.js';
 import { randInRange } from '../utils/utils.js';
 // Adds functionality to the button and a keydown-listener for the key 't'
-export const setupTrulyRandomJuliaBtn = (juliaBtnId, fractalManager, juliaPreviewContext, juliaPreviewContainerId, randjuliaShortcutCheckboxId) => {
+export const setupTrulyRandomJuliaBtn = (juliaBtnId, fractalManager, randjuliaShortcutCheckboxId) => {
     const trulyRandomJuliaBtn = document.getElementById(juliaBtnId);
     const randjuliaShortcutCheckbox = document.getElementById(randjuliaShortcutCheckboxId);
     window.addEventListener('keydown', (evt) => {
@@ -17,7 +17,7 @@ export const setupTrulyRandomJuliaBtn = (juliaBtnId, fractalManager, juliaPrevie
         const juliaCoords = { x: Math.random() * 3 - 2, y: Math.random() * 2.6 - 1.3 };
         const juliaPreviewCenter = { x: 0, y: 0 }; // { x: Math.random() * 3 - 1.5, y: 2.4 - 1.2 };
         const zoomLevel = 1; //Math.random() * 99.5 + 0.5; // 0.5 to 10000
-        const cpuRendering = Math.random() < 0.5 ? 0 : 1;
+        const cpuRendering = Math.random() < 0.5;
         const colorSettings = Array(5).fill(0);
         for (let i = 0; i < 5; i++)
             colorSettings[i] = Math.random() < 0.3 ? 1 : 0;
@@ -34,6 +34,6 @@ export const setupTrulyRandomJuliaBtn = (juliaBtnId, fractalManager, juliaPrevie
             cpuRendering,
             colorSettings,
         };
-        fractalManager.updateRenderFractals(params, juliaPreviewContext, juliaPreviewContainerId);
+        fractalManager.transitionIntoState(params, 100);
     };
 };

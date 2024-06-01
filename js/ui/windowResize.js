@@ -1,5 +1,5 @@
-var oldWidth = window.innerWidth;
-var oldHeight = window.innerHeight;
+let oldWidth = window.innerWidth;
+let oldHeight = window.innerHeight;
 const resizeWindow = (fractalManager, juliaPreviewContext) => {
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -33,8 +33,8 @@ const resizeWindow = (fractalManager, juliaPreviewContext) => {
     juliaPreviewContext.setCenterTo(juliaPreviewCenter.cX, juliaPreviewCenter.cY);
     juliaPreviewContext.setAspectRatio(juliaPreviewContext.canvas.width / juliaPreviewContext.canvas.height);
     // Render all
-    fractalManager.juliaContext.render();
-    fractalManager.mandelContext.render();
-    juliaPreviewContext.render();
+    //fractalManager.juliaContext.render();
+    //fractalManager.mandelContext.render();
+    //juliaPreviewContext.render();
 };
 export const addResizeWindow = (fractalManager, juliaPreviewContext) => (window.onresize = () => resizeWindow(fractalManager, juliaPreviewContext));

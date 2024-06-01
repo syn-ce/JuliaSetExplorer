@@ -11,6 +11,7 @@ export class MandelContext extends FractalContext {
         this.addCenterIndicator();
         this.setXYRenderingBounds(-1.5, 1.5, -2.1);
     }
+    __updateClassSpecificCanvasAndGL = () => { };
     addCenterIndicator() {
         // Center indicator
         this.juliaCenterIndicatorWrapper = document.getElementById('julia-center-coords-indicator-wrapper');
@@ -67,7 +68,7 @@ export class MandelContext extends FractalContext {
                 const ismoothed = i -
                     Math.log2(Math.log2(z.real * z.real + z.imag * z.imag) / Math.log2(this.escapeRadius)) /
                         Math.log2(this.exponent); // https://iquilezles.org/articles/msetsmooth
-                var gray = this.colorSettings[0] *
+                let gray = this.colorSettings[0] *
                     (i +
                         1 -
                         Math.log(Math.log(Math.sqrt(z.real * z.real + z.imag * z.imag))) /

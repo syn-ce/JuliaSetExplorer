@@ -3,6 +3,7 @@ import { getCanvasRenderingContext2D, getWebGL2RenderingContext, canvasMoveEvent
 import { hexToRGB, normalizeRGB } from '../utils/colorUtils.js';
 import { zoomPoint } from '../utils/vectorUtils.js';
 import { Viewport } from './viewport.js';
+import { interpolateFractalParamsAtTime } from '../utils/fractalUtils.js';
 export class FractalContext {
     gl;
     glProgram;
@@ -33,7 +34,13 @@ export class FractalContext {
     renderQueued;
     renderInProgress;
     progressBar;
+    renderState;
     constructor(canvas, canvas2d, width, height, screenStart, fragmentShaderText, nrIterations) {
+        this.renderState = {
+            wasUpdatedSinceLastRender: true,
+            shouldRender: false,
+            animationDuration: 1000,
+        };
         this.canvas = canvas;
         this.canvas.width = width;
         this.canvas.height = height;
@@ -47,9 +54,8 @@ export class FractalContext {
         this.exponent = 2.0;
         this.zoomLevel = 1;
         this.gl = getWebGL2RenderingContext(canvas);
-        var vertexShader = createShader(this.gl, this.gl.VERTEX_SHADER, vertexShaderText);
-        //const fragmentShaderText = getFragmentShaderText(this.nrIterations, 'vec2(0.0,0.0)', 'vec2(x,y)', '');
-        var fragmentShader = createShader(this.gl, this.gl.FRAGMENT_SHADER, fragmentShaderText);
+        let vertexShader = createShader(this.gl, this.gl.VERTEX_SHADER, vertexShaderText);
+        let fragmentShader = createShader(this.gl, this.gl.FRAGMENT_SHADER, fragmentShaderText);
         this.glProgram = createProgram(this.gl, vertexShader, fragmentShader);
         this.primitiveType = this.gl.TRIANGLES;
         this.offset = 0;
@@ -66,36 +72,54 @@ export class FractalContext {
         this.setupGL();
     }
     setColorSettings = (colorSettings) => {
+        this.renderState.wasUpdatedSinceLastRender = true;
         this.colorSettings = colorSettings;
-        var colorSettingsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'colorSettings');
+    };
+    __setColorSettings = () => {
+        let colorSettingsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'colorSettings');
         this.gl.uniform1fv(colorSettingsAttribLocation, this.colorSettings);
     };
     setColorValues = (rgbColor) => {
+        this.renderState.wasUpdatedSinceLastRender = true;
         this.rgbColor = rgbColor;
-        var rgbColorAttribLocation = this.gl.getUniformLocation(this.glProgram, 'rgbColor');
+    };
+    __setColorValues = () => {
+        let rgbColorAttribLocation = this.gl.getUniformLocation(this.glProgram, 'rgbColor');
         this.gl.uniform3f(rgbColorAttribLocation, this.rgbColor.r, this.rgbColor.g, this.rgbColor.b);
     };
     setEscapeRadius = (escapeRadius) => {
+        this.renderState.wasUpdatedSinceLastRender = true;
         this.escapeRadius = escapeRadius;
-        var escapeRadiusAttribLocation = this.gl.getUniformLocation(this.glProgram, 'escapeRadius');
+    };
+    __setEscapeRadius = () => {
+        let escapeRadiusAttribLocation = this.gl.getUniformLocation(this.glProgram, 'escapeRadius');
         this.gl.uniform1f(escapeRadiusAttribLocation, this.escapeRadius);
     };
     setXYRenderingBounds = (yMin, yMax, xMin) => {
+        this.renderState.wasUpdatedSinceLastRender = true;
         this.vp.updateXYBounds(yMin, yMax, xMin);
-        var xBoundsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'xBounds');
+    };
+    __setXYRenderingBounds = () => {
+        let xBoundsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'xBounds');
         this.gl.uniform2f(xBoundsAttribLocation, this.vp.xMin, this.vp.xMax);
-        var yBoundsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'yBounds');
+        let yBoundsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'yBounds');
         this.gl.uniform2f(yBoundsAttribLocation, this.vp.yMin, this.vp.yMax);
         this.dispatchCanvasMoveEvent();
     };
     setExponent = (exponent) => {
+        this.renderState.wasUpdatedSinceLastRender = true;
         this.exponent = exponent;
-        var exponentAttribLocation = this.gl.getUniformLocation(this.glProgram, 'exponent');
+    };
+    __setExponent = () => {
+        let exponentAttribLocation = this.gl.getUniformLocation(this.glProgram, 'exponent');
         this.gl.uniform1f(exponentAttribLocation, this.exponent);
     };
     setNrIterations = (nrIterations) => {
+        this.renderState.wasUpdatedSinceLastRender = true;
         this.nrIterations = nrIterations;
-        var nrIterationsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'nrIterations');
+    };
+    __setNrIterations = () => {
+        let nrIterationsAttribLocation = this.gl.getUniformLocation(this.glProgram, 'nrIterations');
         this.gl.uniform1f(nrIterationsAttribLocation, this.nrIterations);
     };
     setProgressBarElement = (progressBarElementId, timeDisplayElementId) => {
@@ -104,6 +128,83 @@ export class FractalContext {
             ? document.getElementById(timeDisplayElementId)
             : document.createElement('div'); // Dummy element
         this.progressBar.HTMLBar.parentElement.style.display = 'none';
+    };
+    animation = (timeStamp, startState, goalState, start, prevTimeStamp) => {
+        if (start === undefined) {
+            start = timeStamp;
+        }
+        const elapsed = timeStamp - start;
+        if (prevTimeStamp != timeStamp) {
+            let t = elapsed / this.renderState.animationDuration;
+            t = Math.max(Math.min(t, 1), 0);
+            const newState = interpolateFractalParamsAtTime(startState, goalState, t);
+            // Render
+            if (this.cpuRendering) {
+                requestAnimationFrame(() => {
+                    this.drawSetCPU().then(() => {
+                        this.canvas2d.style.display = '';
+                        this.canvas.style.display = 'none';
+                    });
+                });
+            }
+            else {
+                requestAnimationFrame(() => {
+                    this.gl.drawArrays(this.primitiveType, this.offset, this.count);
+                    this.canvas.style.display = '';
+                    this.canvas2d.style.display = 'none';
+                });
+            }
+        }
+        if (elapsed < this.renderState.animationDuration) {
+            prevTimeStamp = timeStamp;
+            requestAnimationFrame((timeStamp) => this.animation(timeStamp, startState, goalState, start, prevTimeStamp));
+        }
+    };
+    __updateCanvasAndGLAttributes = () => {
+        this.__resizeCanvas();
+        this.__setScreenResolution();
+        this.__setScreenStart();
+        this.__setXYRenderingBounds();
+        this.__setEscapeRadius();
+        this.__setExponent();
+        this.__setNrIterations();
+        this.__setColorValues();
+        this.__setColorSettings();
+        this.__updateClassSpecificCanvasAndGL();
+    };
+    __renderCanvas = () => {
+        // Render
+        if (this.cpuRendering) {
+            this.drawSetCPU().then(() => {
+                this.canvas2d.style.display = '';
+                this.canvas.style.display = 'none';
+            });
+        }
+        else {
+            this.gl.drawArrays(this.primitiveType, this.offset, this.count);
+            this.canvas.style.display = '';
+            this.canvas2d.style.display = 'none';
+        }
+    };
+    // Used for rendering once when the renderLoop is not running, e.g. when downloading from the invisible canvas
+    manualImmediateRender = () => {
+        this.__updateCanvasAndGLAttributes();
+        this.__renderCanvas();
+    };
+    renderLoop = (timeStamp) => {
+        if (!this.renderState.shouldRender)
+            return;
+        // Only render if necessary
+        if (!this.renderState.wasUpdatedSinceLastRender) {
+            requestAnimationFrame(this.renderLoop);
+            return;
+        }
+        this.renderState.wasUpdatedSinceLastRender = false;
+        // Update canvas, webgl
+        this.__updateCanvasAndGLAttributes();
+        this.__renderCanvas();
+        // Keep renderLoop running
+        requestAnimationFrame(this.renderLoop);
     };
     canImmediatelyRender = () => {
         return Date.now() - this.timeOfLastRender >= this.frameInterval;
@@ -145,7 +246,6 @@ export class FractalContext {
                 for (let x = 0; x < this.canvas2d.width; x++) {
                     let ind = (y * this.canvas2d.width + x) * 4;
                     let val = this.getColorValueForPoint(this.vp.xToCoord(x + this.vp.screenStart.x), this.vp.yToCoord(y + this.vp.screenStart.y));
-                    //if (val == 0) zeroValues++;
                     data[ind] = val.x * 255;
                     data[ind + 1] = val.y * 255;
                     data[ind + 2] = val.z * 255;
@@ -154,7 +254,7 @@ export class FractalContext {
                 setTimeout(() => resolve(''), 0);
             });
         };
-        var startTime = performance.now();
+        let startTime = performance.now();
         let zeroValues = 0;
         const imageData = this.context2d.getImageData(0, 0, this.canvas2d.width, this.canvas2d.height);
         const data = imageData.data;
@@ -212,12 +312,12 @@ export class FractalContext {
         this.gl.clearColor(0.4, 0.75, 0.2, 1.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
         // X, Y
-        var triangles = [-1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0];
-        var triangleVertexBufferObject = this.gl.createBuffer();
+        let triangles = [-1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0];
+        let triangleVertexBufferObject = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, triangleVertexBufferObject);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(triangles), this.gl.STATIC_DRAW);
-        var positionAttribLocation = this.gl.getAttribLocation(this.glProgram, 'vertPosition');
-        var vao = this.gl.createVertexArray();
+        let positionAttribLocation = this.gl.getAttribLocation(this.glProgram, 'vertPosition');
+        let vao = this.gl.createVertexArray();
         this.gl.bindVertexArray(vao);
         this.gl.enableVertexAttribArray(positionAttribLocation);
         this.gl.vertexAttribPointer(positionAttribLocation, // Attribute location
@@ -239,6 +339,17 @@ export class FractalContext {
         this.addPanZoomToCanvas(this.canvas);
         this.addPanZoomToCanvas(this.canvas2d);
     };
+    startMainRenderLoop() {
+        // Start renderLoop
+        this.renderState.shouldRender = true;
+        requestAnimationFrame(this.renderLoop);
+    }
+    stopRenderLoop = () => (this.renderState.shouldRender = false);
+    setZoom(cX, cY, zoomLevel) {
+        // Set zoom-level of canvas, towards current center
+        this.renderState.wasUpdatedSinceLastRender = true;
+        this.zoom(cX, cY, zoomLevel);
+    }
     zoom = (x, y, zoomLevel) => {
         // (x,y) - Center of zoom
         // zoomLevel - New level of zoom, i.e. 2.0 for zoom of two compared to the original setting
@@ -262,12 +373,11 @@ export class FractalContext {
             let x = vp.xToCoord(evt.clientX);
             let y = vp.yToCoord(evt.clientY);
             if (sign < 0) {
-                this.zoom(x, y, this.zoomLevel * this.zoomFactor);
+                this.setZoom(x, y, this.zoomLevel * this.zoomFactor);
             }
             else {
-                this.zoom(x, y, this.zoomLevel / this.zoomFactor);
+                this.setZoom(x, y, this.zoomLevel / this.zoomFactor);
             }
-            this.render();
         });
         // Pan
         canvas.addEventListener('mousedown', (evt) => {
@@ -296,7 +406,7 @@ export class FractalContext {
             let yMax = vp.yMax - this.panningObject.startYInCoords + newY;
             this.setXYRenderingBounds(yMin, yMax, xMin);
             // Main render loop
-            this.render();
+            //this.render();
         });
     };
     dispatchCanvasMoveEvent = () => {
@@ -316,7 +426,6 @@ export class FractalContext {
                 Math.abs(evt.clientY - lastClick.pos.y) <= 0) {
                 // Center clicked point
                 this.setCenterTo(this.vp.xToCoord(evt.clientX), this.vp.yToCoord(evt.clientY));
-                this.render();
             }
             lastClick.time = performance.now();
             lastClick.pos = { x: evt.clientX, y: evt.clientY };
@@ -331,7 +440,6 @@ export class FractalContext {
                 return;
             let rgbColor = normalizeRGB(hexToRGB(evt.currentTarget.value));
             this.setColorValues(rgbColor);
-            this.render();
         });
     };
     addEscapeRadiusInputListener = (escapeRadiusInputId, isVisible = () => true) => {
@@ -342,7 +450,6 @@ export class FractalContext {
                 return;
             let val = parseFloat(evt.currentTarget.value);
             this.setEscapeRadius(val);
-            this.render();
         });
     };
     addExponentInputListener = (exponentInputId, isVisible = () => true) => {
@@ -353,7 +460,6 @@ export class FractalContext {
                 return;
             let val = parseFloat(evt.currentTarget.value);
             this.setExponent(val);
-            this.render();
         });
     };
     addNrIterationsInputListener = (nrIterationsInputId, isVisible = () => true) => {
@@ -364,7 +470,6 @@ export class FractalContext {
                 return;
             let val = parseFloat(evt.currentTarget.value);
             this.setNrIterations(val);
-            this.render();
         });
     };
     addColorSettingsInputs = (colorDropdownId, isVisible = () => true) => {
@@ -378,7 +483,6 @@ export class FractalContext {
                 return;
             const colorSettings = parseColorSettings();
             this.setColorSettings(colorSettings);
-            this.render();
         }));
         // Initial color settings
         this.colorSettingsInputs[0].checked = true;
@@ -392,6 +496,7 @@ export class FractalContext {
         return { cX: currCX, cY: currCY };
     };
     setCenterTo = (cX, cY) => {
+        this.renderState.wasUpdatedSinceLastRender = true;
         // Keep current zoom level, simply adjust the bounds
         let currCenter = this.getCurrentCenter();
         let xOffset = Number.isNaN(cX) ? 0 : cX - currCenter.cX;
@@ -402,49 +507,59 @@ export class FractalContext {
         this.setXYRenderingBounds(newYMin, newYMax, newXMin);
     };
     setScreenResolution = (width, height) => {
-        var screenResAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenResolution');
-        this.gl.uniform2f(screenResAttribLocation, width, height);
+        this.renderState.wasUpdatedSinceLastRender = true;
+        this.vp.updateVP(this.vp.screenStart.x, this.vp.screenStart.y, width, height);
+    };
+    __setScreenResolution = () => {
+        let screenResAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenResolution');
+        this.gl.uniform2f(screenResAttribLocation, this.vp.vWidth, this.vp.vHeight);
     };
     setScreenStart = (screenStartX, screenStartY) => {
-        var screenStartAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenStart');
-        this.gl.uniform2f(screenStartAttribLocation, screenStartX, screenStartY);
+        this.vp.updateVP(screenStartX, screenStartY, this.vp.vWidth, this.vp.vHeight);
+    };
+    __setScreenStart = () => {
+        let screenStartAttribLocation = this.gl.getUniformLocation(this.glProgram, 'screenStart');
+        this.gl.uniform2f(screenStartAttribLocation, this.vp.screenStart.x, this.vp.screenStart.y);
     };
     setCPURendering = (bool) => {
+        this.renderState.wasUpdatedSinceLastRender = this.cpuRendering != bool;
         this.cpuRendering = bool;
     };
     resizeCanvas = (xScreenLeft, xScreenRight, yScreenBot, yScreenTop) => {
         let newWidth = xScreenRight - xScreenLeft;
         let newHeight = yScreenTop - yScreenBot;
-        // Update webgl canvas
-        let canvas = this.canvas;
-        canvas.width = newWidth;
-        canvas.height = newHeight;
-        // Update 2d canvas
-        let canvas2d = this.canvas2d;
-        canvas2d.width = newWidth;
-        canvas2d.height = newHeight;
         // Extrapolate new boundaries
         let newXMin = this.vp.xToCoord(xScreenLeft);
         let newYMin = this.vp.yToCoord(yScreenTop);
         let newYMax = this.vp.yToCoord(yScreenBot);
         // Update vp
         this.vp.updateVP(xScreenLeft, yScreenBot, newWidth, newHeight);
-        // Update gl
-        this.gl.viewport(0, 0, newWidth, newHeight);
         this.setScreenResolution(newWidth, newHeight);
         this.setXYRenderingBounds(newYMin, newYMax, newXMin);
     };
+    __resizeCanvas = () => {
+        // Update webgl canvas
+        let canvas = this.canvas;
+        canvas.width = this.vp.vWidth;
+        canvas.height = this.vp.vHeight;
+        // Update 2d canvas
+        let canvas2d = this.canvas2d;
+        canvas2d.width = this.vp.vWidth;
+        canvas2d.height = this.vp.vHeight;
+        // Update gl
+        this.gl.viewport(0, 0, this.vp.vWidth, this.vp.vHeight);
+    };
     // Used to move the border around the canvas
-    moveCanvas = (borderElement) => {
-        const canvas = this.canvas;
-        borderElement.style.left = `${this.vp.screenStart.x.toString()}px`;
-        borderElement.style.top = `${this.vp.screenStart.y.toString()}px`;
+    moveCanvas = (canvasBorderElement) => {
+        canvasBorderElement.style.left = `${this.vp.screenStart.x.toString()}px`;
+        canvasBorderElement.style.top = `${this.vp.screenStart.y.toString()}px`;
     };
     // Will change the x-value so that the result matches the aspect ratio, will move the window to the center of the screen
     setAspectRatio = (aspectRatio) => {
         // Try adjusting width and height so that the image stays on screen and has a reasonable size
         let newWidth = Math.round(this.canvas.height * aspectRatio);
         let newHeight = Math.round(newWidth / aspectRatio);
+        this.renderState.wasUpdatedSinceLastRender = true;
         if (100 < newWidth &&
             newWidth <= window.innerWidth * 0.75 &&
             100 < newHeight &&
@@ -465,8 +580,10 @@ export class FractalContext {
                 newNewWidth += 20;
                 newNewHeight = newNewWidth / aspectRatio;
             }
-            if (50 < newNewHeight && newNewHeight <= window.innerHeight - 10)
-                (newWidth = newNewWidth), (newHeight = newNewHeight);
+            if (50 < newNewHeight && newNewHeight <= window.innerHeight - 10) {
+                newWidth = newNewWidth;
+                newHeight = newNewHeight;
+            }
             let xLeft = window.innerWidth / 2 - newWidth / 2;
             let xRight = window.innerWidth / 2 + newWidth / 2;
             let yBot = window.innerHeight / 2 - newHeight / 2;
@@ -475,9 +592,8 @@ export class FractalContext {
         }
         this.tryResizeCanvasMediumSize();
         this.moveCanvas(document.getElementById('download-preview-canvas-border'));
-        this.render();
     };
-    // Tries to resize the canvas to a a "medium" width and height if both are small
+    // Tries to resize the canvas to a "medium" width and height if both are small
     tryResizeCanvasMediumSize = () => {
         let canvas = this.canvas;
         let width = canvas.width;

@@ -1,5 +1,4 @@
 import { denormalizeRGB, getColorSettingsAbbreviations } from '../utils/colorUtils.js';
-import { httpPostNewCommunityJulia } from '../utils/http.js';
 // Closing of preview
 const juliaPreviewCloser = document.getElementById('close-save-preview');
 const juliaPreviewContainer = document.getElementById('download-preview-container');
@@ -19,7 +18,6 @@ const previewDownloadImage = (juliaContext, juliaPreviewContext, juliaPreviewCon
     if (borderId)
         juliaPreviewContext.moveCanvas(borderElement);
     updateJuliaPreviewContext(juliaPreviewContext, juliaContext);
-    juliaPreviewContext.render();
 };
 // Update the values of the preview context with the values of the (main) julia context
 export const updateJuliaPreviewContext = (juliaPreviewContext, juliaContext) => {
@@ -29,7 +27,7 @@ export const updateJuliaPreviewContext = (juliaPreviewContext, juliaContext) => 
     juliaPreviewContext.setNrIterations(juliaContext.nrIterations);
     // Need to set center explicitly because of the different canvas sizes and the way the bounds are set
     let center = juliaContext.getCurrentCenter();
-    juliaPreviewContext.zoom(center.cX, center.cY, juliaContext.zoomLevel);
+    juliaPreviewContext.setZoom(center.cX, center.cY, juliaContext.zoomLevel);
     juliaPreviewContext.setCenterTo(center.cX, center.cY);
     juliaPreviewContext.setColorSettings(juliaContext.colorSettings);
     juliaPreviewContext.setJuliaCCoords(juliaContext.juliaCCoords.x, juliaContext.juliaCCoords.y);
@@ -43,10 +41,10 @@ const downloadJuliaPNG = (juliaDrawingContext, juliaPreviewContext, disableDownl
     let colorSettingsAbbreviations = getColorSettingsAbbreviations(juliaPreviewContext.colorSettings);
     let filename = `JuliaSet_${color.r}_${color.g}_${color.b}_${juliaPreviewContext.nrIterations}_${juliaPreviewContext.exponent}_${juliaPreviewContext.escapeRadius}_${juliaPreviewContext.juliaCCoords.x}_${juliaPreviewContext.juliaCCoords.y}_${center.cX}_${center.cY}_${juliaPreviewContext.zoomLevel}${(getColorSettingsAbbreviations.length == 0 ? '' : '_') + colorSettingsAbbreviations.join('_')}_${juliaPreviewContext.cpuRendering ? 1 : 0}.png`;
     downloadLink.setAttribute('download', filename);
-    if (juliaCommunityCheckbox.checked)
-        httpPostNewCommunityJulia(filename.slice(0, filename.length - 4));
+    // if (juliaCommunityCheckbox.checked) httpPostNewCommunityJulia(filename.slice(0, filename.length - 4));
     // Update drawing context with values of preview context
     updateJuliaDrawingContext(juliaDrawingContext, juliaPreviewContext);
+    juliaDrawingContext.manualImmediateRender();
     const cpuRendering = juliaPreviewContext.cpuRendering; // Save the current state so changes (i.e. cpu rendering gets
     // deactivated) during the render won't affect download
     juliaDrawingContext.render(cpuRendering).then(() => {
@@ -83,6 +81,7 @@ export const updateJuliaDrawingContext = (juliaDrawingContext, juliaPreviewConte
     juliaDrawingContext.setCenterTo(xCenterJuliaPreviewContext, yCenterJuliaPreviewContext);
     juliaDrawingContext.setColorSettings(juliaPreviewContext.colorSettings);
     juliaDrawingContext.setJuliaCCoords(juliaPreviewContext.juliaCCoords.x, juliaPreviewContext.juliaCCoords.y);
+    juliaDrawingContext.setZoom(xCenterJuliaPreviewContext, yCenterJuliaPreviewContext, juliaPreviewContext.zoomLevel);
 };
 // Open preview / editor for download of Julia-Image
 const openSaveJuliaModal = (juliaContext, juliaDrawingContext, juliaPreviewContext, juliaPreviewContainerId) => {
@@ -156,14 +155,12 @@ export const setupPreviewCenterOriginBtn = (juliaPreviewContext, centerOriginBtn
     const previewCenterOriginBtn = document.getElementById(centerOriginBtnId);
     previewCenterOriginBtn.onclick = (evt) => {
         juliaPreviewContext.setCenterTo(0, 0);
-        juliaPreviewContext.render();
     };
 };
 export const setupPreviewCPURenderBtn = (juliaPreviewContext, previewCPURenderBtnId) => {
     const previewCPURenderButton = document.getElementById(previewCPURenderBtnId);
     previewCPURenderButton.onclick = () => {
         juliaPreviewContext.setCPURendering(!juliaPreviewContext.cpuRendering);
-        juliaPreviewContext.render();
         previewCPURenderButton.innerText = 'Turn CPU Rendering ' + (juliaPreviewContext.cpuRendering ? 'OFF' : 'ON');
     };
 };

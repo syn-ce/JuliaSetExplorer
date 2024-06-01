@@ -12,6 +12,7 @@ import { addPasteEventListeners } from './ui/filePaste.js';
 import { setupRandomCommunityJuliaSetBtn, setupRandomSelectedJuliaSetBtn } from './ui/loadRandomJuliaSet.js';
 import { setupTrulyRandomJuliaBtn } from './ui/trulyRandomJuliaSet.js';
 import { addResizeWindow } from './ui/windowResize.js';
+import { setupPreviewRenderVideo } from './ui/videoRendering.js';
 const canvasMandel = getCanvasElementById('mandel-canvas');
 const canvasMandel2d = getCanvasElementById('mandel-canvas-2d');
 const canvasJulia = getCanvasElementById('julia-canvas');
@@ -74,26 +75,29 @@ const juliaCenterXInputId = 'julia-center-x';
 const juliaCenterYInputId = 'julia-center-y';
 const fractalManager = new FractalManager(mandelContext, juliaContext, juliaCenterXInputId, juliaCenterYInputId, juliaPreviewContext, checkJuliaPrevContextVisib);
 fractalManager.addPausingUpdateJulia('shortcut-indfollowmouse-checkbox', 'shortcut-randmove-checkbox');
+const renderVideoModalId = 'video-state-capture-modal';
 // Enable dropping of files
-addDragDropEventListeners(fractalManager, 'dropzone', juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId);
+addDragDropEventListeners(fractalManager, 'dropzone', renderVideoModalId);
 // Enable pasting of filenames
-addPasteEventListeners(fractalManager, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId);
+addPasteEventListeners(fractalManager);
 // Hide-UI-Button
 setupHideUIButton('hide-ui-btn', 'shortcut-hide-checkbox');
 // Center origin in preview button
 setupPreviewCenterOriginBtn(juliaPreviewContext, 'preview-center-origin-btn');
+// Render video button
+setupPreviewRenderVideo(fractalManager, juliaDrawingContext, juliaPreviewContext, renderVideoModalId, 'video-modal-closer', 'shortcut-video-checkbox', 'video-start-state-dropzone', 'video-goal-state-dropzone', 'render-video-btn');
 // Community julia button in preview
-setupRandomCommunityJuliaSetBtn('random-community-julia-btn', juliaCommunityCheckboxId, fractalManager, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId);
+setupRandomCommunityJuliaSetBtn('random-community-julia-btn', juliaCommunityCheckboxId, fractalManager);
 // Selected julia button in preview
-setupRandomSelectedJuliaSetBtn('random-selected-julia-btn', fractalManager, juliaPreviewContext, juliaDrawingContext, juliaPreviewContainerId);
+setupRandomSelectedJuliaSetBtn('random-selected-julia-btn', fractalManager);
 // Truly-Random julia button in preview
-setupTrulyRandomJuliaBtn('truly-random-julia-btn', fractalManager, juliaPreviewContext, juliaPreviewContainerId, 'shortcut-randjulia-checkbox');
+setupTrulyRandomJuliaBtn('truly-random-julia-btn', fractalManager, 'shortcut-randjulia-checkbox');
 // CPU Rendering button in preview
 setupPreviewCPURenderBtn(juliaPreviewContext, 'preview-cpu-render-btn');
 // Help modal
 setupHelpModal('shortcut-info-checkbox');
 // Resizing of window (to be improved)
 addResizeWindow(fractalManager, juliaPreviewContext);
-// Render
-juliaContext.render();
-mandelContext.render();
+// Start render loop
+juliaContext.startMainRenderLoop();
+mandelContext.startMainRenderLoop();

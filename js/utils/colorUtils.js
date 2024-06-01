@@ -13,7 +13,7 @@ export const RGBToHex = (rgbColor) => {
     return `#${componentToHex(rgbColor.r)}${componentToHex(rgbColor.g)}${componentToHex(rgbColor.b)}`;
 };
 export const componentToHex = (c) => {
-    var hex = c.toString(16);
+    const hex = c.toString(16);
     return hex.length == 1 ? '0' + hex : hex;
 };
 export const normalizeRGB = (rgbColor) => {

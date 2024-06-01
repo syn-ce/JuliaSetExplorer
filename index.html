@@ -132,8 +132,9 @@
                     <button id="download-julia-btn">Download</button>
                 </div>
                 <div class="outer-box">
-                    <button id="random-community-julia-btn">Community</button>
-                    <button id="random-selected-julia-btn">Selected</button>
+                    <button id="render-video-btn">Video</button>
+                    <button disabled="true" id="random-community-julia-btn">Community</button>
+                    <button disabled="true" id="random-selected-julia-btn">Selected</button>
                     <button id="truly-random-julia-btn">Random</button>
                     <button id="preview-cpu-render-btn">Turn CPU Rendering ON</button>
                 </div>
@@ -152,6 +153,23 @@
             <canvas id="julia-canvas"></canvas>
             <canvas id="julia-canvas-2d"></canvas>
         </div>
+        <div id="video-state-capture-modal">
+            <div id="video-modal-closer" class="close"></div>
+            <div id="video-state-capture-modal-content-wrapper">
+                <div id="video-state-capture-modal-content">
+                    <div style="background-color: rgb(159, 0, 0); text-align: center">
+                        As can be seen, currently still very much in development
+                    </div>
+                    <div id="video-state-capture-dropzone-wrapper">
+                        <div class="video-state-capture-dropzone" id="video-start-state-dropzone">state 1</div>
+                        <div class="video-state-capture-dropzone" id="video-goal-state-dropzone">state 2</div>
+                    </div>
+                    <div id="video-state-capture-render-btn-wrapper">
+                        <button id="video-state-capture-render-btn">test</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="help-modal">
             <div id="help-modal-content">
                 <p>This website lets you explore julia sets.</p>
@@ -162,7 +180,9 @@
                         <tr>
                             <td>f</td>
                             <td>start/stop the indicator following the mouse</td>
-                            <td><input type="checkbox" id="shortcut-indfollowmouse-checkbox" checked="checked" /></td>
+                            <td>
+                                <input type="checkbox" id="shortcut-indfollowmouse-checkbox" checked="checked" />
+                            </td>
                         </tr>
                         <tr>
                             <td>s</td>
@@ -190,9 +210,16 @@
                             <td><input type="checkbox" id="shortcut-randjulia-checkbox" /></td>
                         </tr>
                         <tr>
+                            <td>v</td>
+                            <td>open/close video-modal</td>
+                            <td><input type="checkbox" id="shortcut-video-checkbox" /></td>
+                        </tr>
+                        <tr>
                             <td></td>
                             <td>send and load Julia sets (community)</td>
-                            <td><input type="checkbox" id="community-julia-checkbox" value="checked" /></td>
+                            <td>
+                                <input disabled="true" type="checkbox" id="community-julia-checkbox" />
+                            </td>
                         </tr>
                     </table>
                 </div>
