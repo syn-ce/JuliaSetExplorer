@@ -71,7 +71,11 @@ export const updateJuliaDrawingContext = (juliaDrawingContext, juliaPreviewConte
     // Copy the values of the preview juliaContext with the selected resolution
     juliaDrawingContext.setEscapeRadius(juliaPreviewContext.escapeRadius);
     juliaDrawingContext.resizeCanvas(0, downloadResolution.x, 0, downloadResolution.y);
-    juliaDrawingContext.setXYRenderingBounds(juliaPreviewContext.vp.yMin, juliaPreviewContext.vp.yMax, juliaPreviewContext.vp.xMin);
+    //    juliaDrawingContext.setXYRenderingBounds(
+    //        juliaPreviewContext.vp.yMin,
+    //        juliaPreviewContext.vp.yMax,
+    //        juliaPreviewContext.vp.xMin
+    //    );
     juliaDrawingContext.setColorValues(juliaPreviewContext.rgbColor);
     juliaDrawingContext.setExponent(juliaPreviewContext.exponent);
     juliaDrawingContext.setNrIterations(juliaPreviewContext.nrIterations);
